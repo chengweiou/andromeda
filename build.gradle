@@ -1,0 +1,57 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.0.M1'
+    id 'java'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.chengweiou'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    maven {
+        url 'http://127.0.0.1:8001/repository/chengweiou/'
+        credentials {
+            username 'admin'
+            password 'admin123'
+        }
+    }
+    mavenCentral()
+    maven { url 'https://repo.spring.io/snapshot' }
+    maven { url 'https://repo.spring.io/milestone' }
+
+}
+
+dependencies {
+
+    implementation 'com.auth0:java-jwt:3.8.0'
+    implementation 'redis.clients:jedis:3.1.0-m1'
+
+    implementation 'chengweiou.universe:blackhole:0.0.5@jar'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'org.apache.commons:commons-lang3:3.9'
+
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jetty'
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.0.0'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'mysql:mysql-connector-java'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.4.2'
+    testImplementation ('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'junit', module: 'junit'
+    }
+}
+
+configurations {
+    all {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
+    implementation.exclude module: 'spring-boot-starter-tomcat'
+}

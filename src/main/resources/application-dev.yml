@@ -1,0 +1,33 @@
+server:
+  port: 0
+  servlet:
+    context-path: /andromeda
+
+  ####Jetty specific properties########
+  jetty:
+    max-http-post-size: 0
+
+spring:
+  jackson:
+    default-property-inclusion: NON_NULL
+  datasource:
+    url: jdbc:mysql://localhost:3306/andromeda
+    username: root
+    password: 123456
+  security:
+    basic:
+      enabled: false
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    jedis:
+      pool:
+        max-active: 1000
+        max-idle: 10
+        min-idle: 1
+        max-wait: 1000ms
+
+jwt:
+  issuer: o
+  sign: andromeda
+  expMinute: 10
