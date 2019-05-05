@@ -1,9 +1,12 @@
 ### uat 环境
+network
+docker network create net
+
 mysql 8
 docker run --rm -it --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -d mysql/mysql-server
 
 redis
-docker run —rm --name redis  -p 6379:6379 d redis
+docker run --rm --name redis -p 6379:6379 --network net -d redis
 
 #### 上传
 ```
