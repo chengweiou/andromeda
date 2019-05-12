@@ -16,8 +16,9 @@ public class JwtUtilTest {
     @Autowired
     private JwtUtil jwtUtil;
     @Test
-    public void digest() throws UnauthException {
+    public void sign() throws UnauthException {
         String token = jwtUtil.sign(Builder.set("username", "ou").set("personId", "1").set("extra", "aa").to(new Account()));
+        System.out.println(token);
         Account account = jwtUtil.verify(token);
         Assertions.assertEquals("1", account.getPersonId());
         Assertions.assertEquals("aa", account.getExtra());
