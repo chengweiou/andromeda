@@ -1,6 +1,8 @@
 package chengweiou.universe.andromeda.model.entity;
 
 
+import chengweiou.universe.andromeda.model.Person;
+import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.model.NotNullObj;
 import chengweiou.universe.blackhole.model.NullObj;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -14,12 +16,14 @@ public class Account implements NotNullObj, Serializable {
     private String username;
     @JsonIgnore
     private String password;
-    private String personId;
+    private Person person;
+    private Boolean active;
     private String extra;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
     public void fillNotRequire() {
-        personId = personId!=null ? personId : "0";
+        active = active!=null ? active : person != null;
+        person = person!=null ? person : Builder.set("id", "0").to(new Person());
         extra = extra!=null ? extra : "";
     }
 
@@ -50,25 +54,34 @@ public class Account implements NotNullObj, Serializable {
         this.username = username;
     }
 
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", personId='" + personId + '\'' +
+                ", person=" + person +
+                ", active=" + active +
                 ", extra='" + extra + '\'' +
                 ", createAt=" + createAt +
                 ", updateAt=" + updateAt +
                 '}';
     }
 
-    public String getPersonId() {
-        return personId;
+    public Person getPerson() {
+        return person;
     }
 
-    public void setPersonId(String personId) {
-        this.personId = personId;
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
     public String getPassword() {

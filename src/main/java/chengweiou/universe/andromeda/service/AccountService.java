@@ -12,6 +12,8 @@ public interface AccountService {
 
     int update(Account e);
 
+    int updateByPerson(Account e);
+
     Account findById(Account e);
 
     int count(SearchCondition searchCondition);

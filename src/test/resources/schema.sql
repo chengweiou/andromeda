@@ -26,6 +26,7 @@ CREATE TABLE `account` (
                            `username` VARCHAR(45) NOT NULL,
                            `password` VARCHAR(500) NOT NULL,
                            `personId` VARCHAR(45) NOT NULL,
+                           `active` TINYINT NOT NULL,
                            `extra` VARCHAR(1000) NOT NULL,
                            `createAt` DATETIME NOT NULL,
                            `updateAt` DATETIME NOT NULL,

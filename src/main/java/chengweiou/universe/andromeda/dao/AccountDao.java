@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 @Mapper
 public interface AccountDao {
-    @Insert("insert into account(username, password, personId, extra, createAt, updateAt) values(#{username}, #{password}, #{personId}, #{extra}, #{createAt}, #{updateAt})")
+    @Insert("insert into account(username, password, personId, active, extra, createAt, updateAt) values(#{username}, #{password}, #{active}, #{person.id}, #{extra}, #{createAt}, #{updateAt})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int save(Account e);
 
@@ -21,27 +21,43 @@ public interface AccountDao {
 
     @UpdateProvider(type = Sql.class, method = "update")
     int update(Account e);
-    
+
+    @UpdateProvider(type = Sql.class, method = "updateByPerson")
+    int updateByPerson(Account e);
+
     @Select("select * from account where id=#{id}")
+    @Results({@Result(property = "person.id", column = "personId")})
     Account findById(Account e);
 
     @SelectProvider(type = Sql.class, method = "count")
     int count(@Param("searchCondition") SearchCondition searchCondition);
 
     @SelectProvider(type = Sql.class, method = "find")
+    @Results({@Result(property = "person.id", column = "personId")})
     List<Account> find(@Param("searchCondition") SearchCondition searchCondition);
 
     @Select("select * from account where username=#{username}")
+    @Results({@Result(property = "person.id", column = "personId")})
     Account findByUsername(Account e);
-
     class Sql {
         public String update(final Account e) {
             return new SQL() {{
                 UPDATE("account");
                 if (e.getUsername() != null) SET("username = #{username}");
-                if (e.getPersonId() != null) SET("personId = #{personId}");
+                if (e.getPerson() != null) SET("personId = #{person.id}");
+                if (e.getActive() != null) SET("active = #{active}");
                 if (e.getExtra() != null) SET("extra = #{extra}");
                 WHERE("id=#{id}");
+            }}.toString();
+        }
+
+        public String updateByPerson(final Account e) {
+            return new SQL() {{
+                UPDATE("account");
+                if (e.getUsername() != null) SET("username = #{username}");
+                if (e.getActive() != null) SET("active = #{active}");
+                if (e.getExtra() != null) SET("extra = #{extra}");
+                WHERE("personId=#{person.id}");
             }}.toString();
         }
 

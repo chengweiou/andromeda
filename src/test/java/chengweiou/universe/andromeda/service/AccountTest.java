@@ -1,6 +1,7 @@
 package chengweiou.universe.andromeda.service;
 
 
+import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
@@ -41,6 +42,28 @@ public class AccountTest {
 	}
 
 	@Test
+	public void updateByPerson() {
+		Account e = Builder.set("person", Builder.set("id", "1").to(new Person())).set("extra", "extra by person").to(new Account());
+		int count = service.updateByPerson(e);
+		Assertions.assertEquals(2, count);
+		Account indb = service.findById(Builder.set("id", 1).to(new Account()));
+		Assertions.assertEquals("extra by person", indb.getExtra());
+
+		service.update(Builder.set("id", 1).set("username", "none").to(new Account()));
+	}
+
+	@Test
+	public void updatePerson() {
+		Account e = Builder.set("person", Builder.set("id", "1").to(new Person())).set("extra", "extra by person").to(new Account());
+		int count = service.updateByPerson(e);
+		Assertions.assertEquals(2, count);
+		Account indb = service.findById(Builder.set("id", 1).to(new Account()));
+		Assertions.assertEquals("extra by person", indb.getExtra());
+
+		service.update(Builder.set("id", 1).set("username", "none").to(new Account()));
+	}
+
+	@Test
 	public void count() {
 		int count = service.count(new SearchCondition());
 		Assertions.assertEquals(2, count);
@@ -57,7 +80,7 @@ public class AccountTest {
 	@Test
 	public void findByUsernameAndPassword() {
 		Account indb = service.findByUsername(Builder.set("username", "ou").to(new Account()));
-		Assertions.assertEquals(true, !indb.isNull());
+		Assertions.assertEquals(true, indb.isNotNull());
 		Assertions.assertEquals("ou", indb.getUsername());
 
 	}

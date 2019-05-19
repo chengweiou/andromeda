@@ -9,10 +9,13 @@ import java.io.Serializable;
 public class Auth implements NotNullObj, Serializable {
     private String token;
     private String refreshToken;
-    private String personId;
+    private Person person;
 
     public static final Auth NULL = new Null();
+
     private static class Null extends Auth implements NullObj {
+        @Override
+        public Person getPerson() { return Person.NULL; }
     }
 
     @Override
@@ -20,7 +23,7 @@ public class Auth implements NotNullObj, Serializable {
         return "Auth{" +
                 "token='" + token + '\'' +
                 ", refreshToken='" + refreshToken + '\'' +
-                ", personId='" + personId + '\'' +
+                ", person=" + person +
                 '}';
     }
 
@@ -40,11 +43,11 @@ public class Auth implements NotNullObj, Serializable {
         this.refreshToken = refreshToken;
     }
 
-    public String getPersonId() {
-        return personId;
+    public Person getPerson() {
+        return person;
     }
 
-    public void setPersonId(String personId) {
-        this.personId = personId;
+    public void setPerson(Person person) {
+        this.person = person;
     }
 }

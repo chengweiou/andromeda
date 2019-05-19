@@ -1,11 +1,11 @@
 package chengweiou.universe.andromeda.service.impl;
 
 
-import chengweiou.universe.blackhole.model.SearchCondition;
 import chengweiou.universe.andromeda.dao.AccountDao;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.service.AccountService;
-import chengweiou.universe.andromeda.init.config.JwtUtil;
+import chengweiou.universe.andromeda.util.SecurityUtil;
+import chengweiou.universe.blackhole.model.SearchCondition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +16,10 @@ import java.util.List;
 public class AccountServiceImpl implements AccountService {
     @Autowired
     private AccountDao dao;
-    @Autowired
-    private JwtUtil jwtUtil;
 
     public int save(Account e) {
         e.fillNotRequire();
-        e.setPassword(jwtUtil.sign(e));
+        e.setPassword(SecurityUtil.hash(e.getPassword()));
         e.createAt();
         e.updateAt();
         return dao.save(e);
@@ -34,6 +32,11 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public int update(Account e) {
         return dao.update(e);
+    }
+
+    @Override
+    public int updateByPerson(Account e) {
+        return dao.updateByPerson(e);
     }
 
     @Override

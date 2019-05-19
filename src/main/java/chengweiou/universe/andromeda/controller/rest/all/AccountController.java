@@ -34,11 +34,12 @@ public class AccountController {
         Valid.check("account.username", e.getUsername()).is().lengthIn(30);
         Valid.check("account.password", e.getPassword()).is().notEmpty();
         Account indb = service.findByUsername(e);
+        if (!indb.getActive()) throw new ProjException(ProjectRestCode.ACCOUNT_INACTIVE);
         if (!SecurityUtil.check(e.getPassword(), indb.getPassword())) throw new ProjException(ProjectRestCode.USERNAME_PASSWORD_MISMATCH);
         String token = jwtUtil.sign(indb);
         String refreshToken = RandomStringUtils.random(256);
         jedisUtil.set(refreshToken, token, 60*10);
-        Auth auth = Builder.set("token", token).set("refreshToken", refreshToken).set("personId", indb.getPersonId()).to(new Auth());
+        Auth auth = Builder.set("token", token).set("refreshToken", refreshToken).set("person", indb.getPerson()).to(new Auth());
         return Rest.ok(auth);
     }
 

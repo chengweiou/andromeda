@@ -3,6 +3,7 @@ package chengweiou.universe.andromeda.controller.rest.api;
 
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ParamException;
+import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.model.Rest;
 import chengweiou.universe.blackhole.model.SearchCondition;
 import chengweiou.universe.blackhole.param.Valid;
@@ -39,8 +40,25 @@ public class AccountApiController {
     @PutMapping("/account/{id}")
     public Rest<Boolean> update(Account e) throws ParamException {
         Valid.check("account.id", e.getId()).is().positive();
-        Valid.check("account.name", e.getUsername(), e.getPersonId(), e.getExtra()).are().notAllNull();
+        Valid.check("account.username | account.person | account.extra", e.getUsername(), e.getPerson(), e.getExtra()).are().notAllNull();
         boolean success = service.update(e) == 1;
+        return Rest.ok(success);
+    }
+
+    @PutMapping("/account/person/{person.id}")
+    public Rest<Boolean> updateByPerson(Account e) throws ParamException {
+        Valid.check("account.person.id", e.getPerson().getId()).is().notOf("0");
+        Valid.check("account.active | account.extra", e.getActive(), e.getExtra()).are().notAllNull();
+        boolean success = service.updateByPerson(e) > 0;
+        return Rest.ok(success);
+    }
+
+    @PutMapping("/account/{id}/person")
+    public Rest<Boolean> updatePerson(Account e) throws ParamException {
+        Valid.check("account.id", e.getId()).is().positive();
+        Valid.check("account.person.id", e.getPerson().getId()).is().notOf("0");
+        // will update person and acitve=true together
+        boolean success = service.update(Builder.set("id", e.getId()).set("person", e.getPerson()).set("active", true).to(new Account())) == 1;
         return Rest.ok(success);
     }
 
