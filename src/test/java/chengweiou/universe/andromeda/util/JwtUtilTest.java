@@ -1,9 +1,10 @@
 package chengweiou.universe.andromeda.util;
 
+import chengweiou.universe.andromeda.init.config.JwtUtil;
+import chengweiou.universe.andromeda.model.Person;
+import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.blackhole.exception.UnauthException;
 import chengweiou.universe.blackhole.model.Builder;
-import chengweiou.universe.andromeda.init.config.JwtUtil;
-import chengweiou.universe.andromeda.model.entity.Account;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,10 @@ public class JwtUtilTest {
     private JwtUtil jwtUtil;
     @Test
     public void sign() throws UnauthException {
-        String token = jwtUtil.sign(Builder.set("username", "ou").set("personId", "1").set("extra", "aa").to(new Account()));
+        String token = jwtUtil.sign(Builder.set("username", "ou").set("person", Builder.set("id", "1").to(new Person())).set("extra", "aa").to(new Account()));
         System.out.println(token);
         Account account = jwtUtil.verify(token);
-        Assertions.assertEquals("1", account.getPersonId());
+        Assertions.assertEquals("1", account.getPerson().getId());
         Assertions.assertEquals("aa", account.getExtra());
     }
 }

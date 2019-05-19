@@ -28,7 +28,7 @@ dependencies {
     implementation 'com.auth0:java-jwt:3.8.0'
     implementation 'redis.clients:jedis:3.1.0-m1'
 
-    implementation 'chengweiou.universe:blackhole:0.0.5@jar'
+    implementation 'chengweiou.universe:blackhole:0.0.9@jar'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'org.apache.commons:commons-lang3:3.9'
 

@@ -1,5 +1,6 @@
 package chengweiou.universe.andromeda.util;
 
+import chengweiou.universe.blackhole.util.LogUtil;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 public class SecurityUtil {
@@ -9,6 +10,11 @@ public class SecurityUtil {
     }
 
     public static boolean check(String pw, String hash) {
-        return BCrypt.checkpw(pw, hash);
+        try {
+            return BCrypt.checkpw(pw, hash);
+        } catch (Exception ex) {
+            LogUtil.e("check pw fail: " + hash, ex);
+            return false;
+        }
     }
 }

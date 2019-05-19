@@ -1,9 +1,11 @@
 package chengweiou.universe.andromeda.controller;
 
 
+import chengweiou.universe.andromeda.model.Auth;
+import chengweiou.universe.andromeda.model.ProjectRestCode;
+import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Rest;
-import chengweiou.universe.andromeda.model.entity.Account;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +29,7 @@ public class AccountTest {
 	@Test
 	public void saveDelete() throws Exception {
 		String result = mvc.perform(MockMvcRequestBuilders.post("/api/account")
-				.param("username", "oresttest").param("password", "abcdefg").param("personId", "3")
+				.param("username", "oresttest").param("password", "abcdefg").param("person.id", "3")
 			).andReturn().getResponse().getContentAsString();
 		Rest<Long> saveRest = Rest.from(result, Long.class);
 		Assertions.assertEquals(BasicRestCode.OK, saveRest.getCode());
@@ -52,6 +54,60 @@ public class AccountTest {
 		mvc.perform(MockMvcRequestBuilders.put("/api/account/1")
 				.param("username", "ou")
 		).andReturn().getResponse().getContentAsString();
+	}
+
+	@Test
+	public void updateByPerson() throws Exception {
+		String result = mvc.perform(MockMvcRequestBuilders.put("/api/account/person/1")
+				.param("active", "false")
+		).andReturn().getResponse().getContentAsString();
+		Rest<Boolean> rest = Rest.from(result);
+		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
+		Assertions.assertEquals(true, rest.getData());
+
+		result = mvc.perform(MockMvcRequestBuilders.post("/login")
+				.param("username", "ou").param("password", "123")
+		).andReturn().getResponse().getContentAsString();
+		Rest<Auth> loginRest = Rest.from(result, ProjectRestCode.class);
+		Assertions.assertEquals(ProjectRestCode.ACCOUNT_INACTIVE, loginRest.getCode());
+
+		mvc.perform(MockMvcRequestBuilders.put("/api/account/person/1")
+				.param("active", "true")
+		).andReturn().getResponse().getContentAsString();
+
+		result = mvc.perform(MockMvcRequestBuilders.post("/login")
+				.param("username", "ou").param("password", "123")
+		).andReturn().getResponse().getContentAsString();
+		loginRest = Rest.from(result, Auth.class);
+		Assertions.assertEquals(BasicRestCode.OK, loginRest.getCode());
+	}
+
+	@Test
+	public void updatePerson() throws Exception {
+		String result = mvc.perform(MockMvcRequestBuilders.post("/api/account")
+				.param("username", "oresttest").param("password", "abcdefg").param("person.id", "3")
+		).andReturn().getResponse().getContentAsString();
+		Rest<Long> saveRest = Rest.from(result, Long.class);
+		Assertions.assertEquals(BasicRestCode.OK, saveRest.getCode());
+
+		result = mvc.perform(MockMvcRequestBuilders.put("/api/account/" + saveRest.getData() + "/person")
+				.param("person.id", "3")
+		).andReturn().getResponse().getContentAsString();
+		Rest<Boolean> rest = Rest.from(result);
+		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
+		Assertions.assertEquals(true, rest.getData());
+
+		result = mvc.perform(MockMvcRequestBuilders.get("/api/account/" + saveRest.getData())
+		).andReturn().getResponse().getContentAsString();
+		Rest<Account> findRest = Rest.from(result, Account.class);
+		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
+		Assertions.assertEquals("3", findRest.getData().getPerson().getId());
+		Assertions.assertEquals(true, findRest.getData().getActive());
+
+		result = mvc.perform(MockMvcRequestBuilders.delete("/api/account/" + saveRest.getData())
+		).andReturn().getResponse().getContentAsString();
+		Rest<Boolean> delRest = Rest.from(result);
+		Assertions.assertEquals(BasicRestCode.OK, delRest.getCode());
 	}
 
 	@Test

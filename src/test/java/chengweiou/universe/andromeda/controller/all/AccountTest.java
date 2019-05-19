@@ -33,12 +33,6 @@ public class AccountTest {
 		Assertions.assertEquals(true, !loginRest.getData().getToken().equals(""));
 		Assertions.assertEquals(true, !loginRest.getData().getRefreshToken().equals(""));
 
-//		result = mvc.perform(MockMvcRequestBuilders.post("/logout")
-//				.param("refreshToken", "")
-//		).andReturn().getResponse().getContentAsString();
-//		Rest<Auth> logoutRest = Rest.from(result, Auth.class);
-//		Assertions.assertEquals(BasicRestCode.OK, logoutRest.getCode());
-
 		result = mvc.perform(MockMvcRequestBuilders.post("/logout")
 				.param("refreshToken", "")
 		).andReturn().getResponse().getContentAsString();
@@ -48,11 +42,35 @@ public class AccountTest {
 
 	@Test
 	public void loginFail() throws Exception {
+		// wrong pass
 		String result = mvc.perform(MockMvcRequestBuilders.post("/login")
 				.param("username", "ou").param("password", "123e")
 		).andReturn().getResponse().getContentAsString();
 		Rest<Auth> loginRest = Rest.from(result, ProjectRestCode.class);
 		Assertions.assertEquals(ProjectRestCode.USERNAME_PASSWORD_MISMATCH, loginRest.getCode());
+	}
+
+	@Test
+	public void loginFailInactive() throws Exception {
+		// inactive account not set person
+		String result = mvc.perform(MockMvcRequestBuilders.post("/api/account")
+				.param("username", "oresttest_inactive").param("password", "abcdefg")
+		).andReturn().getResponse().getContentAsString();
+		Rest<Long> saveRest = Rest.from(result, Long.class);
+		Assertions.assertEquals(BasicRestCode.OK, saveRest.getCode());
+		Assertions.assertEquals(true, saveRest.getData() > 0);
+
+		result = mvc.perform(MockMvcRequestBuilders.post("/login")
+				.param("username", "oresttest_inactive").param("password", "abcdefg")
+		).andReturn().getResponse().getContentAsString();
+		Rest<Auth> loginRest = Rest.from(result, ProjectRestCode.class);
+		Assertions.assertEquals(ProjectRestCode.ACCOUNT_INACTIVE, loginRest.getCode());
+
+		result = mvc.perform(MockMvcRequestBuilders.delete("/api/account/" + saveRest.getData())
+		).andReturn().getResponse().getContentAsString();
+		Rest<Boolean> delRest = Rest.from(result);
+		Assertions.assertEquals(BasicRestCode.OK, delRest.getCode());
+		Assertions.assertEquals(true, delRest.getData());
 	}
 
 	@BeforeEach
