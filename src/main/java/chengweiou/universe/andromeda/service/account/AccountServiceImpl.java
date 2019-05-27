@@ -1,10 +1,12 @@
 package chengweiou.universe.andromeda.service.account;
 
 
-import chengweiou.universe.andromeda.dao.AccountDao;
+import chengweiou.universe.andromeda.model.ProjectRestCode;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.util.SecurityUtil;
+import chengweiou.universe.blackhole.exception.FailException;
+import chengweiou.universe.blackhole.exception.ProjException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,51 +16,49 @@ import java.util.List;
 @Service
 public class AccountServiceImpl implements AccountService {
     @Autowired
-    private AccountDao dao;
+    private AccountDio dio;
 
-    public int save(Account e) {
-        e.fillNotRequire();
-        e.setPassword(SecurityUtil.hash(e.getPassword()));
-        e.createAt();
-        e.updateAt();
-        return dao.save(e);
+    public int save(Account e) throws FailException {
+        int count = dio.save(e);
+        if (count != 1) throw new FailException();
+        return count;
     }
 
     @Override
     public int delete(Account e) {
-        return dao.delete(e);
+        return dio.delete(e);
     }
 
     @Override
     public int update(Account e) {
-        return dao.update(e);
+        return dio.update(e);
     }
 
     @Override
     public int updateByPerson(Account e) {
-        return dao.updateByPerson(e);
+        return dio.updateByPerson(e);
     }
 
     @Override
     public Account findById(Account e) {
-        Account result = dao.findById(e);
-        return result != null ? result : Account.NULL;
+        return dio.findById(e);
     }
 
     @Override
-    public Account findByUsername(Account e) {
-        Account result = dao.findByUsername(e);
-        return result != null ? result : Account.NULL;
+    public Account login(Account e) throws ProjException {
+        Account indb = dio.findByUsername(e);
+        if (!indb.getActive()) throw new ProjException(ProjectRestCode.ACCOUNT_INACTIVE);
+        if (!SecurityUtil.check(e.getPassword(), indb.getPassword())) throw new ProjException(ProjectRestCode.USERNAME_PASSWORD_MISMATCH);
+        return indb;
     }
 
     @Override
     public int count(SearchCondition searchCondition) {
-        return dao.count(searchCondition);
+        return dio.count(searchCondition);
     }
 
     @Override
     public List<Account> find(SearchCondition searchCondition) {
-        searchCondition.setDefaultSort("createAt");
-        return dao.find(searchCondition);
+        return dio.find(searchCondition);
     }
 }

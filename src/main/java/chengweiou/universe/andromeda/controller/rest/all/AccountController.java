@@ -4,11 +4,9 @@ package chengweiou.universe.andromeda.controller.rest.all;
 import chengweiou.universe.andromeda.init.jwt.JwtUtil;
 import chengweiou.universe.andromeda.init.redis.JedisUtil;
 import chengweiou.universe.andromeda.model.Auth;
-import chengweiou.universe.andromeda.model.ProjectRestCode;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.service.account.AccountService;
 import chengweiou.universe.andromeda.service.loginrecord.LoginRecordTask;
-import chengweiou.universe.andromeda.util.SecurityUtil;
 import chengweiou.universe.blackhole.exception.ParamException;
 import chengweiou.universe.blackhole.exception.ProjException;
 import chengweiou.universe.blackhole.exception.UnauthException;
@@ -35,9 +33,8 @@ public class AccountController {
     public Rest<Auth> login(Account e) throws ParamException, ProjException {
         Valid.check("account.username", e.getUsername()).is().lengthIn(30);
         Valid.check("account.password", e.getPassword()).is().notEmpty();
-        Account indb = service.findByUsername(e);
-        if (!indb.getActive()) throw new ProjException(ProjectRestCode.ACCOUNT_INACTIVE);
-        if (!SecurityUtil.check(e.getPassword(), indb.getPassword())) throw new ProjException(ProjectRestCode.USERNAME_PASSWORD_MISMATCH);
+        Account indb = service.login(e);
+        
         String token = jwtUtil.sign(indb);
         String refreshToken = RandomStringUtils.randomAlphabetic(256);
         jedisUtil.set(refreshToken, token, 60*10);

@@ -24,8 +24,7 @@ public class AccountApiController {
     public Rest<Long> save(Account e) throws ParamException, FailException {
         Valid.check("account.username", e.getUsername()).is().lengthIn(30);
         Valid.check("account.password", e.getPassword()).is().notEmpty();
-        int count = service.save(e);
-        if (count != 1) throw new FailException();
+        service.save(e);
         return Rest.ok(e.getId());
     }
 

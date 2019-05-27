@@ -4,6 +4,8 @@ import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.service.account.AccountService;
+import chengweiou.universe.blackhole.exception.FailException;
+import chengweiou.universe.blackhole.exception.ProjException;
 import chengweiou.universe.blackhole.model.Builder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,7 +22,7 @@ public class AccountTest {
 	private AccountService service;
 
 	@Test
-	public void saveDelete() {
+	public void saveDelete() throws FailException {
 		Account e = Builder.set("username", "testusernamechengweiou").set("password", "test_account-service").to(new Account());
 		int count = service.save(e);
 		Assertions.assertEquals(1, count);
@@ -78,8 +80,8 @@ public class AccountTest {
 	}
 
 	@Test
-	public void findByUsernameAndPassword() {
-		Account indb = service.findByUsername(Builder.set("username", "ou").to(new Account()));
+	public void login() throws ProjException {
+		Account indb = service.login(Builder.set("username", "ou").set("password", "123").to(new Account()));
 		Assertions.assertEquals(true, indb.isNotNull());
 		Assertions.assertEquals("ou", indb.getUsername());
 
