@@ -1,4 +1,4 @@
-package chengweiou.universe.andromeda.controller;
+package chengweiou.universe.andromeda.controller.api;
 
 
 import chengweiou.universe.andromeda.model.Auth;
@@ -137,7 +137,6 @@ public class AccountTest {
 		Rest<List<Account>> rest = Rest.from(result, List.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
 		Assertions.assertEquals(1, rest.getData().size());
-		// todo value in list[0]
 	}
 
 	@Test
