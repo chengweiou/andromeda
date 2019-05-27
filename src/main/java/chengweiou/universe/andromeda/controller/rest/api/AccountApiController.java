@@ -4,7 +4,7 @@ package chengweiou.universe.andromeda.controller.rest.api;
 import chengweiou.universe.andromeda.model.Auth;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
-import chengweiou.universe.andromeda.service.AccountService;
+import chengweiou.universe.andromeda.service.account.AccountService;
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ParamException;
 import chengweiou.universe.blackhole.model.Builder;

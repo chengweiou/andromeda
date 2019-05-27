@@ -6,11 +6,9 @@ import chengweiou.universe.andromeda.init.redis.JedisUtil;
 import chengweiou.universe.andromeda.model.Auth;
 import chengweiou.universe.andromeda.model.ProjectRestCode;
 import chengweiou.universe.andromeda.model.entity.Account;
-import chengweiou.universe.andromeda.model.entity.LoginRecord;
-import chengweiou.universe.andromeda.service.AccountService;
-import chengweiou.universe.andromeda.service.LoginRecordService;
+import chengweiou.universe.andromeda.service.account.AccountService;
+import chengweiou.universe.andromeda.service.loginrecord.LoginRecordTask;
 import chengweiou.universe.andromeda.util.SecurityUtil;
-import chengweiou.universe.andromeda.util.UserAgentUtil;
 import chengweiou.universe.blackhole.exception.ParamException;
 import chengweiou.universe.blackhole.exception.ProjException;
 import chengweiou.universe.blackhole.exception.UnauthException;
@@ -23,22 +21,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-
 @RestController
 public class AccountController {
     @Autowired
     private AccountService service;
     @Autowired
-    private LoginRecordService loginRecordService;
+    private LoginRecordTask loginRecordTask;
     @Autowired
     private JedisUtil jedisUtil;
     @Autowired
     private JwtUtil jwtUtil;
-    @Autowired
-    private HttpServletRequest request;
-    @Autowired
-    private UserAgentUtil userAgentUtil;
 
     @PostMapping("/login")
     public Rest<Auth> login(Account e) throws ParamException, ProjException {
@@ -51,11 +43,7 @@ public class AccountController {
         String refreshToken = RandomStringUtils.randomAlphabetic(256);
         jedisUtil.set(refreshToken, token, 60*10);
         Auth auth = Builder.set("token", token).set("refreshToken", refreshToken).set("person", indb.getPerson()).to(new Auth());
-//      todo  线程池 ip, platform
-//        LoginRecordTask.save(indb);
-        loginRecordService.save(
-                Builder.set("account", indb).set("ip", request.getRemoteAddr()).set("platform", userAgentUtil.getPlatform(request.getHeader("User-Agent")))
-                        .to(new LoginRecord()));
+        loginRecordTask.save(indb);
         return Rest.ok(auth);
     }
 

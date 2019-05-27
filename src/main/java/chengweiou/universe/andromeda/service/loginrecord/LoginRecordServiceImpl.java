@@ -1,10 +1,9 @@
-package chengweiou.universe.andromeda.service.impl;
+package chengweiou.universe.andromeda.service.loginrecord;
 
 import chengweiou.universe.andromeda.dao.LoginRecordDao;
 import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.LoginRecord;
-import chengweiou.universe.andromeda.service.LoginRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

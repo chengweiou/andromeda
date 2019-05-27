@@ -1,4 +1,4 @@
-package chengweiou.universe.andromeda.service;
+package chengweiou.universe.andromeda.service.loginrecord;
 
 
 import chengweiou.universe.andromeda.model.Person;

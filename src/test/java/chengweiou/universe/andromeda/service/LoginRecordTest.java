@@ -5,6 +5,7 @@ import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.model.entity.LoginRecord;
+import chengweiou.universe.andromeda.service.loginrecord.LoginRecordService;
 import chengweiou.universe.blackhole.model.Builder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -1,10 +1,9 @@
-package chengweiou.universe.andromeda.service.impl;
+package chengweiou.universe.andromeda.service.account;
 
 
 import chengweiou.universe.andromeda.dao.AccountDao;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
-import chengweiou.universe.andromeda.service.AccountService;
 import chengweiou.universe.andromeda.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
