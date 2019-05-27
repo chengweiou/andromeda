@@ -24,6 +24,7 @@ public class AccountServiceImpl implements AccountService {
         return dao.save(e);
     }
 
+    @Override
     public int delete(Account e) {
         return dao.delete(e);
     }

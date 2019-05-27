@@ -13,12 +13,19 @@ public class LoginRecord implements NotNullObj, Serializable {
     private Account account;
     private String ip;
     private String platform;
+    private String loginTime;
+    private String logoutTime;
+    private LocalDateTime createAt;
     private LocalDateTime updateAt;
 
-//    todo 加入登出时间
     public void fillNotRequire() {
+        loginTime = loginTime != null ? loginTime : LocalDateTime.now(ZoneId.of("UTC")).toString();
+        logoutTime = logoutTime != null ? logoutTime : "";
     }
 
+    public void createAt() {
+        createAt = LocalDateTime.now(ZoneId.of("UTC"));
+    }
     public void updateAt() {
         updateAt = LocalDateTime.now(ZoneId.of("UTC"));
     }
@@ -27,17 +34,6 @@ public class LoginRecord implements NotNullObj, Serializable {
     private static class Null extends LoginRecord implements NullObj {
         @Override
         public Account getAccount() { return Account.NULL; }
-    }
-
-    @Override
-    public String toString() {
-        return "LoginRecord{" +
-                "id=" + id +
-                ", account=" + account +
-                ", ip='" + ip + '\'' +
-                ", platform='" + platform + '\'' +
-                ", updateAt=" + updateAt +
-                '}';
     }
 
     public Long getId() {
@@ -62,6 +58,44 @@ public class LoginRecord implements NotNullObj, Serializable {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginRecord{" +
+                "id=" + id +
+                ", account=" + account +
+                ", ip='" + ip + '\'' +
+                ", platform='" + platform + '\'' +
+                ", loginTime='" + loginTime + '\'' +
+                ", logoutTime='" + logoutTime + '\'' +
+                ", createAt=" + createAt +
+                ", updateAt=" + updateAt +
+                '}';
+    }
+
+    public String getLoginTime() {
+        return loginTime;
+    }
+
+    public void setLoginTime(String loginTime) {
+        this.loginTime = loginTime;
+    }
+
+    public String getLogoutTime() {
+        return logoutTime;
+    }
+
+    public void setLogoutTime(String logoutTime) {
+        this.logoutTime = logoutTime;
+    }
+
+    public LocalDateTime getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(LocalDateTime createAt) {
+        this.createAt = createAt;
     }
 
     public String getPlatform() {

@@ -1,4 +1,4 @@
-package chengweiou.universe.andromeda.init.handler;
+package chengweiou.universe.andromeda.init.handler.test;
 
 
 import chengweiou.universe.blackhole.exception.FailException;
@@ -11,28 +11,38 @@ import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@Profile("prod")
+@Profile("!prod")
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandlerDebug {
 
     @ExceptionHandler(ProjException.class)
     public Rest handleProjException(ProjException ex) {
-        return Rest.fail(ex.getCode());
+        Rest rest = Rest.fail(ex.getCode());
+        rest.setMessage(ex.getMessage());
+        return rest;
     }
     @ExceptionHandler(ParamException.class)
     public Rest handleParamException(ParamException ex) {
-        return Rest.fail(BasicRestCode.PARAM);
+        Rest rest = Rest.fail(BasicRestCode.PARAM);
+        rest.setMessage(ex.getMessage());
+        return rest;
     }
     @ExceptionHandler(MissingRequestHeaderException.class)
     public Rest handleParamException(MissingRequestHeaderException ex) {
-        return Rest.fail(BasicRestCode.PARAM);
+        Rest rest = Rest.fail(BasicRestCode.PARAM);
+        rest.setMessage(ex.getHeaderName() + "cannot be null");
+        return rest;
     }
     @ExceptionHandler(FailException.class)
     public Rest handleFailException(FailException ex) {
-        return Rest.fail(BasicRestCode.FAIL);
+        Rest rest = Rest.fail(BasicRestCode.FAIL);
+        rest.setMessage(ex.getMessage());
+        return rest;
     }
     @ExceptionHandler(Exception.class)
     public Rest handleException(Exception ex) {
-        return Rest.fail(BasicRestCode.FAIL);
+        Rest rest = Rest.fail(BasicRestCode.FAIL);
+        rest.setMessage(ex.getMessage());
+        return rest;
     }
 }

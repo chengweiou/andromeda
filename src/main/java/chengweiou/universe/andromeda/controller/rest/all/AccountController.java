@@ -17,7 +17,6 @@ import chengweiou.universe.blackhole.model.Rest;
 import chengweiou.universe.blackhole.param.Valid;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,7 +49,9 @@ public class AccountController {
     @PostMapping("/logout")
     public Rest<Boolean> logout(Auth auth) {
         // todo put token to block list
+        String token = jedisUtil.get(auth.getRefreshToken());
         jedisUtil.del(auth.getRefreshToken());
+        loginRecordTask.logout(token);
         return Rest.ok(true);
     }
 
@@ -61,12 +62,5 @@ public class AccountController {
         String token = jwtUtil.sign(e);
         jedisUtil.set(auth.getRefreshToken(), token, 60 * 10);
         return Rest.ok(Builder.set("token", token).to(auth));
-    }
-
-    @GetMapping("/test")
-    public Rest<Auth> testparam(Auth auth) throws UnauthException {
-        jedisUtil.set("aaa", "111", 60);
-        auth.setToken(jedisUtil.get("aaa"));
-        return Rest.ok(auth);
     }
 }

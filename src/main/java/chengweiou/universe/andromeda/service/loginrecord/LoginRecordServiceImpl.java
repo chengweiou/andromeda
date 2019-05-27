@@ -3,6 +3,7 @@ package chengweiou.universe.andromeda.service.loginrecord;
 import chengweiou.universe.andromeda.dao.LoginRecordDao;
 import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.andromeda.model.SearchCondition;
+import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.model.entity.LoginRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,12 +17,24 @@ public class LoginRecordServiceImpl implements LoginRecordService {
 
     public int save(LoginRecord e) {
         e.fillNotRequire();
+        e.createAt();
         e.updateAt();
         return dao.save(e);
     }
 
     public int delete(LoginRecord e) {
         return dao.delete(e);
+    }
+
+    @Override
+    public int update(LoginRecord e) {
+        e.updateAt();
+        return dao.update(e);
+    }
+
+    @Override
+    public LoginRecord findLast(Account account) {
+        return dao.findLastByAccount(account);
     }
 
     @Override

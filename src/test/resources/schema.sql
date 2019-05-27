@@ -17,6 +17,9 @@ CREATE TABLE `loginRecord` (
    `personId` VARCHAR(45) NOT NULL,
    `ip` VARCHAR(45) NOT NULL,
    `platform` VARCHAR(45) NOT NULL,
+   `loginTime` VARCHAR(45) NOT NULL,
+   `logoutTime` VARCHAR(45) NOT NULL,
+   `createAt` DATETIME NOT NULL,
    `updateAt` DATETIME NOT NULL,
    PRIMARY KEY (`id`)
 );

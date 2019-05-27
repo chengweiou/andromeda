@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @SpringBootTest
@@ -30,6 +33,20 @@ public class LoginRecordTest {
 		Assertions.assertEquals(true, e.getId() > 0);
 		count = service.delete(e);
 		Assertions.assertEquals(1, count);
+	}
+
+	@Test
+	public void update() {
+		LoginRecord e = Builder.set("id", 1L).set("logoutTime", LocalDateTime.now(ZoneId.of("UTC")).toString()).to(new LoginRecord());
+		int count = service.update(e);
+		Assertions.assertEquals(1, count);
+
+		e.setAccount(Builder.set("id", 1).to(new Account()));
+		LoginRecord indb = service.findLast(e.getAccount());
+		Assertions.assertEquals(true, indb.getLogoutTime().startsWith(LocalDate.now(ZoneId.of("UTC")).toString()));
+
+		Builder.set("logoutTime", "").to(e);
+		service.update(e);
 	}
 
 	@Test
