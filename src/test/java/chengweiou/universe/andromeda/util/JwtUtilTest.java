@@ -1,6 +1,6 @@
 package chengweiou.universe.andromeda.util;
 
-import chengweiou.universe.andromeda.init.config.JwtUtil;
+import chengweiou.universe.andromeda.init.jwt.JwtUtil;
 import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.blackhole.exception.UnauthException;

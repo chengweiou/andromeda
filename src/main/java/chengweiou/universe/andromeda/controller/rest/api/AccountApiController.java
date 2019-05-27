@@ -1,15 +1,15 @@
 package chengweiou.universe.andromeda.controller.rest.api;
 
 
+import chengweiou.universe.andromeda.model.Auth;
+import chengweiou.universe.andromeda.model.SearchCondition;
+import chengweiou.universe.andromeda.model.entity.Account;
+import chengweiou.universe.andromeda.service.AccountService;
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ParamException;
 import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.model.Rest;
-import chengweiou.universe.blackhole.model.SearchCondition;
 import chengweiou.universe.blackhole.param.Valid;
-import chengweiou.universe.andromeda.model.Auth;
-import chengweiou.universe.andromeda.model.entity.Account;
-import chengweiou.universe.andromeda.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -71,7 +71,7 @@ public class AccountApiController {
 
     @GetMapping("/me")
     public Rest<Account> me(Auth auth, @RequestAttribute("personId")String personId) {
-        // 还不确定
+        // todo 还不确定
         return Rest.ok(personId);
     }
 

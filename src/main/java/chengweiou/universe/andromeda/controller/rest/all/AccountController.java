@@ -1,33 +1,44 @@
 package chengweiou.universe.andromeda.controller.rest.all;
 
 
+import chengweiou.universe.andromeda.init.jwt.JwtUtil;
 import chengweiou.universe.andromeda.init.redis.JedisUtil;
+import chengweiou.universe.andromeda.model.Auth;
 import chengweiou.universe.andromeda.model.ProjectRestCode;
+import chengweiou.universe.andromeda.model.entity.Account;
+import chengweiou.universe.andromeda.model.entity.LoginRecord;
+import chengweiou.universe.andromeda.service.AccountService;
+import chengweiou.universe.andromeda.service.LoginRecordService;
 import chengweiou.universe.andromeda.util.SecurityUtil;
+import chengweiou.universe.andromeda.util.UserAgentUtil;
 import chengweiou.universe.blackhole.exception.ParamException;
 import chengweiou.universe.blackhole.exception.ProjException;
 import chengweiou.universe.blackhole.exception.UnauthException;
 import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.model.Rest;
 import chengweiou.universe.blackhole.param.Valid;
-import chengweiou.universe.andromeda.model.Auth;
-import chengweiou.universe.andromeda.model.entity.Account;
-import chengweiou.universe.andromeda.service.AccountService;
-import chengweiou.universe.andromeda.init.config.JwtUtil;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 public class AccountController {
     @Autowired
     private AccountService service;
     @Autowired
+    private LoginRecordService loginRecordService;
+    @Autowired
     private JedisUtil jedisUtil;
     @Autowired
     private JwtUtil jwtUtil;
+    @Autowired
+    private HttpServletRequest request;
+    @Autowired
+    private UserAgentUtil userAgentUtil;
 
     @PostMapping("/login")
     public Rest<Auth> login(Account e) throws ParamException, ProjException {
@@ -37,15 +48,20 @@ public class AccountController {
         if (!indb.getActive()) throw new ProjException(ProjectRestCode.ACCOUNT_INACTIVE);
         if (!SecurityUtil.check(e.getPassword(), indb.getPassword())) throw new ProjException(ProjectRestCode.USERNAME_PASSWORD_MISMATCH);
         String token = jwtUtil.sign(indb);
-        String refreshToken = RandomStringUtils.random(256);
+        String refreshToken = RandomStringUtils.randomAlphabetic(256);
         jedisUtil.set(refreshToken, token, 60*10);
         Auth auth = Builder.set("token", token).set("refreshToken", refreshToken).set("person", indb.getPerson()).to(new Auth());
+//      todo  线程池 ip, platform
+//        LoginRecordTask.save(indb);
+        loginRecordService.save(
+                Builder.set("account", indb).set("ip", request.getRemoteAddr()).set("platform", userAgentUtil.getPlatform(request.getHeader("User-Agent")))
+                        .to(new LoginRecord()));
         return Rest.ok(auth);
     }
 
     @PostMapping("/logout")
     public Rest<Boolean> logout(Auth auth) {
-        // put token to block list
+        // todo put token to block list
         jedisUtil.del(auth.getRefreshToken());
         return Rest.ok(true);
     }

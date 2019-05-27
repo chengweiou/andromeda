@@ -1,7 +1,7 @@
 package chengweiou.universe.andromeda.dao;
 
 
-import chengweiou.universe.blackhole.model.SearchCondition;
+import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.jdbc.SQL;

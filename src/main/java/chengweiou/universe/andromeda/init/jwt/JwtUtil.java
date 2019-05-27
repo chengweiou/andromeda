@@ -1,4 +1,4 @@
-package chengweiou.universe.andromeda.init.config;
+package chengweiou.universe.andromeda.init.jwt;
 
 import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.blackhole.exception.UnauthException;

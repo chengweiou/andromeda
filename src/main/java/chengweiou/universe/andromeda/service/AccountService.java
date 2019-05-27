@@ -1,7 +1,7 @@
 package chengweiou.universe.andromeda.service;
 
 
-import chengweiou.universe.blackhole.model.SearchCondition;
+import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package chengweiou.universe.andromeda.init.config;
+package chengweiou.universe.andromeda.init.jwt;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
