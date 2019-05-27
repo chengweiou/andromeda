@@ -16,9 +16,9 @@ public interface AccountService {
 
     Account findById(Account e);
 
+    Account findByUsername(Account e);
+
     int count(SearchCondition searchCondition);
 
     List<Account> find(SearchCondition searchCondition);
-
-    Account findByUsername(Account e);
 }

@@ -1,7 +1,6 @@
 package chengweiou.universe.andromeda.controller.rest.api;
 
 
-import chengweiou.universe.andromeda.model.Auth;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.service.account.AccountService;
@@ -67,12 +66,6 @@ public class AccountApiController {
         Valid.check("account.id", e.getId()).is().positive();
         Account data = service.findById(e);
         return Rest.ok(data);
-    }
-
-    @GetMapping("/me")
-    public Rest<Account> me(Auth auth, @RequestAttribute("personId")String personId) {
-        // todo 还不确定
-        return Rest.ok(personId);
     }
 
     @GetMapping("/account/count")

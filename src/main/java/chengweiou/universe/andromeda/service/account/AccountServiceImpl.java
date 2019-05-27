@@ -46,18 +46,19 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public Account findByUsername(Account e) {
+        Account result = dao.findByUsername(e);
+        return result != null ? result : Account.NULL;
+    }
+
+    @Override
     public int count(SearchCondition searchCondition) {
         return dao.count(searchCondition);
     }
+
     @Override
     public List<Account> find(SearchCondition searchCondition) {
         searchCondition.setDefaultSort("createAt");
         return dao.find(searchCondition);
-    }
-
-    @Override
-    public Account findByUsername(Account e) {
-        Account result = dao.findByUsername(e);
-        return result != null ? result : Account.NULL;
     }
 }
