@@ -6,12 +6,12 @@ import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 
-@Service
+@Component
 public class AccountDio {
     @Autowired
     private AccountDao dao;
