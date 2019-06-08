@@ -80,6 +80,15 @@ public class AccountTest {
 	}
 
 	@Test
+	public void checkUsername() {
+		// todo 是否合法，在家一个config名单,不允许注册的系统名，比如管理员xxx。这边检查要加，注册也要处理。
+		boolean canUsed = service.checkUsername(Builder.set("username", "o").to(new Account()));
+		Assertions.assertEquals(true, canUsed);
+		canUsed = service.checkUsername(Builder.set("username", "ou").to(new Account()));
+		Assertions.assertEquals(false, canUsed);
+	}
+
+	@Test
 	public void login() throws ProjException {
 		Account indb = service.login(Builder.set("username", "ou").set("password", "123").to(new Account()));
 		Assertions.assertEquals(true, indb.isNotNull());

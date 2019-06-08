@@ -60,4 +60,11 @@ public class AccountController {
         jedisUtil.set(auth.getRefreshToken(), token, 60 * 10);
         return Rest.ok(Builder.set("token", token).to(auth));
     }
+
+    @PostMapping("/account/username/check")
+    public Rest<Boolean> checkUsername(Account e) throws ParamException, ProjException {
+        Valid.check("account.username", e.getUsername()).is().lengthIn(30);
+        boolean success = service.checkUsername(e);
+        return Rest.ok(success);
+    }
 }

@@ -73,6 +73,23 @@ public class AccountTest {
 		Assertions.assertEquals(true, delRest.getData());
 	}
 
+	@Test
+	public void checkUsername() throws Exception {
+		String result = mvc.perform(MockMvcRequestBuilders.post("/account/username/check")
+				.param("username", "ou")
+		).andReturn().getResponse().getContentAsString();
+		Rest<Boolean> rest = Rest.from(result);
+		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
+		Assertions.assertEquals(false, rest.getData());
+
+		result = mvc.perform(MockMvcRequestBuilders.post("/account/username/check")
+				.param("username", "ch")
+		).andReturn().getResponse().getContentAsString();
+		rest = Rest.from(result);
+		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
+		Assertions.assertEquals(true, rest.getData());
+	}
+
 	@BeforeEach
 	public void before() {
 		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();

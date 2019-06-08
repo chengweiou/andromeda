@@ -61,4 +61,9 @@ public class AccountServiceImpl implements AccountService {
     public List<Account> find(SearchCondition searchCondition) {
         return dio.find(searchCondition);
     }
+
+    @Override
+    public boolean checkUsername(Account e) {
+        return dio.countByUsername(e) == 0;
+    }
 }

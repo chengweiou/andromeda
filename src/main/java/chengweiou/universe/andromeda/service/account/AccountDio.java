@@ -54,4 +54,8 @@ public class AccountDio {
         searchCondition.setDefaultSort("createAt");
         return dao.find(searchCondition);
     }
+
+    public int countByUsername(Account e) {
+        return dao.countByUsername(e);
+    }
 }

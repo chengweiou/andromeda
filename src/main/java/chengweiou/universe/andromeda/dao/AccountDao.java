@@ -39,6 +39,10 @@ public interface AccountDao {
     @Select("select * from account where username=#{username}")
     @Results({@Result(property = "person.id", column = "personId")})
     Account findByUsername(Account e);
+
+    @Select("select count(*) from account where username=#{username}")
+    int countByUsername(Account e);
+
     class Sql {
         public String update(final Account e) {
             return new SQL() {{

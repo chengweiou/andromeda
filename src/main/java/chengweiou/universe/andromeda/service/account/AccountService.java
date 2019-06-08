@@ -23,4 +23,6 @@ public interface AccountService {
     int count(SearchCondition searchCondition);
 
     List<Account> find(SearchCondition searchCondition);
+
+    boolean checkUsername(Account e);
 }
