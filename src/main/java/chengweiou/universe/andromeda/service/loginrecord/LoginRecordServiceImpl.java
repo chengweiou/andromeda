@@ -4,6 +4,7 @@ import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.model.entity.LoginRecord;
+import chengweiou.universe.blackhole.exception.FailException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +15,16 @@ public class LoginRecordServiceImpl implements LoginRecordService {
     @Autowired
     private LoginRecordDio dio;
 
-    public int save(LoginRecord e) {
-        return dio.save(e);
+    @Override
+    public void save(LoginRecord e) throws FailException {
+        int count = dio.save(e);
+        if (count != 1) throw new FailException();
     }
 
-    public int delete(LoginRecord e) {
-        return dio.delete(e);
+    @Override
+    public void delete(LoginRecord e) throws FailException {
+        int count = dio.delete(e);
+        if (count != 1) throw new FailException();
     }
 
     @Override

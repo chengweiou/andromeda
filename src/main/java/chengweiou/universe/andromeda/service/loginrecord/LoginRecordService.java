@@ -5,12 +5,13 @@ import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.model.entity.LoginRecord;
+import chengweiou.universe.blackhole.exception.FailException;
 
 import java.util.List;
 
 public interface LoginRecordService {
-    int save(LoginRecord e);
-    int delete(LoginRecord e);
+    void save(LoginRecord e) throws FailException;
+    void delete(LoginRecord e) throws FailException;
 
     int update(LoginRecord e);
 

@@ -6,6 +6,7 @@ import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.model.entity.LoginRecord;
 import chengweiou.universe.andromeda.service.loginrecord.LoginRecordService;
+import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.model.Builder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -25,14 +26,12 @@ public class LoginRecordTest {
 	private LoginRecordService service;
 
 	@Test
-	public void saveDelete() {
+	public void saveDelete() throws FailException {
 		LoginRecord e = Builder.set("account", Builder.set("id", 1L).set("person", Builder.set("id", "1").to(new Person())).to(new Account()))
                 .set("ip", "193.212.242.1").set("platform", "chrome").to(new LoginRecord());
-		int count = service.save(e);
-		Assertions.assertEquals(1, count);
+		service.save(e);
 		Assertions.assertEquals(true, e.getId() > 0);
-		count = service.delete(e);
-		Assertions.assertEquals(1, count);
+		service.delete(e);
 	}
 
 	@Test

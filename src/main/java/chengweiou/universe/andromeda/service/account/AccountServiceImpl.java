@@ -18,15 +18,15 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private AccountDio dio;
 
-    public int save(Account e) throws FailException {
+    public void save(Account e) throws FailException {
         int count = dio.save(e);
         if (count != 1) throw new FailException();
-        return count;
     }
 
     @Override
-    public int delete(Account e) {
-        return dio.delete(e);
+    public void delete(Account e) throws FailException {
+        int count = dio.delete(e);
+        if (count != 1) throw new FailException();
     }
 
     @Override

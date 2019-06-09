@@ -29,10 +29,10 @@ public class AccountApiController {
     }
 
     @DeleteMapping("/account/{id}")
-    public Rest<Boolean> delete(Account e) throws ParamException {
+    public Rest<Boolean> delete(Account e) throws ParamException, FailException {
         Valid.check("account.id", e.getId()).is().positive();
-        boolean success = service.delete(e) == 1;
-        return Rest.ok(success);
+        service.delete(e);
+        return Rest.ok(true);
     }
 
     @PutMapping("/account/{id}")

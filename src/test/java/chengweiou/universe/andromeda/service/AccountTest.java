@@ -24,11 +24,9 @@ public class AccountTest {
 	@Test
 	public void saveDelete() throws FailException {
 		Account e = Builder.set("username", "testusernamechengweiou").set("password", "test_account-service").to(new Account());
-		int count = service.save(e);
-		Assertions.assertEquals(1, count);
+		service.save(e);
 		Assertions.assertEquals(true, e.getId() > 0);
-		count = service.delete(e);
-		Assertions.assertEquals(1, count);
+		service.delete(e);
 	}
 
 	@Test

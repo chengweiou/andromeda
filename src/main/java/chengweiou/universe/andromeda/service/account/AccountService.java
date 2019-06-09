@@ -9,8 +9,8 @@ import chengweiou.universe.blackhole.exception.ProjException;
 import java.util.List;
 
 public interface AccountService {
-    int save(Account e) throws FailException;
-    int delete(Account e);
+    void save(Account e) throws FailException;
+    void delete(Account e) throws FailException;
 
     int update(Account e);
 

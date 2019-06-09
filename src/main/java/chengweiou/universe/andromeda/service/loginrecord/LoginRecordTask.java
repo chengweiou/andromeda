@@ -4,6 +4,7 @@ import chengweiou.universe.andromeda.init.jwt.JwtUtil;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.model.entity.LoginRecord;
 import chengweiou.universe.andromeda.util.UserAgentUtil;
+import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.UnauthException;
 import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.util.LogUtil;
@@ -29,11 +30,15 @@ public class LoginRecordTask {
     private JwtUtil jwtUtil;
 
     @Async
-    public Future<Integer> save(Account account) {
-        int count = service.save(
-                Builder.set("account", account).set("ip", request.getRemoteAddr()).set("platform", userAgentUtil.getPlatform(request.getHeader("User-Agent")))
-                        .to(new LoginRecord()));
-        return new AsyncResult<>(count);
+    public Future<Boolean> save(Account account) {
+        try {
+            service.save(
+                    Builder.set("account", account).set("ip", request.getRemoteAddr()).set("platform", userAgentUtil.getPlatform(request.getHeader("User-Agent")))
+                            .to(new LoginRecord()));
+            return new AsyncResult<>(true);
+        } catch (FailException e) {
+            return new AsyncResult<>(false);
+        }
     }
 
     @Async
