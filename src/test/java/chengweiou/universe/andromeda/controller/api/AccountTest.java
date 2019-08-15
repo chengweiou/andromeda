@@ -79,7 +79,7 @@ public class AccountTest {
 				.param("username", "ou").param("password", "123")
 		).andReturn().getResponse().getContentAsString();
 		loginRest = Rest.from(result, Auth.class);
-		Assertions.assertEquals(BasicRestCode.OK, loginRest.getCode());
+		Assertions.assertEquals(BasicRestCode.OK, loginRest.getCode(), loginRest.getMessage());
 	}
 
 	@Test
