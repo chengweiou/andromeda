@@ -89,7 +89,7 @@ public class AccountTest {
 	@Test
 	public void login() throws ProjException {
 		Account indb = service.login(Builder.set("username", "ou").set("password", "123").to(new Account()));
-		Assertions.assertEquals(true, indb.isNotNull());
+		Assertions.assertEquals(true, indb.notNull());
 		Assertions.assertEquals("ou", indb.getUsername());
 
 	}

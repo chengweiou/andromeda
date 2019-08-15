@@ -1,9 +1,7 @@
-package chengweiou.universe.andromeda.init.jwt;
+package chengweiou.universe.andromeda.base.jwt;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
-@Component
 @ConfigurationProperties(prefix = "jwt")
 public class JwtConfig {
     private String issuer;

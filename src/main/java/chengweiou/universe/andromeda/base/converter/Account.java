@@ -1,5 +1,6 @@
-package chengweiou.universe.andromeda.init.converter;
+package chengweiou.universe.andromeda.base.converter;
 
+import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.blackhole.model.NotNullObj;
 import chengweiou.universe.blackhole.model.NullObj;
 

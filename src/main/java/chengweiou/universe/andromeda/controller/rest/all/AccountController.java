@@ -1,8 +1,8 @@
 package chengweiou.universe.andromeda.controller.rest.all;
 
 
-import chengweiou.universe.andromeda.init.jwt.JwtUtil;
-import chengweiou.universe.andromeda.init.redis.JedisUtil;
+import chengweiou.universe.andromeda.base.jwt.JwtUtil;
+import chengweiou.universe.andromeda.base.redis.JedisUtil;
 import chengweiou.universe.andromeda.model.Auth;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.service.account.AccountService;

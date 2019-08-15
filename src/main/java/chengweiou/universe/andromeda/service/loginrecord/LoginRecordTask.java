@@ -1,6 +1,6 @@
 package chengweiou.universe.andromeda.service.loginrecord;
 
-import chengweiou.universe.andromeda.init.jwt.JwtUtil;
+import chengweiou.universe.andromeda.base.jwt.JwtUtil;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.model.entity.LoginRecord;
 import chengweiou.universe.andromeda.util.UserAgentUtil;

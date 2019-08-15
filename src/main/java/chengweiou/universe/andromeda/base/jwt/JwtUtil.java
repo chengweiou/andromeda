@@ -1,6 +1,7 @@
-package chengweiou.universe.andromeda.init.jwt;
+package chengweiou.universe.andromeda.base.jwt;
 
 import chengweiou.universe.andromeda.model.Person;
+import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.blackhole.exception.UnauthException;
 import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.util.LogUtil;
@@ -10,7 +11,6 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
-import chengweiou.universe.andromeda.model.entity.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

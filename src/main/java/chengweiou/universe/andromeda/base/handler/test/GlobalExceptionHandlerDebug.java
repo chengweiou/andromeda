@@ -1,4 +1,4 @@
-package chengweiou.universe.andromeda.init.handler.test;
+package chengweiou.universe.andromeda.base.handler.test;
 
 
 import chengweiou.universe.blackhole.exception.FailException;
@@ -7,6 +7,7 @@ import chengweiou.universe.blackhole.exception.ProjException;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Rest;
 import org.springframework.context.annotation.Profile;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -23,6 +24,12 @@ public class GlobalExceptionHandlerDebug {
     }
     @ExceptionHandler(ParamException.class)
     public Rest handleParamException(ParamException ex) {
+        Rest rest = Rest.fail(BasicRestCode.PARAM);
+        rest.setMessage(ex.getMessage());
+        return rest;
+    }
+    @ExceptionHandler(BindException.class)
+    public Rest handleParamException(BindException ex) {
         Rest rest = Rest.fail(BasicRestCode.PARAM);
         rest.setMessage(ex.getMessage());
         return rest;

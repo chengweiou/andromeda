@@ -1,6 +1,6 @@
 package chengweiou.universe.andromeda.util;
 
-import chengweiou.universe.andromeda.init.redis.JedisUtil;
+import chengweiou.universe.andromeda.base.redis.JedisUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

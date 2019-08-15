@@ -1,4 +1,4 @@
-package chengweiou.universe.andromeda.init.formatter;
+package chengweiou.universe.andromeda.base.formatter;
 
 import org.springframework.format.Formatter;
 

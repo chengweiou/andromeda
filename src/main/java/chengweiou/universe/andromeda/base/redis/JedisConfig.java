@@ -1,4 +1,4 @@
-package chengweiou.universe.andromeda.init.redis;
+package chengweiou.universe.andromeda.base.redis;
 
 
 import org.springframework.beans.factory.annotation.Autowired;

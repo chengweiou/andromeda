@@ -1,4 +1,4 @@
-package chengweiou.universe.andromeda.init.async;
+package chengweiou.universe.andromeda.base.async;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
