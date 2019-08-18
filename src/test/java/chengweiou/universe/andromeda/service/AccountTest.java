@@ -32,7 +32,7 @@ public class AccountTest {
 	@Test
 	public void update() {
 		Account e = Builder.set("id", 1).set("username", "ou1").to(new Account());
-		int count = service.update(e);
+		long count = service.update(e);
 		Assertions.assertEquals(1, count);
 		Account indb = service.findById(e);
 		Assertions.assertEquals("ou1", indb.getUsername());
@@ -44,7 +44,7 @@ public class AccountTest {
 	@Test
 	public void updateByPerson() {
 		Account e = Builder.set("person", Builder.set("id", "1").to(new Person())).set("extra", "extra by person").to(new Account());
-		int count = service.updateByPerson(e);
+		long count = service.updateByPerson(e);
 		Assertions.assertEquals(2, count);
 		Account indb = service.findById(Builder.set("id", 1).to(new Account()));
 		Assertions.assertEquals("extra by person", indb.getExtra());
@@ -55,7 +55,7 @@ public class AccountTest {
 	@Test
 	public void updatePerson() {
 		Account e = Builder.set("person", Builder.set("id", "1").to(new Person())).set("extra", "extra by person").to(new Account());
-		int count = service.updateByPerson(e);
+		long count = service.updateByPerson(e);
 		Assertions.assertEquals(2, count);
 		Account indb = service.findById(Builder.set("id", 1).to(new Account()));
 		Assertions.assertEquals("extra by person", indb.getExtra());
@@ -65,7 +65,7 @@ public class AccountTest {
 
 	@Test
 	public void count() {
-		int count = service.count(new SearchCondition());
+		long count = service.count(new SearchCondition());
 		Assertions.assertEquals(2, count);
 	}
 

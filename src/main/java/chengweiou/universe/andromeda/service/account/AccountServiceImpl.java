@@ -19,23 +19,23 @@ public class AccountServiceImpl implements AccountService {
     private AccountDio dio;
 
     public void save(Account e) throws FailException {
-        int count = dio.save(e);
+        long count = dio.save(e);
         if (count != 1) throw new FailException();
     }
 
     @Override
     public void delete(Account e) throws FailException {
-        int count = dio.delete(e);
+        long count = dio.delete(e);
         if (count != 1) throw new FailException();
     }
 
     @Override
-    public int update(Account e) {
+    public long update(Account e) {
         return dio.update(e);
     }
 
     @Override
-    public int updateByPerson(Account e) {
+    public long updateByPerson(Account e) {
         return dio.updateByPerson(e);
     }
 
@@ -53,7 +53,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public int count(SearchCondition searchCondition) {
+    public long count(SearchCondition searchCondition) {
         return dio.count(searchCondition);
     }
 

@@ -15,18 +15,18 @@ public class LoginRecordDio {
     @Autowired
     private LoginRecordDao dao;
 
-    public int save(LoginRecord e) {
+    public long save(LoginRecord e) {
         e.fillNotRequire();
         e.createAt();
         e.updateAt();
         return dao.save(e);
     }
 
-    public int delete(LoginRecord e) {
+    public long delete(LoginRecord e) {
         return dao.delete(e);
     }
 
-    public int update(LoginRecord e) {
+    public long update(LoginRecord e) {
         e.updateAt();
         return dao.update(e);
     }
@@ -35,7 +35,7 @@ public class LoginRecordDio {
         return dao.findLastByAccount(account);
     }
 
-    public int count(SearchCondition searchCondition) {
+    public long count(SearchCondition searchCondition) {
         return dao.count(searchCondition);
     }
     public List<LoginRecord> find(SearchCondition searchCondition) {
@@ -43,7 +43,7 @@ public class LoginRecordDio {
         return dao.find(searchCondition);
     }
 
-    public int count(SearchCondition searchCondition, Person person) {
+    public long count(SearchCondition searchCondition, Person person) {
         return dao.countByPerson(searchCondition, person);
     }
     public List<LoginRecord> find(SearchCondition searchCondition, Person person) {

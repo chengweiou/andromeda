@@ -14,23 +14,23 @@ import java.util.List;
 public interface AccountDao {
     @Insert("insert into account(username, password, personId, active, extra, createAt, updateAt) values(#{username}, #{password}, #{active}, #{person.id}, #{extra}, #{createAt}, #{updateAt})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    int save(Account e);
+    long save(Account e);
 
     @Delete("delete from account where id=#{id}")
-    int delete(Account e);
+    long delete(Account e);
 
     @UpdateProvider(type = Sql.class, method = "update")
-    int update(Account e);
+    long update(Account e);
 
     @UpdateProvider(type = Sql.class, method = "updateByPerson")
-    int updateByPerson(Account e);
+    long updateByPerson(Account e);
 
     @Select("select * from account where id=#{id}")
     @Results({@Result(property = "person.id", column = "personId")})
     Account findById(Account e);
 
     @SelectProvider(type = Sql.class, method = "count")
-    int count(@Param("searchCondition") SearchCondition searchCondition);
+    long count(@Param("searchCondition") SearchCondition searchCondition);
 
     @SelectProvider(type = Sql.class, method = "find")
     @Results({@Result(property = "person.id", column = "personId")})
@@ -41,7 +41,7 @@ public interface AccountDao {
     Account findByUsername(Account e);
 
     @Select("select count(*) from account where username=#{username}")
-    int countByUsername(Account e);
+    long countByUsername(Account e);
 
     class Sql {
         public String update(final Account e) {

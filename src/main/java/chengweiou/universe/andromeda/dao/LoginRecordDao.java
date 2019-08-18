@@ -17,13 +17,13 @@ public interface LoginRecordDao {
     @Insert("insert into loginRecord(accountId, personId, ip, platform, loginTime, logoutTime, createAt, updateAt) " +
             "values(#{account.id}, #{account.person.id}, #{ip}, #{platform}, #{loginTime}, #{logoutTime}, #{createAt}, #{updateAt})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    int save(LoginRecord e);
+    long save(LoginRecord e);
 
     @Delete("delete from loginRecord where id=#{id}")
-    int delete(LoginRecord e);
+    long delete(LoginRecord e);
 
     @UpdateProvider(type = Sql.class, method = "update")
-    int update(LoginRecord e);
+    long update(LoginRecord e);
 
     @Select("select * from loginRecord where accountId=#{id} order by updateAt desc limit 1")
     @Results({
@@ -33,7 +33,7 @@ public interface LoginRecordDao {
     LoginRecord findLastByAccount(Account account);
 
     @SelectProvider(type = Sql.class, method = "count")
-    int count(@Param("searchCondition") SearchCondition searchCondition);
+    long count(@Param("searchCondition") SearchCondition searchCondition);
 
     @SelectProvider(type = Sql.class, method = "find")
     @Results({
@@ -43,7 +43,7 @@ public interface LoginRecordDao {
     List<LoginRecord> find(@Param("searchCondition") SearchCondition searchCondition);
 
     @SelectProvider(type = Sql.class, method = "countByPerson")
-    int countByPerson(@Param("searchCondition") SearchCondition searchCondition, @Param("person") Person person);
+    long countByPerson(@Param("searchCondition") SearchCondition searchCondition, @Param("person") Person person);
 
     @SelectProvider(type = Sql.class, method = "findByPerson")
     @Results({

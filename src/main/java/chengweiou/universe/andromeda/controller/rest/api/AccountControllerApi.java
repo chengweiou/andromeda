@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api")
-public class AccountApiController {
+public class AccountControllerApi {
     @Autowired
     private AccountService service;
 
@@ -68,8 +68,8 @@ public class AccountApiController {
     }
 
     @GetMapping("/account/count")
-    public Rest<Integer> count(SearchCondition searchCondition) {
-        Integer count = service.count(searchCondition);
+    public Rest<Long> count(SearchCondition searchCondition) {
+        long count = service.count(searchCondition);
         return Rest.ok(count);
     }
 

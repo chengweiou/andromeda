@@ -37,7 +37,7 @@ public class LoginRecordTest {
 	@Test
 	public void update() {
 		LoginRecord e = Builder.set("id", 1L).set("logoutTime", LocalDateTime.now(ZoneId.of("UTC")).toString()).to(new LoginRecord());
-		int count = service.update(e);
+		long count = service.update(e);
 		Assertions.assertEquals(1, count);
 
 		e.setAccount(Builder.set("id", 1).to(new Account()));
@@ -50,7 +50,7 @@ public class LoginRecordTest {
 
 	@Test
 	public void count() {
-		int count = service.count(new SearchCondition());
+		long count = service.count(new SearchCondition());
 		Assertions.assertEquals(2, count);
 	}
 
@@ -64,7 +64,7 @@ public class LoginRecordTest {
 
     @Test
     public void countByPerson() {
-        int count = service.count(new SearchCondition(), Builder.set("id", "1").to(new Person()));
+		long count = service.count(new SearchCondition(), Builder.set("id", "1").to(new Person()));
         Assertions.assertEquals(2, count);
     }
 

@@ -17,18 +17,18 @@ public class LoginRecordServiceImpl implements LoginRecordService {
 
     @Override
     public void save(LoginRecord e) throws FailException {
-        int count = dio.save(e);
+        long count = dio.save(e);
         if (count != 1) throw new FailException();
     }
 
     @Override
     public void delete(LoginRecord e) throws FailException {
-        int count = dio.delete(e);
+        long count = dio.delete(e);
         if (count != 1) throw new FailException();
     }
 
     @Override
-    public int update(LoginRecord e) {
+    public long update(LoginRecord e) {
         return dio.update(e);
     }
 
@@ -38,7 +38,7 @@ public class LoginRecordServiceImpl implements LoginRecordService {
     }
 
     @Override
-    public int count(SearchCondition searchCondition) {
+    public long count(SearchCondition searchCondition) {
         return dio.count(searchCondition);
     }
     @Override
@@ -47,7 +47,7 @@ public class LoginRecordServiceImpl implements LoginRecordService {
     }
 
     @Override
-    public int count(SearchCondition searchCondition, Person person) {
+    public long count(SearchCondition searchCondition, Person person) {
         return dio.count(searchCondition, person);
     }
     @Override

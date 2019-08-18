@@ -16,7 +16,7 @@ public class AccountDio {
     @Autowired
     private AccountDao dao;
 
-    public int save(Account e) {
+    public long save(Account e) {
         e.fillNotRequire();
         e.setPassword(SecurityUtil.hash(e.getPassword()));
         e.createAt();
@@ -24,15 +24,15 @@ public class AccountDio {
         return dao.save(e);
     }
 
-    public int delete(Account e) {
+    public long delete(Account e) {
         return dao.delete(e);
     }
 
-    public int update(Account e) {
+    public long update(Account e) {
         return dao.update(e);
     }
 
-    public int updateByPerson(Account e) {
+    public long updateByPerson(Account e) {
         return dao.updateByPerson(e);
     }
 
@@ -46,7 +46,7 @@ public class AccountDio {
         return result != null ? result : Account.NULL;
     }
 
-    public int count(SearchCondition searchCondition) {
+    public long count(SearchCondition searchCondition) {
         return dao.count(searchCondition);
     }
 
@@ -55,7 +55,7 @@ public class AccountDio {
         return dao.find(searchCondition);
     }
 
-    public int countByUsername(Account e) {
+    public long countByUsername(Account e) {
         return dao.countByUsername(e);
     }
 }

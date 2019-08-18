@@ -124,9 +124,9 @@ public class AccountTest {
 		String result = mvc.perform(MockMvcRequestBuilders.get("/api/account/count")
 				.param("k", "o")
 			).andReturn().getResponse().getContentAsString();
-		Rest<Integer> rest = Rest.from(result, Integer.class);
+		Rest<Long> rest = Rest.from(result, Long.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
-		Assertions.assertEquals(Integer.valueOf(1), rest.getData());
+		Assertions.assertEquals(Long.valueOf(1), rest.getData());
 	}
 
 	@Test

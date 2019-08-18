@@ -15,13 +15,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api")
-public class LoginRecordApiController {
+public class LoginRecordControllerApi {
     @Autowired
     private LoginRecordService service;
 
     @GetMapping("/loginRecord/count")
-    public Rest<Integer> count(SearchCondition searchCondition) {
-        Integer count = service.count(searchCondition);
+    public Rest<Long> count(SearchCondition searchCondition) {
+        long count = service.count(searchCondition);
         return Rest.ok(count);
     }
 
@@ -32,8 +32,8 @@ public class LoginRecordApiController {
     }
 
     @GetMapping("/loginRecord/person/{id}/count")
-    public Rest<Integer> count(SearchCondition searchCondition, Person person) {
-        Integer count = service.count(searchCondition, person);
+    public Rest<Long> count(SearchCondition searchCondition, Person person) {
+        long count = service.count(searchCondition, person);
         return Rest.ok(count);
     }
 
