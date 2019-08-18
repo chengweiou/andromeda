@@ -6,13 +6,17 @@ import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.model.NotNullObj;
 import chengweiou.universe.blackhole.model.NullObj;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+@Document
 public class Account implements NotNullObj, Serializable {
-    private Long id;
+    @Id
+    private String id;
     private String username;
     @JsonIgnore
     private String password;
@@ -38,11 +42,11 @@ public class Account implements NotNullObj, Serializable {
     private static class Null extends Account implements NullObj {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

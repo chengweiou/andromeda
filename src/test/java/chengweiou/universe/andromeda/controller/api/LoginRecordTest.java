@@ -1,9 +1,11 @@
 package chengweiou.universe.andromeda.controller.api;
 
 
+import chengweiou.universe.andromeda.data.Data;
 import chengweiou.universe.andromeda.model.entity.LoginRecord;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Rest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,12 +25,14 @@ public class LoginRecordTest {
 	private MockMvc mvc;
 	@Autowired
 	private WebApplicationContext webApplicationContext;
+	@Autowired
+	private Data data;
 
 	@Test
 	public void count() throws Exception {
 		String result = mvc.perform(MockMvcRequestBuilders.get("/api/loginRecord/count")
 		).andReturn().getResponse().getContentAsString();
-		Rest<Integer> rest = Rest.from(result, Integer.class);
+		Rest<Long> rest = Rest.from(result, Long.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
 		Assertions.assertEquals(2, rest.getData());
 	}
@@ -45,7 +49,7 @@ public class LoginRecordTest {
 	public void countByPerson() throws Exception {
 		String result = mvc.perform(MockMvcRequestBuilders.get("/api/loginRecord/person/1/count")
 		).andReturn().getResponse().getContentAsString();
-		Rest<Integer> rest = Rest.from(result, Integer.class);
+		Rest<Long> rest = Rest.from(result, Long.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
 		Assertions.assertEquals(2, rest.getData());
 	}
@@ -61,5 +65,13 @@ public class LoginRecordTest {
 	@BeforeEach
 	public void before() {
 		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+	}
+	@BeforeEach
+	public void init() {
+		data.init();
+	}
+	@AfterEach
+	public void clean() {
+		data.clean();
 	}
 }

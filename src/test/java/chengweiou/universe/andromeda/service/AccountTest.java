@@ -1,5 +1,6 @@
 package chengweiou.universe.andromeda.service;
 
+import chengweiou.universe.andromeda.data.Data;
 import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
@@ -7,7 +8,9 @@ import chengweiou.universe.andromeda.service.account.AccountService;
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ProjException;
 import chengweiou.universe.blackhole.model.Builder;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,19 +23,21 @@ import java.util.List;
 public class AccountTest {
 	@Autowired
 	private AccountService service;
+	@Autowired
+	private Data data;
 
 	@Test
 	public void saveDelete() throws FailException {
 		Account e = Builder.set("username", "testusernamechengweiou").set("password", "test_account-service").to(new Account());
 		service.save(e);
-		Assertions.assertEquals(true, e.getId() > 0);
+		Assertions.assertEquals(true, e.getId().length() == 24);
 		service.delete(e);
 	}
 
 	@Test
 	public void update() {
-		Account e = Builder.set("id", 1).set("username", "ou1").to(new Account());
-		int count = service.update(e);
+		Account e = Builder.set("id", data.accountList.get(0).getId()).set("username", "ou1").to(new Account());
+		long count = service.update(e);
 		Assertions.assertEquals(1, count);
 		Account indb = service.findById(e);
 		Assertions.assertEquals("ou1", indb.getUsername());
@@ -43,10 +48,10 @@ public class AccountTest {
 
 	@Test
 	public void updateByPerson() {
-		Account e = Builder.set("person", Builder.set("id", "1").to(new Person())).set("extra", "extra by person").to(new Account());
-		int count = service.updateByPerson(e);
+		Account e = Builder.set("person", Builder.set("id", data.personList.get(0).getId()).to(new Person())).set("extra", "extra by person").to(new Account());
+		long count = service.updateByPerson(e);
 		Assertions.assertEquals(2, count);
-		Account indb = service.findById(Builder.set("id", 1).to(new Account()));
+		Account indb = service.findById(Builder.set("id", data.accountList.get(0).getId()).to(new Account()));
 		Assertions.assertEquals("extra by person", indb.getExtra());
 
 		service.update(Builder.set("id", 1).set("username", "none").to(new Account()));
@@ -54,10 +59,10 @@ public class AccountTest {
 
 	@Test
 	public void updatePerson() {
-		Account e = Builder.set("person", Builder.set("id", "1").to(new Person())).set("extra", "extra by person").to(new Account());
-		int count = service.updateByPerson(e);
+		Account e = Builder.set("person", Builder.set("id", data.personList.get(0).getId()).to(new Person())).set("extra", "extra by person").to(new Account());
+		long count = service.updateByPerson(e);
 		Assertions.assertEquals(2, count);
-		Account indb = service.findById(Builder.set("id", 1).to(new Account()));
+		Account indb = service.findById(Builder.set("id", data.accountList.get(0).getId()).to(new Account()));
 		Assertions.assertEquals("extra by person", indb.getExtra());
 
 		service.update(Builder.set("id", 1).set("username", "none").to(new Account()));
@@ -65,7 +70,7 @@ public class AccountTest {
 
 	@Test
 	public void count() {
-		int count = service.count(new SearchCondition());
+		long count = service.count(new SearchCondition());
 		Assertions.assertEquals(2, count);
 	}
 
@@ -92,5 +97,13 @@ public class AccountTest {
 		Assertions.assertEquals(true, indb.notNull());
 		Assertions.assertEquals("ou", indb.getUsername());
 
+	}
+	@BeforeEach
+	public void init() {
+		data.init();
+	}
+	@AfterEach
+	public void clean() {
+		data.clean();
 	}
 }

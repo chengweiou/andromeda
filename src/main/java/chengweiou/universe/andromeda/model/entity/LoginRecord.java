@@ -1,16 +1,24 @@
 package chengweiou.universe.andromeda.model.entity;
 
 
+import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.blackhole.model.NotNullObj;
 import chengweiou.universe.blackhole.model.NullObj;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+@Document
 public class LoginRecord implements NotNullObj, Serializable {
-    private Long id;
+    @Id
+    private String id;
+    @DBRef
     private Account account;
+    private Person person;
     private String ip;
     private String platform;
     private String loginTime;
@@ -36,12 +44,20 @@ public class LoginRecord implements NotNullObj, Serializable {
         public Account getAccount() { return Account.NULL; }
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
     public Account getAccount() {

@@ -42,16 +42,16 @@ public class LoginRecordTask {
     }
 
     @Async
-    public Future<Integer> logout(String token) {
+    public Future<Long> logout(String token) {
         try {
             Account account = jwtUtil.verify(token);
             LoginRecord e = service.findLast(account);
             e.setLogoutTime(LocalDateTime.now(ZoneId.of("UTC")).toString());
-            int count = service.update(e);
+            long count = service.update(e);
             return new AsyncResult<>(count);
         } catch (UnauthException e) {
             LogUtil.i("logout update record fail <-- jwt verify fail");
-            return new AsyncResult<>(0);
+            return new AsyncResult<>(0L);
         }
     }
 }

@@ -1,10 +1,12 @@
 package chengweiou.universe.andromeda.controller.all;
 
 
+import chengweiou.universe.andromeda.data.Data;
+import chengweiou.universe.andromeda.model.Auth;
 import chengweiou.universe.andromeda.model.ProjectRestCode;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Rest;
-import chengweiou.universe.andromeda.model.Auth;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,8 @@ public class AccountTest {
 	private MockMvc mvc;
 	@Autowired
 	private WebApplicationContext webApplicationContext;
+	@Autowired
+	private Data data;
 
 	@Test
 	public void login() throws Exception {
@@ -56,9 +60,9 @@ public class AccountTest {
 		String result = mvc.perform(MockMvcRequestBuilders.post("/api/account")
 				.param("username", "oresttest_inactive").param("password", "abcdefg")
 		).andReturn().getResponse().getContentAsString();
-		Rest<Long> saveRest = Rest.from(result, Long.class);
+		Rest<String> saveRest = Rest.from(result, String.class);
 		Assertions.assertEquals(BasicRestCode.OK, saveRest.getCode());
-		Assertions.assertEquals(true, saveRest.getData() > 0);
+		Assertions.assertEquals(24, saveRest.getData().length());
 
 		result = mvc.perform(MockMvcRequestBuilders.post("/login")
 				.param("username", "oresttest_inactive").param("password", "abcdefg")
@@ -93,5 +97,13 @@ public class AccountTest {
 	@BeforeEach
 	public void before() {
 		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+	}
+	@BeforeEach
+	public void init() {
+		data.init();
+	}
+	@AfterEach
+	public void clean() {
+		data.clean();
 	}
 }

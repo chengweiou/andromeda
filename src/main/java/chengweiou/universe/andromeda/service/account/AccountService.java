@@ -12,15 +12,15 @@ public interface AccountService {
     void save(Account e) throws FailException;
     void delete(Account e) throws FailException;
 
-    int update(Account e);
+    long update(Account e);
 
-    int updateByPerson(Account e);
+    long updateByPerson(Account e);
 
     Account findById(Account e);
 
     Account login(Account e) throws ProjException;
 
-    int count(SearchCondition searchCondition);
+    long count(SearchCondition searchCondition);
 
     List<Account> find(SearchCondition searchCondition);
 

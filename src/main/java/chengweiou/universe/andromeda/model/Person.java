@@ -2,10 +2,12 @@ package chengweiou.universe.andromeda.model;
 
 import chengweiou.universe.blackhole.model.NotNullObj;
 import chengweiou.universe.blackhole.model.NullObj;
+import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 
 public class Person implements NotNullObj, Serializable {
+    @Id
     private String id;
     public static final Person NULL = new Person.Null();
     public static class Null extends Person implements NullObj {

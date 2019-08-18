@@ -13,14 +13,14 @@ public interface LoginRecordService {
     void save(LoginRecord e) throws FailException;
     void delete(LoginRecord e) throws FailException;
 
-    int update(LoginRecord e);
+    long update(LoginRecord e);
 
     LoginRecord findLast(Account account);
 
-    int count(SearchCondition searchCondition);
+    long count(SearchCondition searchCondition);
 
     List<LoginRecord> find(SearchCondition searchCondition);
-    int count(SearchCondition searchCondition, Person person);
+    long count(SearchCondition searchCondition, Person person);
 
     List<LoginRecord> find(SearchCondition searchCondition, Person person);
 }

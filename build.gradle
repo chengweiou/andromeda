@@ -45,12 +45,11 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.9'
 
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jetty'
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
-    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.0'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.4.2'
@@ -59,8 +58,8 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         exclude group: 'junit', module: 'junit'
     }
-    runtimeOnly 'com.h2database:h2'
-    runtimeOnly 'mysql:mysql-connector-java'
+    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
+
 }
 
 configurations {
