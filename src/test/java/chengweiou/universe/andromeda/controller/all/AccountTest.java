@@ -1,6 +1,7 @@
 package chengweiou.universe.andromeda.controller.all;
 
 
+import chengweiou.universe.andromeda.data.Data;
 import chengweiou.universe.andromeda.model.ProjectRestCode;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Rest;
@@ -22,6 +23,8 @@ public class AccountTest {
 	private MockMvc mvc;
 	@Autowired
 	private WebApplicationContext webApplicationContext;
+	@Autowired
+	private Data data;
 
 	@Test
 	public void login() throws Exception {
@@ -93,5 +96,9 @@ public class AccountTest {
 	@BeforeEach
 	public void before() {
 		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+	}
+	@BeforeEach
+	public void init() {
+		data.init();
 	}
 }

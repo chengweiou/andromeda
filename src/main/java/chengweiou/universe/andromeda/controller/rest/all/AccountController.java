@@ -62,9 +62,9 @@ public class AccountController {
     }
 
     @PostMapping("/account/username/check")
-    public Rest<Boolean> checkUsername(Account e) throws ParamException, ProjException {
+    public Rest<Boolean> checkUsername(Account e) throws ParamException {
         Valid.check("account.username", e.getUsername()).is().lengthIn(30);
-        boolean success = service.checkUsername(e);
-        return Rest.ok(success);
+        long count = service.countByUsername(e);
+        return Rest.ok(count != 1);
     }
 }

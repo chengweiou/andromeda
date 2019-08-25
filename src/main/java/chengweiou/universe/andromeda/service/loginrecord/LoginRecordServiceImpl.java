@@ -17,14 +17,12 @@ public class LoginRecordServiceImpl implements LoginRecordService {
 
     @Override
     public void save(LoginRecord e) throws FailException {
-        long count = dio.save(e);
-        if (count != 1) throw new FailException();
+        dio.save(e);
     }
 
     @Override
     public void delete(LoginRecord e) throws FailException {
-        long count = dio.delete(e);
-        if (count != 1) throw new FailException();
+        dio.delete(e);
     }
 
     @Override

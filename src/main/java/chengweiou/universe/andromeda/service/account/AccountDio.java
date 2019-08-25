@@ -2,9 +2,12 @@ package chengweiou.universe.andromeda.service.account;
 
 
 import chengweiou.universe.andromeda.dao.AccountDao;
+import chengweiou.universe.andromeda.model.ProjectRestCode;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.util.SecurityUtil;
+import chengweiou.universe.blackhole.exception.FailException;
+import chengweiou.universe.blackhole.exception.ProjException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,16 +19,20 @@ public class AccountDio {
     @Autowired
     private AccountDao dao;
 
-    public long save(Account e) {
+    public void save(Account e) throws ProjException, FailException {
+        long count = dao.countByUsername(e);
+        if (count != 0) throw new ProjException("dup key: " + e.getUsername() + " exists", ProjectRestCode.EXISTS);
         e.fillNotRequire();
         e.setPassword(SecurityUtil.hash(e.getPassword()));
         e.createAt();
         e.updateAt();
-        return dao.save(e);
+        count = dao.save(e);
+        if (count != 1) throw new FailException();
     }
 
-    public long delete(Account e) {
-        return dao.delete(e);
+    public void delete(Account e) throws FailException {
+        long count = dao.delete(e);
+        if (count != 1) throw new FailException();
     }
 
     public long update(Account e) {

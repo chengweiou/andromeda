@@ -9,7 +9,7 @@ import chengweiou.universe.blackhole.exception.ProjException;
 import java.util.List;
 
 public interface AccountService {
-    void save(Account e) throws FailException;
+    void save(Account e) throws FailException, ProjException;
     void delete(Account e) throws FailException;
 
     long update(Account e);
@@ -24,5 +24,5 @@ public interface AccountService {
 
     List<Account> find(SearchCondition searchCondition);
 
-    boolean checkUsername(Account e);
+    long countByUsername(Account e);
 }

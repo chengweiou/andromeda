@@ -6,6 +6,7 @@ import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.service.account.AccountService;
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ParamException;
+import chengweiou.universe.blackhole.exception.ProjException;
 import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.model.Rest;
 import chengweiou.universe.blackhole.param.Valid;
@@ -21,7 +22,7 @@ public class AccountControllerApi {
     private AccountService service;
 
     @PostMapping("/account")
-    public Rest<Long> save(Account e) throws ParamException, FailException {
+    public Rest<Long> save(Account e) throws ParamException, FailException, ProjException {
         Valid.check("account.username", e.getUsername()).is().lengthIn(30);
         Valid.check("account.password", e.getPassword()).is().notEmpty();
         service.save(e);

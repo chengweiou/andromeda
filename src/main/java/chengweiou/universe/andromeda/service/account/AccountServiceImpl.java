@@ -18,15 +18,13 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private AccountDio dio;
 
-    public void save(Account e) throws FailException {
-        long count = dio.save(e);
-        if (count != 1) throw new FailException();
+    public void save(Account e) throws FailException, ProjException {
+        dio.save(e);
     }
 
     @Override
     public void delete(Account e) throws FailException {
-        long count = dio.delete(e);
-        if (count != 1) throw new FailException();
+        dio.delete(e);
     }
 
     @Override
@@ -63,7 +61,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean checkUsername(Account e) {
-        return dio.countByUsername(e) == 0;
+    public long countByUsername(Account e) {
+        return dio.countByUsername(e);
     }
 }

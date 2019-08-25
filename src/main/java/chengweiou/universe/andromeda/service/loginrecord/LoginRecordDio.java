@@ -5,6 +5,7 @@ import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.model.entity.LoginRecord;
+import chengweiou.universe.blackhole.exception.FailException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,15 +16,17 @@ public class LoginRecordDio {
     @Autowired
     private LoginRecordDao dao;
 
-    public long save(LoginRecord e) {
+    public void save(LoginRecord e) throws FailException {
         e.fillNotRequire();
         e.createAt();
         e.updateAt();
-        return dao.save(e);
+        long count = dao.save(e);
+        if (count != 1) throw new FailException();
     }
 
-    public long delete(LoginRecord e) {
-        return dao.delete(e);
+    public void delete(LoginRecord e) throws FailException {
+        long count = dao.delete(e);
+        if (count != 1) throw new FailException();
     }
 
     public long update(LoginRecord e) {
@@ -32,7 +35,8 @@ public class LoginRecordDio {
     }
 
     public LoginRecord findLast(Account account) {
-        return dao.findLastByAccount(account);
+        LoginRecord result = dao.findLastByAccount(account);
+        return result != null ? result : LoginRecord.NULL;
     }
 
     public long count(SearchCondition searchCondition) {

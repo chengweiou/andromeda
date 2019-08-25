@@ -1,6 +1,7 @@
 package chengweiou.universe.andromeda.controller.api;
 
 
+import chengweiou.universe.andromeda.data.Data;
 import chengweiou.universe.andromeda.model.Auth;
 import chengweiou.universe.andromeda.model.ProjectRestCode;
 import chengweiou.universe.andromeda.model.entity.Account;
@@ -25,6 +26,8 @@ public class AccountTest {
 	private MockMvc mvc;
 	@Autowired
 	private WebApplicationContext webApplicationContext;
+	@Autowired
+	private Data data;
 
 	@Test
 	public void saveDelete() throws Exception {
@@ -148,6 +151,15 @@ public class AccountTest {
 	}
 
 	@Test
+	public void saveDeleteFail() throws Exception {
+		String result = mvc.perform(MockMvcRequestBuilders.post("/api/account")
+				.param("username", data.accountList.get(0).getUsername()).param("password", "123456653")
+		).andReturn().getResponse().getContentAsString();
+		Rest<Long> saveRest = Rest.from(result, ProjectRestCode.class);
+		Assertions.assertEquals(ProjectRestCode.EXISTS, saveRest.getCode());
+	}
+
+	@Test
 	public void deleteFail() throws Exception {
 		String result = mvc.perform(MockMvcRequestBuilders.delete("/api/account/0")
 			).andReturn().getResponse().getContentAsString();
@@ -174,5 +186,9 @@ public class AccountTest {
 	@BeforeEach
 	public void before() {
 		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+	}
+	@BeforeEach
+	public void init() {
+		data.init();
 	}
 }
