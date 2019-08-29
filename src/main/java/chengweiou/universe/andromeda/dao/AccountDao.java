@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 @Mapper
 public interface AccountDao {
-    @Insert("insert into account(username, password, personId, active, extra, createAt, updateAt) values(#{username}, #{password}, #{active}, #{person.id}, #{extra}, #{createAt}, #{updateAt})")
+    @Insert("insert into account(username, password, personId, active, extra, createAt, updateAt) values(#{username}, #{password}, #{person.id}, #{active}, #{extra}, #{createAt}, #{updateAt})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     long save(Account e);
 
