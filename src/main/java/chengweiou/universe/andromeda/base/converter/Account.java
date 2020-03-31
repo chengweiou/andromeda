@@ -3,9 +3,11 @@ package chengweiou.universe.andromeda.base.converter;
 import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.blackhole.model.NotNullObj;
 import chengweiou.universe.blackhole.model.NullObj;
+import lombok.Data;
 
 import java.io.Serializable;
 
+@Data
 public class Account implements NotNullObj, Serializable {
     private Person person;
     private String extra;
@@ -15,27 +17,4 @@ public class Account implements NotNullObj, Serializable {
         public Person getPerson() { return Person.NULL; }
     }
 
-    @Override
-    public String toString() {
-        return "Account{" +
-                "person=" + person +
-                ", extra='" + extra + '\'' +
-                '}';
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
-    }
-
-    public String getExtra() {
-        return extra;
-    }
-
-    public void setExtra(String extra) {
-        this.extra = extra;
-    }
 }

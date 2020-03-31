@@ -1,8 +1,10 @@
 package chengweiou.universe.andromeda.base.jwt;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 @ConfigurationProperties(prefix = "jwt")
+@Component
 public class JwtConfig {
     private String issuer;
     private Long expMinute;

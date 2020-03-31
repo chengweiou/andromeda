@@ -1,25 +1,28 @@
+set search_path = home;
 
-CREATE TABLE `account` (
-   `id` INT NOT NULL AUTO_INCREMENT,
-   `username` VARCHAR(45) NOT NULL,
-   `password` VARCHAR(500) NOT NULL,
-   `personId` VARCHAR(45) NOT NULL,
-   `active` TINYINT NOT NULL,
-   `extra` VARCHAR(1000) NOT NULL,
-   `createAt` DATETIME NOT NULL,
-   `updateAt` DATETIME NOT NULL,
-   PRIMARY KEY (`id`)
+DROP TABLE IF EXISTS account;
+
+CREATE TABLE account (
+   id bigserial NOT NULL,
+   username character varying NOT NULL,
+   password character varying NOT NULL,
+   personId character varying NOT NULL,
+   active boolean NOT NULL,
+   extra character varying NOT NULL,
+   createAt timestamp without time zone NOT NULL,
+   updateAt timestamp without time zone NOT NULL,
+   PRIMARY KEY (id)
 );
 
-CREATE TABLE `loginRecord` (
-   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-   `accountId` INT NOT NULL,
-   `personId` VARCHAR(45) NOT NULL,
-   `ip` VARCHAR(45) NOT NULL,
-   `platform` VARCHAR(45) NOT NULL,
-   `loginTime` VARCHAR(45) NOT NULL,
-   `logoutTime` VARCHAR(45) NOT NULL,
-   `createAt` DATETIME NOT NULL,
-   `updateAt` DATETIME NOT NULL,
-   PRIMARY KEY (`id`)
+CREATE TABLE loginRecord (
+   id bigserial NOT NULL,
+   accountId bigserial NOT NULL,
+   personId bigserial NOT NULL,
+   ip character varying NOT NULL,
+   platform character varying NOT NULL,
+   loginTime character varying NOT NULL,
+   logoutTime character varying NOT NULL,
+   createAt timestamp without time zone NOT NULL,
+   updateAt timestamp without time zone NOT NULL,
+   PRIMARY KEY (id)
 );

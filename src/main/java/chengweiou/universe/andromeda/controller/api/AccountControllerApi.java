@@ -1,4 +1,4 @@
-package chengweiou.universe.andromeda.controller.rest.api;
+package chengweiou.universe.andromeda.controller.api;
 
 
 import chengweiou.universe.andromeda.model.SearchCondition;

@@ -2,6 +2,10 @@ spring:
   h2:
     console:
       enabled: true
+  datasource:
+    platform: h2
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:test;MODE=PostgreSQL
 
   redis:
     host: 127.0.0.1

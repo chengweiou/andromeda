@@ -69,6 +69,7 @@ public interface AccountDao {
             return new SQL() {{
                 SELECT("count(*)"); FROM("account");
                 if (searchCondition.getK() != null) WHERE("username LIKE #{searchCondition.like.k}");
+                if (searchCondition.getPerson() != null) WHERE("personId = #{searchCondition.person.id}");
             }}.toString();
         }
 
@@ -76,6 +77,7 @@ public interface AccountDao {
             return new SQL() {{
                 SELECT("*"); FROM("account");
                 if (searchCondition.getK() != null) WHERE("username LIKE #{searchCondition.like.k}");
+                if (searchCondition.getPerson() != null) WHERE("personId = #{searchCondition.person.id}");
             }}.toString().concat(searchCondition.getOrderBy()).concat(searchCondition.getSqlLimit());
         }
     }

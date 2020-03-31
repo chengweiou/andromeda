@@ -1,4 +1,4 @@
-package chengweiou.universe.andromeda.controller.rest.all;
+package chengweiou.universe.andromeda.controller.all;
 
 
 import chengweiou.universe.andromeda.base.jwt.JwtUtil;
@@ -15,6 +15,7 @@ import chengweiou.universe.blackhole.model.Rest;
 import chengweiou.universe.blackhole.param.Valid;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -61,10 +62,10 @@ public class AccountController {
         return Rest.ok(Builder.set("token", token).to(auth));
     }
 
-    @PostMapping("/account/username/check")
+    @GetMapping("/account/username/check")
     public Rest<Boolean> checkUsername(Account e) throws ParamException {
         Valid.check("account.username", e.getUsername()).is().lengthIn(30);
         long count = service.countByUsername(e);
-        return Rest.ok(count != 1);
+        return Rest.ok(count == 0);
     }
 }

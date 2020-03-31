@@ -183,6 +183,7 @@ public class AccountTest {
 		Assertions.assertEquals(BasicRestCode.PARAM, rest.getCode());
 	}
 
+
 	@BeforeEach
 	public void before() {
 		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();

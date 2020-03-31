@@ -3,16 +3,12 @@ server:
   servlet:
     context-path: /andromeda
 
-  ####Jetty specific properties########
-  jetty:
-    max-http-post-size: 0
-
 spring:
   jackson:
     default-property-inclusion: NON_NULL
   datasource:
-    url: jdbc:mysql://mysql:3306/andromeda
-    username: root
+    url: jdbc:postgresql://pgsql/universe?currentSchema=andromeda
+    username: postgres
     password: 123456
   redis:
     host: redis
