@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoginAccountConverter implements Converter<String, Account> {
     @Override
-    public chengweiou.universe.andromeda.model.entity.Account convert(String source) {
+    public Account convert(String source) {
         return new Gson().fromJson(source, Account.class);
     }
 }

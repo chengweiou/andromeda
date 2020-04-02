@@ -1,4 +1,4 @@
-set search_path = home;
+set search_path = andromeda;
 
 INSERT INTO account (username, password, personId, active, extra, createAt, updateAt) VALUES
     ('ou', '$2a$12$OOw7Nx4IgoVAOkOyc61lK.GUqC.vxjYlyDJK4AnIj/qPxhX32moEi', '1', 1, 'none', '2019-01-01T00:00:00', '2019-01-01T00:00:00'),

@@ -1,7 +1,6 @@
-set search_path = home;
+set search_path = andromeda;
 
 DROP TABLE IF EXISTS account;
-
 CREATE TABLE account (
    id bigserial NOT NULL,
    username character varying NOT NULL,
@@ -14,6 +13,7 @@ CREATE TABLE account (
    PRIMARY KEY (id)
 );
 
+DROP TABLE IF EXISTS loginRecord;
 CREATE TABLE loginRecord (
    id bigserial NOT NULL,
    accountId bigserial NOT NULL,
