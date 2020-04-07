@@ -39,7 +39,8 @@ public class AccountControllerApi {
     @PutMapping("/account/{id}")
     public Rest<Boolean> update(Account e) throws ParamException {
         Valid.check("account.id", e.getId()).is().positive();
-        Valid.check("account.username | account.person | account.extra", e.getUsername(), e.getPerson(), e.getExtra()).are().notAllNull();
+        Valid.check("account.username | account.password | account.active | account.person | account.extra",
+                e.getUsername(), e.getPassword(), e.getPerson(), e.getActive(), e.getExtra()).are().notAllNull();
         boolean success = service.update(e) == 1;
         return Rest.ok(success);
     }

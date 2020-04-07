@@ -19,6 +19,7 @@ public class AccountServiceImpl implements AccountService {
     private AccountDio dio;
 
     public void save(Account e) throws FailException, ProjException {
+        e.setPassword(SecurityUtil.hash(e.getPassword()));
         dio.save(e);
     }
 
@@ -29,11 +30,13 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public long update(Account e) {
+        if (e.getPassword() != null) e.setPassword(SecurityUtil.hash(e.getPassword()));
         return dio.update(e);
     }
 
     @Override
     public long updateByPerson(Account e) {
+        if (e.getPassword() != null) e.setPassword(SecurityUtil.hash(e.getPassword()));
         return dio.updateByPerson(e);
     }
 
@@ -45,6 +48,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account login(Account e) throws ProjException {
         Account indb = dio.findByUsername(e);
+        if (indb.getId() == null) throw new ProjException(ProjectRestCode.USERNAME_PASSWORD_MISMATCH);
         if (!indb.getActive()) throw new ProjException(ProjectRestCode.ACCOUNT_INACTIVE);
         if (!SecurityUtil.check(e.getPassword(), indb.getPassword())) throw new ProjException(ProjectRestCode.USERNAME_PASSWORD_MISMATCH);
         return indb;

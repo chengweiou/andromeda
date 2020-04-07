@@ -48,9 +48,11 @@ public interface AccountDao {
             return new SQL() {{
                 UPDATE("account");
                 if (e.getUsername() != null) SET("username = #{username}");
+                if (e.getPassword() != null) SET("password = #{password}");
                 if (e.getPerson() != null) SET("personId = #{person.id}");
                 if (e.getActive() != null) SET("active = #{active}");
                 if (e.getExtra() != null) SET("extra = #{extra}");
+                SET("updateAt = #{updateAt}");
                 WHERE("id=#{id}");
             }}.toString();
         }
@@ -59,8 +61,10 @@ public interface AccountDao {
             return new SQL() {{
                 UPDATE("account");
                 if (e.getUsername() != null) SET("username = #{username}");
+                if (e.getPassword() != null) SET("password = #{password}");
                 if (e.getActive() != null) SET("active = #{active}");
                 if (e.getExtra() != null) SET("extra = #{extra}");
+                SET("updateAt = #{updateAt}");
                 WHERE("personId=#{person.id}");
             }}.toString();
         }

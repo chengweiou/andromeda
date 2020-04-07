@@ -21,3 +21,4 @@ jwt:
   issuer: o
   sign: andromeda
   expMinute: 10
+  refreshExpMinute: 600

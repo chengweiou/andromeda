@@ -5,6 +5,7 @@ import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.service.account.AccountService;
+import chengweiou.universe.andromeda.util.SecurityUtil;
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ProjException;
 import chengweiou.universe.blackhole.model.Builder;
@@ -48,6 +49,19 @@ public class AccountTest {
 		Assertions.assertEquals("ou1", indb.getUsername());
 
 		Builder.set("username", data.accountList.get(0).getUsername()).to(e);
+		service.update(e);
+	}
+
+	@Test
+	public void updatePassword() {
+		String old = "123";
+		Account e = Builder.set("id", 1).set("password", "123456").to(new Account());
+		long count = service.update(e);
+		Assertions.assertEquals(1, count);
+		Account indb = service.findById(e);
+		Assertions.assertEquals(true, SecurityUtil.check("123456", indb.getPassword()));
+
+		Builder.set("password", old).to(e);
 		service.update(e);
 	}
 

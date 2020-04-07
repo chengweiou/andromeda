@@ -17,7 +17,7 @@ DROP TABLE IF EXISTS loginRecord;
 CREATE TABLE loginRecord (
    id bigserial NOT NULL,
    accountId bigserial NOT NULL,
-   personId bigserial NOT NULL,
+   personId character varying NOT NULL,
    ip character varying NOT NULL,
    platform character varying NOT NULL,
    loginTime character varying NOT NULL,

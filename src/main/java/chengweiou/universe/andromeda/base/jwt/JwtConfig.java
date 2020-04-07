@@ -1,45 +1,17 @@
 package chengweiou.universe.andromeda.base.jwt;
 
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @ConfigurationProperties(prefix = "jwt")
 @Component
+@Data
 public class JwtConfig {
     private String issuer;
+    // token，过期了无法请求
     private Long expMinute;
     private String sign;
-
-    @Override
-    public String toString() {
-        return "JwtConfig{" +
-                "issuer='" + issuer + '\'' +
-                ", expMinute=" + expMinute +
-                ", sign='" + sign + '\'' +
-                '}';
-    }
-
-    public String getIssuer() {
-        return issuer;
-    }
-
-    public void setIssuer(String issuer) {
-        this.issuer = issuer;
-    }
-
-    public Long getExpMinute() {
-        return expMinute;
-    }
-
-    public void setExpMinute(Long expMinute) {
-        this.expMinute = expMinute;
-    }
-
-    public String getSign() {
-        return sign;
-    }
-
-    public void setSign(String sign) {
-        this.sign = sign;
-    }
+    // refresh token，用来获得新的token
+    private Long refreshExpMinute;
 }

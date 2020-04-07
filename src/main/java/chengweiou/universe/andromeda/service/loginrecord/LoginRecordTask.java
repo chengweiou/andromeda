@@ -23,20 +23,16 @@ public class LoginRecordTask {
     @Autowired
     private LoginRecordService service;
     @Autowired
-    private HttpServletRequest request;
-    @Autowired
     private UserAgentUtil userAgentUtil;
     @Autowired
     private JwtUtil jwtUtil;
 
     @Async
-    public Future<Boolean> save(Account account) {
+    public Future<Boolean> save(LoginRecord e) {
         try {
-            service.save(
-                    Builder.set("account", account).set("ip", request.getRemoteAddr()).set("platform", userAgentUtil.getPlatform(request.getHeader("User-Agent")))
-                            .to(new LoginRecord()));
+            service.save(e);
             return new AsyncResult<>(true);
-        } catch (FailException e) {
+        } catch (FailException ex) {
             return new AsyncResult<>(false);
         }
     }

@@ -4,7 +4,10 @@ package chengweiou.universe.andromeda.controller.api;
 import chengweiou.universe.andromeda.data.Data;
 import chengweiou.universe.andromeda.model.Auth;
 import chengweiou.universe.andromeda.model.ProjectRestCode;
+import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
+import chengweiou.universe.andromeda.model.entity.LoginRecord;
+import chengweiou.universe.andromeda.service.loginrecord.LoginRecordDio;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Rest;
 import org.junit.jupiter.api.Assertions;
@@ -28,6 +31,8 @@ public class AccountTest {
 	private WebApplicationContext webApplicationContext;
 	@Autowired
 	private Data data;
+	@Autowired
+	private LoginRecordDio loginRecordDio;
 
 	@Test
 	public void saveDelete() throws Exception {
@@ -83,6 +88,10 @@ public class AccountTest {
 		).andReturn().getResponse().getContentAsString();
 		loginRest = Rest.from(result, Auth.class);
 		Assertions.assertEquals(BasicRestCode.OK, loginRest.getCode(), loginRest.getMessage());
+
+		List<LoginRecord> delLoginRecordList = loginRecordDio.find(new SearchCondition());
+		loginRecordDio.delete(delLoginRecordList.get(0));
+
 	}
 
 	@Test
@@ -155,8 +164,8 @@ public class AccountTest {
 		String result = mvc.perform(MockMvcRequestBuilders.post("/api/account")
 				.param("username", data.accountList.get(0).getUsername()).param("password", "123456653")
 		).andReturn().getResponse().getContentAsString();
-		Rest<Long> saveRest = Rest.from(result, ProjectRestCode.class);
-		Assertions.assertEquals(ProjectRestCode.EXISTS, saveRest.getCode());
+		Rest<Long> saveRest = Rest.from(result);
+		Assertions.assertEquals(BasicRestCode.EXISTS, saveRest.getCode());
 	}
 
 	@Test

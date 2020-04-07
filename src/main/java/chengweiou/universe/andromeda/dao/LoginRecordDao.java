@@ -61,6 +61,7 @@ public interface LoginRecordDao {
                 if (e.getPlatform() != null) SET("platform = #{platform}");
                 if (e.getLoginTime() != null) SET("loginTime = #{loginTime}");
                 if (e.getLogoutTime() != null) SET("logoutTime = #{logoutTime}");
+                SET("updateAt = #{updateAt}");
                 WHERE("id=#{id}");
             }}.toString();
         }
