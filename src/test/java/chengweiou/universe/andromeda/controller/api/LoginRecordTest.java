@@ -46,7 +46,8 @@ public class LoginRecordTest {
 
 	@Test
 	public void countByPerson() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.get("/api/loginRecord/person/1/count")
+		String result = mvc.perform(MockMvcRequestBuilders.get("/api/loginRecord/count")
+				.param("account.person.id", "1")
 		).andReturn().getResponse().getContentAsString();
 		Rest<Long> rest = Rest.from(result, Long.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
@@ -54,7 +55,8 @@ public class LoginRecordTest {
 	}
 	@Test
 	public void findByPerson() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.get("/api/loginRecord/person/1")
+		String result = mvc.perform(MockMvcRequestBuilders.get("/api/loginRecord")
+				.param("account.person.id", "1")
 		).andReturn().getResponse().getContentAsString();
 		Rest<List<LoginRecord>> rest = Rest.from(result, List.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());

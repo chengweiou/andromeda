@@ -36,7 +36,7 @@ dependencies {
     implementation 'eu.bitwalker:UserAgentUtils:1.21'
 	implementation 'org.springframework.security:spring-security-crypto:5.3.1.RELEASE'
     
-	implementation 'chengweiou.universe:blackhole:0.0.26@jar'
+	implementation 'chengweiou.universe:blackhole:0.0.28@jar'
 	implementation 'com.google.code.gson:gson:2.8.5'
 	implementation 'org.apache.commons:commons-lang3:3.10'
 

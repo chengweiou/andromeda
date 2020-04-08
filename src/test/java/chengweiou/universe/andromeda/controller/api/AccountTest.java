@@ -89,7 +89,7 @@ public class AccountTest {
 		loginRest = Rest.from(result, Auth.class);
 		Assertions.assertEquals(BasicRestCode.OK, loginRest.getCode(), loginRest.getMessage());
 
-		List<LoginRecord> delLoginRecordList = loginRecordDio.find(new SearchCondition());
+		List<LoginRecord> delLoginRecordList = loginRecordDio.find(new SearchCondition(), null);
 		loginRecordDio.delete(delLoginRecordList.get(0));
 
 	}

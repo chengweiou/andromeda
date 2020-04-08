@@ -39,20 +39,11 @@ public class LoginRecordDio {
         return result != null ? result : LoginRecord.NULL;
     }
 
-    public long count(SearchCondition searchCondition) {
-        return dao.count(searchCondition);
+    public long count(SearchCondition searchCondition, LoginRecord sample) {
+        return dao.count(searchCondition, sample);
     }
-    public List<LoginRecord> find(SearchCondition searchCondition) {
+    public List<LoginRecord> find(SearchCondition searchCondition, LoginRecord sample) {
         searchCondition.setDefaultSort("updateAt");
-        return dao.find(searchCondition);
+        return dao.find(searchCondition, sample);
     }
-
-    public long count(SearchCondition searchCondition, Person person) {
-        return dao.countByPerson(searchCondition, person);
-    }
-    public List<LoginRecord> find(SearchCondition searchCondition, Person person) {
-        searchCondition.setDefaultSort("updateAt");
-        return dao.findByPerson(searchCondition, person);
-    }
-
 }

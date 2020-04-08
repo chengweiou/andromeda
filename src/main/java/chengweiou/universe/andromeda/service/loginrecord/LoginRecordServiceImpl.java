@@ -5,6 +5,7 @@ import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.model.entity.LoginRecord;
 import chengweiou.universe.blackhole.exception.FailException;
+import chengweiou.universe.blackhole.model.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,21 +37,12 @@ public class LoginRecordServiceImpl implements LoginRecordService {
     }
 
     @Override
-    public long count(SearchCondition searchCondition) {
-        return dio.count(searchCondition);
+    public long count(SearchCondition searchCondition, LoginRecord sample) {
+        return dio.count(searchCondition, sample);
     }
     @Override
-    public List<LoginRecord> find(SearchCondition searchCondition) {
-        return dio.find(searchCondition);
-    }
-
-    @Override
-    public long count(SearchCondition searchCondition, Person person) {
-        return dio.count(searchCondition, person);
-    }
-    @Override
-    public List<LoginRecord> find(SearchCondition searchCondition, Person person) {
-        return dio.find(searchCondition, person);
+    public List<LoginRecord> find(SearchCondition searchCondition, LoginRecord sample) {
+        return dio.find(searchCondition, sample);
     }
 
 }

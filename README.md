@@ -19,8 +19,8 @@ docker run --rm --name redis -p 6379:6379 --network net -d redis
 first time:
 ```
 change active profile to uat
-mkdir -pv ~/Desktop/docker/andromeda/config
-cp src/main/resources/application.yml ~/Desktop/docker/andromeda/config/
+mkdir -pv ~/Desktop/docker/universe/andromeda/config
+cp src/main/resources/application.yml ~/Desktop/docker/universe/andromeda/config/
 chmod +x uat.sh
 ./uat.sh
 ```

@@ -4,6 +4,7 @@ package chengweiou.universe.andromeda.service;
 import chengweiou.universe.andromeda.data.Data;
 import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.andromeda.model.SearchCondition;
+import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.model.entity.LoginRecord;
 import chengweiou.universe.andromeda.service.loginrecord.LoginRecordService;
 import chengweiou.universe.blackhole.exception.FailException;
@@ -52,28 +53,30 @@ public class LoginRecordTest {
 
 	@Test
 	public void count() {
-		long count = service.count(new SearchCondition());
+		long count = service.count(new SearchCondition(), null);
 		Assertions.assertEquals(2, count);
 	}
 
 	@Test
 	public void find() {
 		SearchCondition searchCondition = Builder.set("k", "ch").to(new SearchCondition());
-		List<LoginRecord> list = service.find(searchCondition);
+		List<LoginRecord> list = service.find(searchCondition, null);
 		Assertions.assertEquals(1, list.size());
 		Assertions.assertEquals(1, list.get(0).getAccount().getId());
 	}
 
     @Test
     public void countByPerson() {
-		long count = service.count(new SearchCondition(), Builder.set("id", "1").to(new Person()));
+		LoginRecord sample = Builder.set("account", Builder.set("person", Builder.set("id", "1").to(new Person())).to(new Account())).to(new LoginRecord());
+		long count = service.count(new SearchCondition(), sample);
         Assertions.assertEquals(2, count);
     }
 
     @Test
     public void findByPerson() {
         SearchCondition searchCondition = Builder.set("k", "iphone").to(new SearchCondition());
-        List<LoginRecord> list = service.find(searchCondition, Builder.set("id", "1").to(new Person()));
+		LoginRecord sample = Builder.set("account", Builder.set("person", Builder.set("id", "1").to(new Person())).to(new Account())).to(new LoginRecord());
+        List<LoginRecord> list = service.find(searchCondition, sample);
         Assertions.assertEquals(1, list.size());
         Assertions.assertEquals(2, list.get(0).getAccount().getId());
     }

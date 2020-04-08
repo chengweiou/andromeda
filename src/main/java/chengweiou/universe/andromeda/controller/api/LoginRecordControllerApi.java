@@ -20,26 +20,15 @@ public class LoginRecordControllerApi {
     private LoginRecordService service;
 
     @GetMapping("/loginRecord/count")
-    public Rest<Long> count(SearchCondition searchCondition) {
-        long count = service.count(searchCondition);
+    public Rest<Long> count(SearchCondition searchCondition, LoginRecord sample) {
+        long count = service.count(searchCondition, sample);
         return Rest.ok(count);
     }
 
     @GetMapping("/loginRecord")
-    public Rest<List<LoginRecord>> find(SearchCondition searchCondition) {
-        List<LoginRecord> list = service.find(searchCondition);
+    public Rest<List<LoginRecord>> find(SearchCondition searchCondition, LoginRecord sample) {
+        List<LoginRecord> list = service.find(searchCondition, sample);
         return Rest.ok(list);
     }
 
-    @GetMapping("/loginRecord/person/{id}/count")
-    public Rest<Long> count(SearchCondition searchCondition, Person person) {
-        long count = service.count(searchCondition, person);
-        return Rest.ok(count);
-    }
-
-    @GetMapping("/loginRecord/person/{id}")
-    public Rest<List<LoginRecord>> find(SearchCondition searchCondition, Person person) {
-        List<LoginRecord> list = service.find(searchCondition, person);
-        return Rest.ok(list);
-    }
 }

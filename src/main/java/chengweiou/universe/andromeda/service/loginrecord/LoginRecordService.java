@@ -17,10 +17,7 @@ public interface LoginRecordService {
 
     LoginRecord findLast(Account account);
 
-    long count(SearchCondition searchCondition);
+    long count(SearchCondition searchCondition, LoginRecord sample);
+    List<LoginRecord> find(SearchCondition searchCondition, LoginRecord sample);
 
-    List<LoginRecord> find(SearchCondition searchCondition);
-    long count(SearchCondition searchCondition, Person person);
-
-    List<LoginRecord> find(SearchCondition searchCondition, Person person);
 }

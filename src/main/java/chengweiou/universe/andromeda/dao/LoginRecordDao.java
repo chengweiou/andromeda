@@ -33,24 +33,14 @@ public interface LoginRecordDao {
     LoginRecord findLastByAccount(Account account);
 
     @SelectProvider(type = Sql.class, method = "count")
-    long count(@Param("searchCondition") SearchCondition searchCondition);
+    long count(@Param("searchCondition") SearchCondition searchCondition, @Param("sample") LoginRecord sample);
 
     @SelectProvider(type = Sql.class, method = "find")
     @Results({
             @Result(property = "account.id", column = "accountId"),
             @Result(property = "account.person.id", column = "personId"),
     })
-    List<LoginRecord> find(@Param("searchCondition") SearchCondition searchCondition);
-
-    @SelectProvider(type = Sql.class, method = "countByPerson")
-    long countByPerson(@Param("searchCondition") SearchCondition searchCondition, @Param("person") Person person);
-
-    @SelectProvider(type = Sql.class, method = "findByPerson")
-    @Results({
-            @Result(property = "account.id", column = "accountId"),
-            @Result(property = "account.person.id", column = "personId"),
-    })
-    List<LoginRecord> findByPerson(@Param("searchCondition") SearchCondition searchCondition, @Param("person")Person person);
+    List<LoginRecord> find(@Param("searchCondition") SearchCondition searchCondition, @Param("sample") LoginRecord sample);
 
     class Sql {
 
@@ -66,37 +56,31 @@ public interface LoginRecordDao {
             }}.toString();
         }
 
-        public String count(@Param("searchCondition")final SearchCondition searchCondition) {
+        public String count(@Param("searchCondition")final SearchCondition searchCondition, @Param("sample")final LoginRecord sample) {
             return new SQL() {{
                 SELECT("count(*)"); FROM("loginRecord");
                 if (searchCondition.getK() != null) WHERE("ip LIKE #{searchCondition.like.k}")
                         .OR().WHERE("platform LIKE #{searchCondition.like.k}");
+                if (sample != null) {
+                    if (sample.getAccount() != null) {
+                        if (sample.getAccount().getId() != null) WHERE("accountId=#{sample.account.id}");
+                        if (sample.getAccount().getPerson() != null) WHERE("personId=#{sample.account.person.id}");
+                    }
+                }
             }}.toString();
         }
 
-        public String find(@Param("searchCondition")final SearchCondition searchCondition) {
+        public String find(@Param("searchCondition")final SearchCondition searchCondition, @Param("sample")final LoginRecord sample) {
             return new SQL() {{
                 SELECT("*"); FROM("loginRecord");
                 if (searchCondition.getK() != null) WHERE("ip LIKE #{searchCondition.like.k}")
                         .OR().WHERE("platform LIKE #{searchCondition.like.k}");
-            }}.toString().concat(searchCondition.getOrderBy()).concat(searchCondition.getSqlLimit());
-        }
-
-        public String countByPerson(@Param("searchCondition")final SearchCondition searchCondition, @Param("person")final Person person) {
-            return new SQL() {{
-                SELECT("count(*)"); FROM("loginRecord");
-                if (searchCondition.getK() != null) WHERE("ip LIKE #{searchCondition.like.k}")
-                        .OR().WHERE("platform LIKE #{searchCondition.like.k}");
-                AND().WHERE("personId=#{person.id}");
-            }}.toString();
-        }
-
-        public String findByPerson(@Param("searchCondition")final SearchCondition searchCondition, @Param("person")final Person person) {
-            return new SQL() {{
-                SELECT("*"); FROM("loginRecord");
-                if (searchCondition.getK() != null) WHERE("ip LIKE #{searchCondition.like.k}")
-                        .OR().WHERE("platform LIKE #{searchCondition.like.k}");
-                AND().WHERE("personId=#{person.id}");
+                if (sample != null) {
+                    if (sample.getAccount() != null) {
+                        if (sample.getAccount().getId() != null) WHERE("accountId=#{sample.account.id}");
+                        if (sample.getAccount().getPerson() != null) WHERE("personId=#{sample.account.person.id}");
+                    }
+                }
             }}.toString().concat(searchCondition.getOrderBy()).concat(searchCondition.getSqlLimit());
         }
     }
