@@ -53,13 +53,13 @@ public class AccountDio {
         return result != null ? result : Account.NULL;
     }
 
-    public long count(SearchCondition searchCondition) {
-        return dao.count(searchCondition);
+    public long count(SearchCondition searchCondition, Account sample) {
+        return dao.count(searchCondition, sample);
     }
 
-    public List<Account> find(SearchCondition searchCondition) {
+    public List<Account> find(SearchCondition searchCondition, Account sample) {
         searchCondition.setDefaultSort("createAt");
-        return dao.find(searchCondition);
+        return dao.find(searchCondition, sample);
     }
 
     public long countByUsername(Account e) {

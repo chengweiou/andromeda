@@ -70,14 +70,14 @@ public class AccountControllerApi {
     }
 
     @GetMapping("/account/count")
-    public Rest<Long> count(SearchCondition searchCondition) {
-        long count = service.count(searchCondition);
+    public Rest<Long> count(SearchCondition searchCondition, Account sample) {
+        long count = service.count(searchCondition, sample);
         return Rest.ok(count);
     }
 
     @GetMapping("/account")
-    public Rest<List<Account>> find(SearchCondition searchCondition) {
-        List<Account> list = service.find(searchCondition);
+    public Rest<List<Account>> find(SearchCondition searchCondition, Account sample) {
+        List<Account> list = service.find(searchCondition, sample);
         return Rest.ok(list);
     }
 }

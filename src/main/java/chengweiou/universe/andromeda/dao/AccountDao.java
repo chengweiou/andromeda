@@ -30,11 +30,11 @@ public interface AccountDao {
     Account findById(Account e);
 
     @SelectProvider(type = Sql.class, method = "count")
-    long count(@Param("searchCondition") SearchCondition searchCondition);
+    long count(@Param("searchCondition") SearchCondition searchCondition, @Param("sample") Account sample);
 
     @SelectProvider(type = Sql.class, method = "find")
     @Results({@Result(property = "person.id", column = "personId")})
-    List<Account> find(@Param("searchCondition") SearchCondition searchCondition);
+    List<Account> find(@Param("searchCondition") SearchCondition searchCondition, @Param("sample") Account sample);
 
     @Select("select * from account where username=#{username}")
     @Results({@Result(property = "person.id", column = "personId")})
@@ -69,19 +69,23 @@ public interface AccountDao {
             }}.toString();
         }
 
-        public String count(@Param("searchCondition")final SearchCondition searchCondition) {
+        public String count(@Param("searchCondition")final SearchCondition searchCondition, @Param("sample")final Account sample) {
             return new SQL() {{
                 SELECT("count(*)"); FROM("account");
                 if (searchCondition.getK() != null) WHERE("username LIKE #{searchCondition.like.k}");
-                if (searchCondition.getPerson() != null) WHERE("personId = #{searchCondition.person.id}");
+                if (sample != null) {
+                    if (sample.getPerson() != null) WHERE("personId = #{sample.person.id}");
+                }
             }}.toString();
         }
 
-        public String find(@Param("searchCondition")final SearchCondition searchCondition) {
+        public String find(@Param("searchCondition")final SearchCondition searchCondition, @Param("sample")final Account sample) {
             return new SQL() {{
                 SELECT("*"); FROM("account");
                 if (searchCondition.getK() != null) WHERE("username LIKE #{searchCondition.like.k}");
-                if (searchCondition.getPerson() != null) WHERE("personId = #{searchCondition.person.id}");
+                if (sample != null) {
+                    if (sample.getPerson() != null) WHERE("personId = #{sample.person.id}");
+                }
             }}.toString().concat(searchCondition.getOrderBy()).concat(searchCondition.getSqlLimit());
         }
     }

@@ -24,7 +24,7 @@ public class Data {
     public List<LoginRecord> loginRecordList;
 
     public void init() {
-        accountList = accountDio.find(new SearchCondition()).stream().sorted(Comparator.comparingLong(Account::getId)).collect(Collectors.toList());
+        accountList = accountDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(Account::getId)).collect(Collectors.toList());
         accountList.forEach(e -> e.setPassword("123"));
         loginRecordList = loginRecordDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(LoginRecord::getId)).collect(Collectors.toList());
     }

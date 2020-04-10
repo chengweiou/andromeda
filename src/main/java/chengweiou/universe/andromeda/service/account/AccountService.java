@@ -13,16 +13,14 @@ public interface AccountService {
     void delete(Account e) throws FailException;
 
     long update(Account e);
-
     long updateByPerson(Account e);
 
     Account findById(Account e);
 
     Account login(Account e) throws ProjException;
 
-    long count(SearchCondition searchCondition);
-
-    List<Account> find(SearchCondition searchCondition);
+    long count(SearchCondition searchCondition, Account sample);
+    List<Account> find(SearchCondition searchCondition, Account sample);
 
     long countByUsername(Account e);
 }

@@ -55,13 +55,13 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public long count(SearchCondition searchCondition) {
-        return dio.count(searchCondition);
+    public long count(SearchCondition searchCondition, Account sample) {
+        return dio.count(searchCondition, sample);
     }
 
     @Override
-    public List<Account> find(SearchCondition searchCondition) {
-        return dio.find(searchCondition);
+    public List<Account> find(SearchCondition searchCondition, Account sample) {
+        return dio.find(searchCondition, sample);
     }
 
     @Override

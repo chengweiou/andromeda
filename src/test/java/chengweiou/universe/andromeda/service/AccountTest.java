@@ -88,14 +88,14 @@ public class AccountTest {
 
 	@Test
 	public void count() {
-		long count = service.count(new SearchCondition());
+		long count = service.count(new SearchCondition(), null);
 		Assertions.assertEquals(2, count);
 	}
 
 	@Test
 	public void find() {
 		SearchCondition searchCondition = Builder.set("k", "o").to(new SearchCondition());
-		List<Account> list = service.find(searchCondition);
+		List<Account> list = service.find(searchCondition, null);
 		Assertions.assertEquals(1, list.size());
 		Assertions.assertEquals(data.accountList.get(0).getUsername(), list.get(0).getUsername());
 	}
