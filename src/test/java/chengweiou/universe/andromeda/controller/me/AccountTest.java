@@ -2,14 +2,9 @@ package chengweiou.universe.andromeda.controller.me;
 
 
 import chengweiou.universe.andromeda.data.Data;
-import chengweiou.universe.andromeda.model.Auth;
 import chengweiou.universe.andromeda.model.Person;
-import chengweiou.universe.andromeda.model.ProjectRestCode;
-import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
-import chengweiou.universe.andromeda.model.entity.LoginRecord;
 import chengweiou.universe.andromeda.service.account.AccountDio;
-import chengweiou.universe.andromeda.service.loginrecord.LoginRecordDio;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.model.Rest;
@@ -39,13 +34,12 @@ public class AccountTest {
 	private AccountDio accountDio;
 	private Account loginAccount;
 
-	// todo
 	@Test
 	public void update() throws Exception {
 		String result = mvc.perform(MockMvcRequestBuilders.put("/me/account/2")
 				.header("loginAccount", new Gson().toJson(loginAccount))
 				.param("username", "otest1")
-			).andReturn().getResponse().getContentAsString();
+		).andReturn().getResponse().getContentAsString();
 		Rest<Boolean> rest = Rest.from(result);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
 		Assertions.assertEquals(true, rest.getData());
@@ -57,7 +51,7 @@ public class AccountTest {
 	public void count() throws Exception {
 		String result = mvc.perform(MockMvcRequestBuilders.get("/me/account/count")
 				.header("loginAccount", new Gson().toJson(loginAccount))
-			).andReturn().getResponse().getContentAsString();
+		).andReturn().getResponse().getContentAsString();
 		Rest<Long> rest = Rest.from(result, Long.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
 		Assertions.assertEquals(Long.valueOf(2), rest.getData());
@@ -71,6 +65,15 @@ public class AccountTest {
 		Rest<List<Account>> rest = Rest.from(result, List.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
 		Assertions.assertEquals(2, rest.getData().size());
+	}
+
+	@Test
+	public void updateFailUnauth() throws Exception {
+		String result = mvc.perform(MockMvcRequestBuilders.put("/me/account/2")
+				.param("username", "otest1")
+		).andReturn().getResponse().getContentAsString();
+		Rest<Boolean> rest = Rest.from(result);
+		Assertions.assertEquals(BasicRestCode.UNAUTH, rest.getCode());
 	}
 
 	@BeforeEach

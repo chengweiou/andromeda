@@ -50,6 +50,13 @@ public class LoginRecordTest {
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
 		Assertions.assertEquals(0, rest.getData().size());
 	}
+	@Test
+	public void findFailUnauth() throws Exception {
+		String result = mvc.perform(MockMvcRequestBuilders.get("/me/loginRecord")
+		).andReturn().getResponse().getContentAsString();
+		Rest<List<LoginRecord>> rest = Rest.from(result, List.class);
+		Assertions.assertEquals(BasicRestCode.UNAUTH, rest.getCode());
+	}
 
 	@BeforeEach
 	public void before() {

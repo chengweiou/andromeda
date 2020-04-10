@@ -3,11 +3,13 @@ package chengweiou.universe.andromeda.base;
 
 import chengweiou.universe.andromeda.base.formatter.LocalDateFormatter;
 import chengweiou.universe.andromeda.base.formatter.LocalDateTimeFormatter;
+import chengweiou.universe.andromeda.interceptor.AuthInterceptorMe;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.nio.charset.StandardCharsets;
@@ -19,6 +21,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addFormatters(FormatterRegistry registry) {
         registry.addFormatter(new LocalDateFormatter());
         registry.addFormatter(new LocalDateTimeFormatter());
+    }
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new AuthInterceptorMe()).addPathPatterns("/me/**");
     }
     //    todo tip if use wormhole, cors in this project must trun off
     @Override
