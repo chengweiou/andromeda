@@ -15,6 +15,7 @@ import java.time.ZoneId;
 @Data
 public class Account implements NotNullObj, Serializable {
     private Long id;
+    private AccountType type;
     private String username;
     @JsonIgnore
     private String password;
@@ -24,6 +25,7 @@ public class Account implements NotNullObj, Serializable {
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
     public void fillNotRequire() {
+        type = type!=null ? type : AccountType.NORMAL;
         active = active!=null ? active : person != null;
         person = person!=null ? person : Builder.set("id", "0").to(new Person());
         extra = extra!=null ? extra : "";

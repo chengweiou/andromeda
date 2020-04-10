@@ -3,6 +3,7 @@ set search_path = andromeda;
 DROP TABLE IF EXISTS account;
 CREATE TABLE account (
    id bigserial NOT NULL,
+   type character varying NOT NULL,
    username character varying NOT NULL,
    password character varying NOT NULL,
    personId character varying NOT NULL,

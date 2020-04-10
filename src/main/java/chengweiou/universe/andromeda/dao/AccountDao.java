@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 @Mapper
 public interface AccountDao {
-    @Insert("insert into account(username, password, personId, active, extra, createAt, updateAt) values(#{username}, #{password}, #{person.id}, #{active}, #{extra}, #{createAt}, #{updateAt})")
+    @Insert("insert into account(type, username, password, personId, active, extra, createAt, updateAt) values(#{type}, #{username}, #{password}, #{person.id}, #{active}, #{extra}, #{createAt}, #{updateAt})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     long save(Account e);
 
@@ -47,6 +47,7 @@ public interface AccountDao {
         public String update(final Account e) {
             return new SQL() {{
                 UPDATE("account");
+                if (e.getType() != null) SET("type = #{type}");
                 if (e.getUsername() != null) SET("username = #{username}");
                 if (e.getPassword() != null) SET("password = #{password}");
                 if (e.getPerson() != null) SET("personId = #{person.id}");
@@ -60,6 +61,7 @@ public interface AccountDao {
         public String updateByPerson(final Account e) {
             return new SQL() {{
                 UPDATE("account");
+                if (e.getType() != null) SET("type = #{type}");
                 if (e.getUsername() != null) SET("username = #{username}");
                 if (e.getPassword() != null) SET("password = #{password}");
                 if (e.getActive() != null) SET("active = #{active}");
