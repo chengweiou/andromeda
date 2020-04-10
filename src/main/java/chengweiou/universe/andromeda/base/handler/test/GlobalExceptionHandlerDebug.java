@@ -4,6 +4,7 @@ package chengweiou.universe.andromeda.base.handler.test;
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ParamException;
 import chengweiou.universe.blackhole.exception.ProjException;
+import chengweiou.universe.blackhole.exception.UnauthException;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Rest;
 import chengweiou.universe.blackhole.util.LogUtil;
@@ -27,6 +28,13 @@ public class GlobalExceptionHandlerDebug {
     public Rest handleParamException(ParamException ex) {
         Rest rest = Rest.fail(BasicRestCode.PARAM);
         rest.setMessage(ex.getMessage());
+        return rest;
+    }
+    @ExceptionHandler(UnauthException.class)
+    public Rest handleUnauthException(UnauthException ex) {
+        Rest rest = Rest.fail(BasicRestCode.UNAUTH);
+        rest.setMessage(ex.getMessage());
+        LogUtil.e(rest.toString(), ex);
         return rest;
     }
     @ExceptionHandler(BindException.class)
