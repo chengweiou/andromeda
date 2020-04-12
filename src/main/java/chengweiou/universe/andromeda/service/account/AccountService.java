@@ -14,6 +14,7 @@ public interface AccountService {
 
     long update(Account e);
     long updateByPerson(Account e);
+    long updateByPersonAndType(Account e);
 
     Account findById(Account e);
 
@@ -23,4 +24,6 @@ public interface AccountService {
     List<Account> find(SearchCondition searchCondition, Account sample);
 
     long countByUsername(Account e);
+
+
 }

@@ -24,6 +24,8 @@ public interface AccountDao {
 
     @UpdateProvider(type = Sql.class, method = "updateByPerson")
     long updateByPerson(Account e);
+    @UpdateProvider(type = Sql.class, method = "updateByPersonAndType")
+    long updateByPersonAndType(Account e);
 
     @Select("select * from account where id=#{id}")
     @Results({@Result(property = "person.id", column = "personId")})
@@ -68,6 +70,18 @@ public interface AccountDao {
                 if (e.getExtra() != null) SET("extra = #{extra}");
                 SET("updateAt = #{updateAt}");
                 WHERE("personId=#{person.id}");
+            }}.toString();
+        }
+
+        public String updateByPersonAndType(final Account e) {
+            return new SQL() {{
+                UPDATE("account");
+                if (e.getUsername() != null) SET("username = #{username}");
+                if (e.getPassword() != null) SET("password = #{password}");
+                if (e.getActive() != null) SET("active = #{active}");
+                if (e.getExtra() != null) SET("extra = #{extra}");
+                SET("updateAt = #{updateAt}");
+                WHERE("personId=#{person.id} and type=#{type}");
             }}.toString();
         }
 

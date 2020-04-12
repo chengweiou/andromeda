@@ -42,6 +42,10 @@ public class AccountDio {
         e.updateAt();
         return dao.updateByPerson(e);
     }
+    public long updateByPersonAndType(Account e) {
+        e.updateAt();
+        return dao.updateByPersonAndType(e);
+    }
 
     public Account findById(Account e) {
         Account result = dao.findById(e);
@@ -65,4 +69,5 @@ public class AccountDio {
     public long countByUsername(Account e) {
         return dao.countByUsername(e);
     }
+
 }

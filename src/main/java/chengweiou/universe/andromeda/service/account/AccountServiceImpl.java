@@ -39,6 +39,11 @@ public class AccountServiceImpl implements AccountService {
         if (e.getPassword() != null) e.setPassword(SecurityUtil.hash(e.getPassword()));
         return dio.updateByPerson(e);
     }
+    @Override
+    public long updateByPersonAndType(Account e) {
+        if (e.getPassword() != null) e.setPassword(SecurityUtil.hash(e.getPassword()));
+        return dio.updateByPersonAndType(e);
+    }
 
     @Override
     public Account findById(Account e) {

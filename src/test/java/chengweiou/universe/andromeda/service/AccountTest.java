@@ -75,6 +75,18 @@ public class AccountTest {
 
 		service.update(data.accountList.get(0));
 	}
+	@Test
+	public void updateByPersonAndType() {
+		String old = data.accountList.get(0).getExtra();
+		Account e = Builder.set("person", data.accountList.get(0).getPerson()).set("type", data.accountList.get(0).getType())
+				.set("extra", "extra by person").to(new Account());
+		long count = service.updateByPersonAndType(e);
+		Assertions.assertEquals(1, count);
+		Account indb = service.findById(data.accountList.get(0));
+		Assertions.assertEquals("extra by person", indb.getExtra());
+
+		service.update(Builder.set("id", data.accountList.get(0).getId()).set("extra", old).to(new Account()));
+	}
 
 	@Test
 	public void updatePerson() {
