@@ -1,11 +1,15 @@
-package chengweiou.universe.andromeda.controller.api;
+package chengweiou.universe.andromeda.controller.me;
 
 
 import chengweiou.universe.andromeda.data.Data;
+import chengweiou.universe.andromeda.model.Person;
+import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.model.entity.AccountComb;
 import chengweiou.universe.andromeda.service.account.AccountService;
 import chengweiou.universe.blackhole.model.BasicRestCode;
+import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.model.Rest;
+import com.google.gson.Gson;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,10 +31,12 @@ public class AccountCombTest {
 	private Data data;
 	@Autowired
 	private AccountService service;
+	private Account loginAccount;
 
 	@Test
 	public void findByPerson() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.get("/api/accountComb/person/1")
+		String result = mvc.perform(MockMvcRequestBuilders.get("/me/accountComb")
+				.header("loginAccount", new Gson().toJson(loginAccount))
 			).andReturn().getResponse().getContentAsString();
 		Rest<AccountComb> rest = Rest.from(result, AccountComb.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
@@ -39,8 +45,8 @@ public class AccountCombTest {
 	}
 	@Test
 	public void update() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.put("/api/accountComb")
-				.param("person.id", "1")
+		String result = mvc.perform(MockMvcRequestBuilders.put("/me/accountComb")
+				.header("loginAccount", new Gson().toJson(loginAccount))
 				.param("username", "oresttest").param("password", "abcdefg").param("wechatActive", "true")
 		).andReturn().getResponse().getContentAsString();
 		Rest<Boolean> saveRest = Rest.from(result, Boolean.class);
@@ -54,6 +60,9 @@ public class AccountCombTest {
 	@BeforeEach
 	public void before() {
 		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+		loginAccount = Builder.set("person", Builder.set("id", 1L).to(new Person()))
+				.set("extra", "MEMBER")
+				.to(new Account());
 	}
 	@BeforeEach
 	public void init() {
