@@ -19,6 +19,7 @@ public class AccountComb implements NotNullObj, Serializable {
     private String username;
     @JsonIgnore
     private String password;
+    private String oldPassword;
     private Boolean normalActive;
     private String phone;
     private Boolean phoneActive;

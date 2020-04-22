@@ -55,6 +55,19 @@ public class AccountCombTest {
 		service.updateByPersonAndType(data.accountList.get(0));
 		service.updateByPersonAndType(data.accountList.get(1));
 	}
+	@Test
+	public void updatePassword() throws Exception {
+		String result = mvc.perform(MockMvcRequestBuilders.put("/me/accountComb/password")
+				.header("loginAccount", new Gson().toJson(loginAccount))
+				.param("oldPassword", "123")
+				.param("password", "abcdefg")
+		).andReturn().getResponse().getContentAsString();
+		Rest<Boolean> saveRest = Rest.from(result, Boolean.class);
+		Assertions.assertEquals(BasicRestCode.OK, saveRest.getCode());
+
+		service.updateByPersonAndType(data.accountList.get(0));
+		service.updateByPersonAndType(data.accountList.get(1));
+	}
 
 
 	@BeforeEach

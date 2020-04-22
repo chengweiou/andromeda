@@ -24,6 +24,4 @@ public interface AccountService {
     List<Account> find(SearchCondition searchCondition, Account sample);
 
     long countByUsername(Account e);
-
-
 }

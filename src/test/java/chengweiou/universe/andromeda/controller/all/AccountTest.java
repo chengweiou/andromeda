@@ -2,10 +2,12 @@ package chengweiou.universe.andromeda.controller.all;
 
 
 import chengweiou.universe.andromeda.data.Data;
+import chengweiou.universe.andromeda.model.Auth;
 import chengweiou.universe.andromeda.model.ProjectRestCode;
+import chengweiou.universe.andromeda.model.entity.LoginRecord;
+import chengweiou.universe.andromeda.service.loginrecord.LoginRecordDio;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Rest;
-import chengweiou.universe.andromeda.model.Auth;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +27,8 @@ public class AccountTest {
 	private WebApplicationContext webApplicationContext;
 	@Autowired
 	private Data data;
+	@Autowired
+	private LoginRecordDio loginRecordDio;
 
 	@Test
 	public void login() throws Exception {
@@ -41,6 +45,8 @@ public class AccountTest {
 		).andReturn().getResponse().getContentAsString();
 		Rest<Boolean> logoutRest = Rest.from(result);
 		Assertions.assertEquals(BasicRestCode.OK, logoutRest.getCode());
+		LoginRecord delLoginRecord = loginRecordDio.findLast(data.accountList.get(0));
+		loginRecordDio.delete(delLoginRecord);
 	}
 
 	@Test
