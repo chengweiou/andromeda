@@ -36,14 +36,16 @@ public class AccountTest {
 
 	@Test
 	public void saveDelete() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.post("/api/account")
+		String result = mvc.perform(MockMvcRequestBuilders.post("/mg/account")
+				.header("inServer", "true")
 				.param("username", "oresttest").param("password", "abcdefg").param("person.id", "3")
 			).andReturn().getResponse().getContentAsString();
 		Rest<Long> saveRest = Rest.from(result, Long.class);
 		Assertions.assertEquals(BasicRestCode.OK, saveRest.getCode());
 		Assertions.assertEquals(true, saveRest.getData() > 0);
 
-		result = mvc.perform(MockMvcRequestBuilders.delete("/api/account/" + saveRest.getData())
+		result = mvc.perform(MockMvcRequestBuilders.delete("/mg/account/" + saveRest.getData())
+				.header("inServer", "true")
 			).andReturn().getResponse().getContentAsString();
 		Rest<Boolean> delRest = Rest.from(result);
 		Assertions.assertEquals(BasicRestCode.OK, delRest.getCode());
@@ -52,21 +54,24 @@ public class AccountTest {
 
 	@Test
 	public void update() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.put("/api/account/1")
+		String result = mvc.perform(MockMvcRequestBuilders.put("/mg/account/1")
+				.header("inServer", "true")
 				.param("username", "otest1")
 			).andReturn().getResponse().getContentAsString();
 		Rest<Boolean> rest = Rest.from(result);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
 		Assertions.assertEquals(true, rest.getData());
 
-		mvc.perform(MockMvcRequestBuilders.put("/api/account/1")
+		mvc.perform(MockMvcRequestBuilders.put("/mg/account/1")
+				.header("inServer", "true")
 				.param("username", "ou")
 		).andReturn().getResponse().getContentAsString();
 	}
 
 	@Test
 	public void updateByPerson() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.put("/api/account/person/1")
+		String result = mvc.perform(MockMvcRequestBuilders.put("/mg/account/person/1")
+				.header("inServer", "true")
 				.param("active", "false")
 		).andReturn().getResponse().getContentAsString();
 		Rest<Boolean> rest = Rest.from(result);
@@ -79,7 +84,8 @@ public class AccountTest {
 		Rest<Auth> loginRest = Rest.from(result, ProjectRestCode.class);
 		Assertions.assertEquals(ProjectRestCode.ACCOUNT_INACTIVE, loginRest.getCode());
 
-		mvc.perform(MockMvcRequestBuilders.put("/api/account/person/1")
+		mvc.perform(MockMvcRequestBuilders.put("/mg/account/person/1")
+				.header("inServer", "true")
 				.param("active", "true")
 		).andReturn().getResponse().getContentAsString();
 
@@ -96,27 +102,31 @@ public class AccountTest {
 
 	@Test
 	public void updatePerson() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.post("/api/account")
+		String result = mvc.perform(MockMvcRequestBuilders.post("/mg/account")
+				.header("inServer", "true")
 				.param("username", "oresttest").param("password", "abcdefg").param("person.id", "3")
 		).andReturn().getResponse().getContentAsString();
 		Rest<Long> saveRest = Rest.from(result, Long.class);
 		Assertions.assertEquals(BasicRestCode.OK, saveRest.getCode());
 
-		result = mvc.perform(MockMvcRequestBuilders.put("/api/account/" + saveRest.getData() + "/person")
+		result = mvc.perform(MockMvcRequestBuilders.put("/mg/account/" + saveRest.getData() + "/person")
+				.header("inServer", "true")
 				.param("person.id", "3")
 		).andReturn().getResponse().getContentAsString();
 		Rest<Boolean> rest = Rest.from(result);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
 		Assertions.assertEquals(true, rest.getData());
 
-		result = mvc.perform(MockMvcRequestBuilders.get("/api/account/" + saveRest.getData())
+		result = mvc.perform(MockMvcRequestBuilders.get("/mg/account/" + saveRest.getData())
+				.header("inServer", "true")
 		).andReturn().getResponse().getContentAsString();
 		Rest<Account> findRest = Rest.from(result, Account.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
 		Assertions.assertEquals("3", findRest.getData().getPerson().getId());
 		Assertions.assertEquals(true, findRest.getData().getActive());
 
-		result = mvc.perform(MockMvcRequestBuilders.delete("/api/account/" + saveRest.getData())
+		result = mvc.perform(MockMvcRequestBuilders.delete("/mg/account/" + saveRest.getData())
+				.header("inServer", "true")
 		).andReturn().getResponse().getContentAsString();
 		Rest<Boolean> delRest = Rest.from(result);
 		Assertions.assertEquals(BasicRestCode.OK, delRest.getCode());
@@ -124,7 +134,8 @@ public class AccountTest {
 
 	@Test
 	public void findById() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.get("/api/account/1")
+		String result = mvc.perform(MockMvcRequestBuilders.get("/mg/account/1")
+				.header("inServer", "true")
 			).andReturn().getResponse().getContentAsString();
 		Rest<Account> rest = Rest.from(result, Account.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
@@ -133,7 +144,8 @@ public class AccountTest {
 
 	@Test
 	public void count() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.get("/api/account/count")
+		String result = mvc.perform(MockMvcRequestBuilders.get("/mg/account/count")
+				.header("inServer", "true")
 				.param("k", "o")
 			).andReturn().getResponse().getContentAsString();
 		Rest<Long> rest = Rest.from(result, Long.class);
@@ -143,7 +155,8 @@ public class AccountTest {
 
 	@Test
 	public void find() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.get("/api/account")
+		String result = mvc.perform(MockMvcRequestBuilders.get("/mg/account")
+				.header("inServer", "true")
 				.param("k", "c")
 		).andReturn().getResponse().getContentAsString();
 		Rest<List<Account>> rest = Rest.from(result, List.class);
@@ -153,7 +166,8 @@ public class AccountTest {
 
 	@Test
 	public void saveFail() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.post("/api/account")
+		String result = mvc.perform(MockMvcRequestBuilders.post("/mg/account")
+				.header("inServer", "true")
 			).andReturn().getResponse().getContentAsString();
 		Rest<Long> rest = Rest.from(result);
 		Assertions.assertEquals(BasicRestCode.PARAM, rest.getCode());
@@ -161,7 +175,8 @@ public class AccountTest {
 
 	@Test
 	public void saveDeleteFail() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.post("/api/account")
+		String result = mvc.perform(MockMvcRequestBuilders.post("/mg/account")
+				.header("inServer", "true")
 				.param("username", data.accountList.get(0).getUsername()).param("password", "123456653")
 		).andReturn().getResponse().getContentAsString();
 		Rest<Long> saveRest = Rest.from(result);
@@ -170,7 +185,8 @@ public class AccountTest {
 
 	@Test
 	public void deleteFail() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.delete("/api/account/0")
+		String result = mvc.perform(MockMvcRequestBuilders.delete("/mg/account/0")
+				.header("inServer", "true")
 			).andReturn().getResponse().getContentAsString();
 		Rest<Long> rest = Rest.from(result);
 		Assertions.assertEquals(BasicRestCode.PARAM, rest.getCode());
@@ -178,7 +194,8 @@ public class AccountTest {
 
 	@Test
 	public void updateFail() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.put("/api/account/1")
+		String result = mvc.perform(MockMvcRequestBuilders.put("/mg/account/1")
+				.header("inServer", "true")
 			).andReturn().getResponse().getContentAsString();
 		Rest<Boolean> rest = Rest.from(result);
 		Assertions.assertEquals(BasicRestCode.PARAM, rest.getCode());
@@ -186,7 +203,8 @@ public class AccountTest {
 
 	@Test
 	public void findByIdFail() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.get("/api/account/0")
+		String result = mvc.perform(MockMvcRequestBuilders.get("/mg/account/0")
+				.header("inServer", "true")
 			).andReturn().getResponse().getContentAsString();
 		Rest<Account> rest = Rest.from(result);
 		Assertions.assertEquals(BasicRestCode.PARAM, rest.getCode());

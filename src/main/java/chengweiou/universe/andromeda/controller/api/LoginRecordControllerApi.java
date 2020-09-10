@@ -1,7 +1,6 @@
 package chengweiou.universe.andromeda.controller.api;
 
 
-import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.LoginRecord;
 import chengweiou.universe.andromeda.service.loginrecord.LoginRecordService;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("mg")
 public class LoginRecordControllerApi {
     @Autowired
     private LoginRecordService service;

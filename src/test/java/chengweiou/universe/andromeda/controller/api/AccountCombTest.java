@@ -30,7 +30,8 @@ public class AccountCombTest {
 
 	@Test
 	public void findByPerson() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.get("/api/accountComb/person/1")
+		String result = mvc.perform(MockMvcRequestBuilders.get("/mg/accountComb/person/1")
+				.header("inServer", "true")
 			).andReturn().getResponse().getContentAsString();
 		Rest<AccountComb> rest = Rest.from(result, AccountComb.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
@@ -39,7 +40,8 @@ public class AccountCombTest {
 	}
 	@Test
 	public void update() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.put("/api/accountComb")
+		String result = mvc.perform(MockMvcRequestBuilders.put("/mg/accountComb")
+				.header("inServer", "true")
 				.param("person.id", "1")
 				.param("username", "oresttest").param("password", "abcdefg").param("wechatActive", "true")
 		).andReturn().getResponse().getContentAsString();

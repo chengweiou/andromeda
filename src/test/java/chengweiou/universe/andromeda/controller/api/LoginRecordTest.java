@@ -29,7 +29,8 @@ public class LoginRecordTest {
 
 	@Test
 	public void count() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.get("/api/loginRecord/count")
+		String result = mvc.perform(MockMvcRequestBuilders.get("/mg/loginRecord/count")
+				.header("inServer", "true")
 		).andReturn().getResponse().getContentAsString();
 		Rest<Long> rest = Rest.from(result, Long.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
@@ -37,7 +38,8 @@ public class LoginRecordTest {
 	}
 	@Test
 	public void find() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.get("/api/loginRecord")
+		String result = mvc.perform(MockMvcRequestBuilders.get("/mg/loginRecord")
+				.header("inServer", "true")
 		).andReturn().getResponse().getContentAsString();
 		Rest<List<LoginRecord>> rest = Rest.from(result, List.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
@@ -46,7 +48,8 @@ public class LoginRecordTest {
 
 	@Test
 	public void countByPerson() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.get("/api/loginRecord/count")
+		String result = mvc.perform(MockMvcRequestBuilders.get("/mg/loginRecord/count")
+				.header("inServer", "true")
 				.param("account.person.id", "1")
 		).andReturn().getResponse().getContentAsString();
 		Rest<Long> rest = Rest.from(result, Long.class);
@@ -55,7 +58,8 @@ public class LoginRecordTest {
 	}
 	@Test
 	public void findByPerson() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.get("/api/loginRecord")
+		String result = mvc.perform(MockMvcRequestBuilders.get("/mg/loginRecord")
+				.header("inServer", "true")
 				.param("account.person.id", "1")
 		).andReturn().getResponse().getContentAsString();
 		Rest<List<LoginRecord>> rest = Rest.from(result, List.class);

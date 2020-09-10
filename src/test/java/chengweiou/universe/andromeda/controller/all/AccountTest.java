@@ -62,7 +62,8 @@ public class AccountTest {
 	@Test
 	public void loginFailInactive() throws Exception {
 		// inactive account not set person
-		String result = mvc.perform(MockMvcRequestBuilders.post("/api/account")
+		String result = mvc.perform(MockMvcRequestBuilders.post("/mg/account")
+				.header("inServer", "true")
 				.param("username", "oresttest_inactive").param("password", "abcdefg")
 		).andReturn().getResponse().getContentAsString();
 		Rest<Long> saveRest = Rest.from(result, Long.class);
@@ -75,7 +76,8 @@ public class AccountTest {
 		Rest<Auth> loginRest = Rest.from(result, ProjectRestCode.class);
 		Assertions.assertEquals(ProjectRestCode.ACCOUNT_INACTIVE, loginRest.getCode());
 
-		result = mvc.perform(MockMvcRequestBuilders.delete("/api/account/" + saveRest.getData())
+		result = mvc.perform(MockMvcRequestBuilders.delete("/mg/account/" + saveRest.getData())
+				.header("inServer", "true")
 		).andReturn().getResponse().getContentAsString();
 		Rest<Boolean> delRest = Rest.from(result);
 		Assertions.assertEquals(BasicRestCode.OK, delRest.getCode());

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("mg")
 public class AccountCombControllerApi {
     @Autowired
     private AccountService service;

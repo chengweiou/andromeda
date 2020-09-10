@@ -4,6 +4,7 @@ package chengweiou.universe.andromeda.base;
 import chengweiou.universe.andromeda.base.formatter.LocalDateFormatter;
 import chengweiou.universe.andromeda.base.formatter.LocalDateTimeFormatter;
 import chengweiou.universe.andromeda.interceptor.AuthInterceptorMe;
+import chengweiou.universe.andromeda.interceptor.AuthInterceptorMg;
 import chengweiou.universe.andromeda.interceptor.OptionsInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -27,6 +28,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new OptionsInterceptor()).addPathPatterns("/**");
         registry.addInterceptor(new AuthInterceptorMe()).addPathPatterns("/me/**");
+        registry.addInterceptor(new AuthInterceptorMg()).addPathPatterns("/mg/**");
     }
     //    todo tip if use wormhole, cors in this project must trun off
     @Override
