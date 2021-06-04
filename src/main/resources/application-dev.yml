@@ -2,7 +2,10 @@ server:
   port: 0
   servlet:
     context-path: /andromeda
-
+  error:
+    whitelabel:
+      enabled: false
+      
 spring:
   jackson:
     default-property-inclusion: NON_NULL
