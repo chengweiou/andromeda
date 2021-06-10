@@ -1,11 +1,9 @@
 package chengweiou.universe.andromeda.base;
 
 
-import chengweiou.universe.andromeda.base.formatter.LocalDateFormatter;
-import chengweiou.universe.andromeda.base.formatter.LocalDateTimeFormatter;
-import chengweiou.universe.andromeda.interceptor.AuthInterceptorMe;
-import chengweiou.universe.andromeda.interceptor.AuthInterceptorMg;
-import chengweiou.universe.andromeda.interceptor.OptionsInterceptor;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -14,8 +12,11 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.nio.charset.StandardCharsets;
-import java.util.List;
+import chengweiou.universe.andromeda.base.formatter.LocalDateFormatter;
+import chengweiou.universe.andromeda.base.formatter.LocalDateTimeFormatter;
+import chengweiou.universe.andromeda.interceptor.AuthInterceptorMe;
+import chengweiou.universe.andromeda.interceptor.AuthInterceptorMg;
+import chengweiou.universe.andromeda.interceptor.OptionsInterceptor;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {

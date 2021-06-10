@@ -1,22 +1,29 @@
 package chengweiou.universe.andromeda.service.account;
 
 
-import chengweiou.universe.andromeda.model.ProjectRestCode;
-import chengweiou.universe.andromeda.model.SearchCondition;
-import chengweiou.universe.andromeda.model.entity.Account;
-import chengweiou.universe.andromeda.util.SecurityUtil;
-import chengweiou.universe.blackhole.exception.FailException;
-import chengweiou.universe.blackhole.exception.ProjException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import chengweiou.universe.andromeda.model.ProjectRestCode;
+import chengweiou.universe.andromeda.model.SearchCondition;
+import chengweiou.universe.andromeda.model.entity.Account;
+import chengweiou.universe.andromeda.model.entity.Twofa;
+import chengweiou.universe.andromeda.util.SecurityUtil;
+import chengweiou.universe.blackhole.exception.FailException;
+import chengweiou.universe.blackhole.exception.ProjException;
+import chengweiou.universe.blackhole.model.Builder;
 
 
 @Service
 public class AccountServiceImpl implements AccountService {
     @Autowired
     private AccountDio dio;
+    @Autowired
+    private TwofaDio twofaDio;
 
     public void save(Account e) throws FailException, ProjException {
         e.setPassword(SecurityUtil.hash(e.getPassword()));
@@ -57,6 +64,20 @@ public class AccountServiceImpl implements AccountService {
         if (!indb.getActive()) throw new ProjException(ProjectRestCode.ACCOUNT_INACTIVE);
         if (!SecurityUtil.check(e.getPassword(), indb.getPassword())) throw new ProjException(ProjectRestCode.USERNAME_PASSWORD_MISMATCH);
         return indb;
+    }
+
+    @Override
+    public Account findAfterCheckCode(Twofa twofa) throws ProjException {
+        Twofa twofaIndb = twofaDio.findByTokenAndCode(twofa);
+        if (twofaIndb.getId() == null) throw new ProjException(ProjectRestCode.TWOFA_CODE_NOT_MATCH);
+        if (twofaIndb.getUpdateAt().plusMinutes(1).isBefore(LocalDateTime.now(ZoneId.of("UTC")))) throw new ProjException(ProjectRestCode.TWOFA_EXPIRED);
+
+        Account result = dio.findById(twofaIndb.getLoginAccount());
+        twofaIndb.setLoginAccount(Builder.set("id", 0).to(new Account()));
+        twofaIndb.setToken("");
+        twofaIndb.setCode("");
+        twofaDio.update(twofaIndb);
+        return result;
     }
 
     @Override

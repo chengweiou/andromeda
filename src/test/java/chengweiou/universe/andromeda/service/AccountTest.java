@@ -1,14 +1,7 @@
 package chengweiou.universe.andromeda.service;
 
-import chengweiou.universe.andromeda.data.Data;
-import chengweiou.universe.andromeda.model.Person;
-import chengweiou.universe.andromeda.model.SearchCondition;
-import chengweiou.universe.andromeda.model.entity.Account;
-import chengweiou.universe.andromeda.service.account.AccountService;
-import chengweiou.universe.andromeda.util.SecurityUtil;
-import chengweiou.universe.blackhole.exception.FailException;
-import chengweiou.universe.blackhole.exception.ProjException;
-import chengweiou.universe.blackhole.model.Builder;
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,13 +9,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.List;
+import chengweiou.universe.andromeda.data.Data;
+import chengweiou.universe.andromeda.model.Person;
+import chengweiou.universe.andromeda.model.SearchCondition;
+import chengweiou.universe.andromeda.model.entity.Account;
+import chengweiou.universe.andromeda.model.entity.Twofa;
+import chengweiou.universe.andromeda.model.entity.TwofaType;
+import chengweiou.universe.andromeda.service.account.AccountService;
+import chengweiou.universe.andromeda.service.account.TwofaDio;
+import chengweiou.universe.andromeda.util.SecurityUtil;
+import chengweiou.universe.blackhole.exception.FailException;
+import chengweiou.universe.blackhole.exception.ProjException;
+import chengweiou.universe.blackhole.model.Builder;
 
 @SpringBootTest
 @ActiveProfiles("test")
 public class AccountTest {
 	@Autowired
 	private AccountService service;
+	@Autowired
+	private TwofaDio twofaDio;
 	@Autowired
 	private Data data;
 
@@ -130,6 +136,26 @@ public class AccountTest {
 		data.accountList.get(0).setPassword("123");
 
 	}
+
+	@Test
+	public void findAfterTokenAndCode() throws ProjException {
+		Twofa twofa = Builder.set("id", 1).set("type", TwofaType.EMAIL).set("username", "a@a.c").set("account", data.accountList.get(0)).set("token", "aaa").set("code", "111").to(new Twofa());
+		long count = twofaDio.update(twofa);
+		Account indb = service.findAfterCheckCode(Builder.set("token", "aaa").set("code", "111").to(new Twofa()));
+		Assertions.assertEquals(data.accountList.get(0).getId(), indb.getId());
+
+		twofaDio.update(data.twofaList.get(0));
+	}
+
+	@Test
+	public void findAfterTokenAndCodeFail() throws ProjException {
+		Twofa twofa = Builder.set("id", 1).set("type", TwofaType.EMAIL).set("username", "a@a.c").set("account", data.accountList.get(0)).set("token", "aaa").set("code", "111").to(new Twofa());
+		long count = twofaDio.update(twofa);
+		Assertions.assertThrows(ProjException.class, () -> service.findAfterCheckCode(Builder.set("token", "aaa").set("code", "222").to(new Twofa())));
+		
+		twofaDio.update(data.twofaList.get(0));
+	}
+
 	@BeforeEach
 	public void init() {
 		data.init();

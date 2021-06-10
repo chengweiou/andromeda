@@ -4,6 +4,7 @@ package chengweiou.universe.andromeda.base.redis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -16,7 +17,7 @@ public class JedisUtil {
         return new JedisUtil();
     }
 
-    public void set(String k, String v, int expSec) {
+    public void set(String k, String v, long expSec) {
         Jedis jedis = pool.getResource();
         jedis.setex(k, expSec, v);
         jedis.close();
