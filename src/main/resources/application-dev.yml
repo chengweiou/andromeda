@@ -1,14 +1,7 @@
 server:
-  port: 3333
-  servlet:
-    context-path: /andromeda
-  error:
-    whitelabel:
-      enabled: false
+  port: 0
       
 spring:
-  jackson:
-    default-property-inclusion: NON_NULL
   datasource:
     url: jdbc:postgresql://127.0.0.1/universe?currentSchema=andromeda
     username: postgres
@@ -28,3 +21,7 @@ jwt:
   sign: andromeda
   expMinute: 10
   refreshExpMinute: 60
+
+vonage:
+  apiKey: aaa
+  apiSecret: aaa

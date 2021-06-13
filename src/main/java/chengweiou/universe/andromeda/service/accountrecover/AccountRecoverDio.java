@@ -18,7 +18,6 @@ public class AccountRecoverDio {
     private AccountRecoverDao dao;
 
     public void save(AccountRecover e) throws FailException, ProjException {
-        // todo 是不是phone，email也改唯一
         long count = dao.countByPerson(e);
         if (count != 0) throw new ProjException("dup key: " + e.getPerson().getId() + " exists", BasicRestCode.EXISTS);
         e.cleanCode();

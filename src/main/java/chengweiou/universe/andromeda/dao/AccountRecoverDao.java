@@ -22,8 +22,8 @@ import chengweiou.universe.andromeda.model.entity.AccountRecover;
 @Repository
 @Mapper
 public interface AccountRecoverDao {
-    @Insert("insert into accountRecover (personId, phone, email, q1, q2, q3, a1, a2, a3, code, codeExp, createAt, updateAt) " +
-            "values(#{person.id}, #{phone}, #{email}, #{q1}, #{q2}, #{q3}, #{a1}, #{a2}, #{a3}, #{code}, #{codeExp}, #{createAt}, #{updateAt})")
+    @Insert("insert into accountRecover (personId, phone, email, q1, q2, q3, a1, a2, a3, code, codeExp, codeCount, createAt, updateAt) " +
+            "values(#{person.id}, #{phone}, #{email}, #{q1}, #{q2}, #{q3}, #{a1}, #{a2}, #{a3}, #{code}, #{codeExp}, #{codeCount}, #{createAt}, #{updateAt})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     long save(AccountRecover e);
 
@@ -66,6 +66,7 @@ public interface AccountRecoverDao {
                 if (e.getA3() != null) SET("a3 = #{a3}");
                 if (e.getCode() != null) SET("code = #{code}");
                 if (e.getCodeExp() != null) SET("codeExp = #{codeExp}");
+                if (e.getCodeCount() != null) SET("codeCount = #{codeCount}");
                 SET("updateAt = #{updateAt}");
                 WHERE("id=#{id}");
             }}.toString();

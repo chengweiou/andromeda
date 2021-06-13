@@ -18,7 +18,7 @@ spring:
         max-idle: 10
         min-idle: 1
         max-wait: 1000ms
-
+        
 jwt:
   issuer: o
   sign: andromeda

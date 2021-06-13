@@ -9,7 +9,6 @@ import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ProjException;
 
 public interface CodeSendRecordService {
-    // todo 要确保code不存在
     void save(CodeSendRecord e) throws FailException, ProjException;
     void delete(CodeSendRecord e) throws FailException;
 

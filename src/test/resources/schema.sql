@@ -3,8 +3,26 @@ set search_path = andromeda;
 DROP TABLE IF EXISTS account;
 CREATE TABLE account (
    id bigserial NOT NULL,
-   type character varying NOT NULL,
    username character varying NOT NULL,
+   password character varying NOT NULL,
+   personId character varying NOT NULL,
+   active boolean NOT NULL,
+   extra character varying NOT NULL,
+   createAt timestamp without time zone NOT NULL,
+   updateAt timestamp without time zone NOT NULL,
+   PRIMARY KEY (id)
+);
+
+DROP TABLE IF EXISTS accountNew;
+CREATE TABLE accountNew (
+   id bigserial NOT NULL,
+   username character varying NOT NULL,
+   phone character varying NOT NULL,
+   email character varying NOT NULL,
+   wechat character varying NOT NULL,
+   weibo character varying NOT NULL,
+   google character varying NOT NULL,
+   facebook character varying NOT NULL,
    password character varying NOT NULL,
    personId character varying NOT NULL,
    active boolean NOT NULL,
@@ -68,6 +86,7 @@ CREATE TABLE accountRecover (
    a3 character varying NOT NULL,
    code character varying NOT NULL,
    codeExp timestamp without time zone NOT NULL,
+   codeCount smallint NOT NULL,
    createAt timestamp without time zone NOT NULL,
    updateAt timestamp without time zone NOT NULL,
    PRIMARY KEY (id)

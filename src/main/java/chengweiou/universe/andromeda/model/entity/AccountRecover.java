@@ -24,11 +24,13 @@ public class AccountRecover implements NotNullObj, Serializable {
     private String a3;
     private String code;
     private LocalDateTime codeExp;
+    private Integer codeCount;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
     public void cleanCode() {
         code = "";
         codeExp = LocalDateTime.of(1000, 1, 1, 0, 0, 0);
+        codeCount = 0;
     }
     public void fillNotRequire() {
         phone = phone!=null ? phone : "";

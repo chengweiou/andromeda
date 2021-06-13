@@ -148,33 +148,34 @@ public class AccountController {
 
     // 忘记密码：1. 输入用户名，返回可选的恢复账号方式
     @PostMapping("/forgetPassword/1")
-    public Rest<AccountRecover> forgetPassword(Account e) throws ParamException, ProjException, FailException {
+    public Rest<AccountRecover> forgetPassword1(Account e) throws ParamException, ProjException, FailException {
         Valid.check("account.username", e.getUsername()).is().lengthIn(30);
         Account indb = service.findByUsername(e);
-        AccountRecover accountRecover = accountRecoverService.findByPerson(Builder.set("person", indb.getPerson()).to(new AccountRecover()));
-        if (accountRecover.getPhone() != null) {
-            accountRecover.setPhone("********" + accountRecover.getPhone().substring(accountRecover.getPhone().length() - 2));
+        AccountRecover result = accountRecoverService.findByPerson(Builder.set("person", indb.getPerson()).to(new AccountRecover()));
+        if (result.getPhone() != null) {
+            result.setPhone("********" + result.getPhone().substring(result.getPhone().length() - 2));
         }
-        if (accountRecover.getEmail() != null) {
-            int atIndex = accountRecover.getEmail().indexOf("@");
-            accountRecover.setEmail(accountRecover.getEmail().substring(0, Math.min(2, atIndex)) + "***@" + accountRecover.getEmail().substring(atIndex+1, atIndex+2) + "***");
+        if (result.getEmail() != null) {
+            int atIndex = result.getEmail().indexOf("@");
+            result.setEmail(result.getEmail().substring(0, Math.min(2, atIndex)) + "***@" + result.getEmail().substring(atIndex+1, atIndex+2) + "***");
         }
-        accountRecover.setA1(null);
-        accountRecover.setA2(null);
-        accountRecover.setA3(null);
-        return Rest.ok(accountRecover);
+        result.setA1(null);
+        result.setA2(null);
+        result.setA3(null);
+        return Rest.ok(result);
     }
 
     // 忘记密码：2. 客户端填充完整信息。服务端发送code
     @PostMapping("/forgetPassword/2")
-    public Rest<String> forgetPassword(AccountRecover userConfirm) throws ParamException, ProjException, FailException {
+    public Rest<String> forgetPassword2(AccountRecover userConfirm) throws ParamException, ProjException, FailException {
         Valid.check("accountRecover.id", userConfirm.getId()).is().positive();
         Valid.check("accountRecover.phone | email | a1 | a2 | a3", 
                 userConfirm.getPhone(), userConfirm.getEmail(), userConfirm.getA1(), userConfirm.getA2(), userConfirm.getA3()
             ).are().notAllNull();
         String result = null;
         AccountRecover indb = accountRecoverService.findById(userConfirm);
-        // todo 3 times toomany
+        // 在过期前，只能发三次
+        if (LocalDateTime.now(ZoneId.of("UTC")).isBefore(indb.getCodeExp()) && indb.getCodeCount() == 3) throw new ProjException(ProjectRestCode.CODE_TOO_MANY);
         if (
             (userConfirm.getPhone() == null || !userConfirm.getPhone().equals(indb.getPhone()))
             && (userConfirm.getEmail() == null || !userConfirm.getEmail().equals(indb.getEmail()))
@@ -183,8 +184,7 @@ public class AccountController {
             && (userConfirm.getA3() == null || !userConfirm.getA3().equals(indb.getA3()))
         ) throw new ProjException(ProjectRestCode.ACCOUNT_NOT_MATCH);
         String code = RandomStringUtils.randomAlphanumeric(50);
-        // todo set resend ++
-        Builder.set("code", code).set("codeExp", LocalDateTime.now(ZoneId.of("UTC")).plusMinutes(10)).to(indb);
+        Builder.set("code", code).set("codeExp", LocalDateTime.now(ZoneId.of("UTC")).plusMinutes(10)).set("codeCount", indb.getCodeCount()+1).to(indb);
         if (userConfirm.getPhone() != null) phoneMsgService.sendForgetUrl(indb);
         else if (userConfirm.getEmail() != null) phoneMsgService.sendForgetUrl(indb);
         else result = code;
@@ -194,12 +194,11 @@ public class AccountController {
 
     // 忘记密码: 3. 新密码
     @PostMapping("/forgetPassword/3")
-    public Rest<String> resetPassword(AccountRecover accountRecover, Account e) throws ParamException, ProjException {
+    public Rest<String> forgetPassword3(AccountRecover accountRecover, Account e) throws ParamException, ProjException {
         Valid.check("accountRecover.id", accountRecover.getId()).is().positive();
         Valid.check("accountRecover.code", accountRecover.getCode()).is().lengthIs(50);
         Valid.check("account.password", e.getPassword()).is().lengthIn(30);
         e.setId(null);
-        // todo when clean also clean resend
         AccountRecover accountRecoverIndb = accountRecoverService.findByActiveCode(accountRecover);        
         // 可能多个账号
         boolean success = service.updateByPerson(Builder.set("person", accountRecoverIndb.getPerson()).set("password", e.getPassword()).to(new Account())) > 0;
