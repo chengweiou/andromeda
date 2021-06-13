@@ -68,18 +68,18 @@ public class LoginRecordTest {
 
     @Test
     public void countByPerson() {
-		LoginRecord sample = Builder.set("account", Builder.set("person", Builder.set("id", "1").to(new Person())).to(new Account())).to(new LoginRecord());
-		long count = service.count(new SearchCondition(), sample);
-        Assertions.assertEquals(2, count);
+			LoginRecord sample = Builder.set("account", Builder.set("person", Builder.set("id", "1").to(new Person())).to(new Account())).to(new LoginRecord());
+			long count = service.count(new SearchCondition(), sample);
+			Assertions.assertEquals(2, count);
     }
 
     @Test
     public void findByPerson() {
-        SearchCondition searchCondition = Builder.set("k", "iphone").to(new SearchCondition());
-		LoginRecord sample = Builder.set("account", Builder.set("person", Builder.set("id", "1").to(new Person())).to(new Account())).to(new LoginRecord());
-        List<LoginRecord> list = service.find(searchCondition, sample);
-        Assertions.assertEquals(1, list.size());
-        Assertions.assertEquals(2, list.get(0).getAccount().getId());
+			SearchCondition searchCondition = Builder.set("k", "iphone").to(new SearchCondition());
+			LoginRecord sample = Builder.set("account", Builder.set("person", Builder.set("id", "1").to(new Person())).to(new Account())).to(new LoginRecord());
+			List<LoginRecord> list = service.find(searchCondition, sample);
+			Assertions.assertEquals(1, list.size());
+			Assertions.assertEquals(2, list.get(0).getAccount().getId());
     }
 	@BeforeEach
 	public void init() {

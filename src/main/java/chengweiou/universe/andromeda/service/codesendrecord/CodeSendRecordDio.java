@@ -47,7 +47,7 @@ public class CodeSendRecordDio {
         return dao.count(searchCondition, sample);
     }
     public List<CodeSendRecord> find(SearchCondition searchCondition, CodeSendRecord sample) {
-        searchCondition.setDefaultSort("updateAt");
+        searchCondition.setDefaultSort("createAt");
         return dao.find(searchCondition, sample);
     }
 }

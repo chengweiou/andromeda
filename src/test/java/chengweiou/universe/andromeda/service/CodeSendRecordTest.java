@@ -16,6 +16,7 @@ import chengweiou.universe.andromeda.model.entity.codesendrecord.CodeSendRecord;
 import chengweiou.universe.andromeda.model.entity.codesendrecord.CodeSendRecordType;
 import chengweiou.universe.andromeda.service.codesendrecord.CodeSendRecordService;
 import chengweiou.universe.blackhole.exception.FailException;
+import chengweiou.universe.blackhole.exception.ProjException;
 import chengweiou.universe.blackhole.model.Builder;
 
 @SpringBootTest
@@ -27,8 +28,8 @@ public class CodeSendRecordTest {
 	private Data data;
 
 	@Test
-	public void saveDelete() throws FailException {
-		CodeSendRecord e = Builder.set("type", CodeSendRecordType.FORGET_PASSWORD).set("username", "a@a.c").set("code", "111").to(new CodeSendRecord());
+	public void saveDelete() throws FailException, ProjException {
+		CodeSendRecord e = Builder.set("type", CodeSendRecordType.FORGET_PASSWORD).set("username", "a@a.c").set("code", "656").to(new CodeSendRecord());
 		service.save(e);
 		Assertions.assertEquals(true, e.getId() > 0);
 		service.delete(e);

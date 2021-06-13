@@ -22,6 +22,7 @@ public class TwofaDio {
     public void save(Twofa e) throws ProjException, FailException {
         long count = dao.countByPerson(e);
         if (count != 0) throw new ProjException("dup key: " + e.getPerson() + " exists", BasicRestCode.EXISTS);
+        e.cleanCode();
         e.fillNotRequire();
         e.createAt();
         e.updateAt();

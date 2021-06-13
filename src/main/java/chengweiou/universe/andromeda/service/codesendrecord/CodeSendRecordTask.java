@@ -9,13 +9,14 @@ import org.springframework.stereotype.Component;
 
 import chengweiou.universe.andromeda.model.entity.codesendrecord.CodeSendRecord;
 import chengweiou.universe.blackhole.exception.FailException;
+import chengweiou.universe.blackhole.exception.ProjException;
 
 @Component
 public class CodeSendRecordTask {
     @Autowired
     private CodeSendRecordService service;
     @Async
-    public Future<Boolean> save(CodeSendRecord e) {
+    public Future<Boolean> save(CodeSendRecord e) throws ProjException {
         try {
             service.save(e);
             return new AsyncResult<>(true);

@@ -37,6 +37,7 @@ CREATE TABLE twofa (
    loginAccountId character varying NOT NULL,
    token character varying NOT NULL,
    code character varying NOT NULL,
+   codeExp timestamp without time zone NOT NULL,
    createAt timestamp without time zone NOT NULL,
    updateAt timestamp without time zone NOT NULL,
    PRIMARY KEY (id)
@@ -48,6 +49,25 @@ CREATE TABLE codeSendRecord (
    type character varying NOT NULL,
    username character varying NOT NULL,
    code character varying NOT NULL,
+   createAt timestamp without time zone NOT NULL,
+   updateAt timestamp without time zone NOT NULL,
+   PRIMARY KEY (id)
+);
+
+DROP TABLE IF EXISTS accountRecover;
+CREATE TABLE accountRecover (
+   id bigserial NOT NULL,
+   personId character varying NOT NULL,
+   phone character varying NOT NULL,
+   email character varying NOT NULL,
+   q1 character varying NOT NULL,
+   q2 character varying NOT NULL,
+   q3 character varying NOT NULL,
+   a1 character varying NOT NULL,
+   a2 character varying NOT NULL,
+   a3 character varying NOT NULL,
+   code character varying NOT NULL,
+   codeExp timestamp without time zone NOT NULL,
    createAt timestamp without time zone NOT NULL,
    updateAt timestamp without time zone NOT NULL,
    PRIMARY KEY (id)

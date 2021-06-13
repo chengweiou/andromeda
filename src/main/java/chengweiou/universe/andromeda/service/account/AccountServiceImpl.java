@@ -15,7 +15,6 @@ import chengweiou.universe.andromeda.model.entity.Twofa;
 import chengweiou.universe.andromeda.util.SecurityUtil;
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ProjException;
-import chengweiou.universe.blackhole.model.Builder;
 
 
 @Service
@@ -73,9 +72,7 @@ public class AccountServiceImpl implements AccountService {
         if (twofaIndb.getUpdateAt().plusMinutes(1).isBefore(LocalDateTime.now(ZoneId.of("UTC")))) throw new ProjException(ProjectRestCode.TWOFA_EXPIRED);
 
         Account result = dio.findById(twofaIndb.getLoginAccount());
-        twofaIndb.setLoginAccount(Builder.set("id", 0).to(new Account()));
-        twofaIndb.setToken("");
-        twofaIndb.setCode("");
+        twofaIndb.cleanCode();
         twofaDio.update(twofaIndb);
         return result;
     }
@@ -93,5 +90,9 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public long countByUsername(Account e) {
         return dio.countByUsername(e);
+    }
+    @Override
+    public Account findByUsername(Account e) {
+        return dio.findByUsername(e);
     }
 }

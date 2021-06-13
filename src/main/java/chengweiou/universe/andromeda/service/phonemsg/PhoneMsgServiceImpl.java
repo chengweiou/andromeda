@@ -1,16 +1,15 @@
 package chengweiou.universe.andromeda.service.phonemsg;
 
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import chengweiou.universe.andromeda.model.ProjectRestCode;
+import chengweiou.universe.andromeda.model.entity.AccountRecover;
 import chengweiou.universe.andromeda.model.entity.Twofa;
 import chengweiou.universe.andromeda.model.entity.codesendrecord.CodeSendRecord;
+import chengweiou.universe.andromeda.model.entity.codesendrecord.CodeSendRecordType;
 import chengweiou.universe.andromeda.service.codesendrecord.CodeSendRecordDio;
+import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ProjException;
 import chengweiou.universe.blackhole.model.Builder;
 
@@ -20,13 +19,18 @@ public class PhoneMsgServiceImpl implements PhoneMsgService {
     @Autowired
     private CodeSendRecordDio dio;
     
-    public void sendCode(Twofa twofa) throws ProjException {
-        CodeSendRecord lastCodeSendRecord = dio.findLastByUsername(Builder.set("username", twofa.getCodeTo()).to(new CodeSendRecord()));
-        if (lastCodeSendRecord.getId() != null) {
-            if (lastCodeSendRecord.getCreateAt().plusMinutes(1).isAfter(LocalDateTime.now(ZoneId.of("UTC")))) throw new ProjException(ProjectRestCode.PHONE_MSG_TOO_MANY);
-        }
-        
+    @Override
+    public void sendLogin(Twofa twofa) throws ProjException, FailException {
         // todo  send code
+        CodeSendRecord e = Builder.set("type", CodeSendRecordType.TWOFA).set("username", twofa.getCodeTo()).set("code", twofa.getCode()).to(new CodeSendRecord());
+        dio.save(e);
+    }
+
+    @Override
+    public void sendForgetUrl(AccountRecover accountRecover) throws FailException {
+        CodeSendRecord e = Builder.set("type", CodeSendRecordType.FORGET_PASSWORD).set("username", accountRecover.getPhone()).set("code", accountRecover.getCode()).to(new CodeSendRecord());
+        // todo send code
+        dio.save(e);
     }
 
 }

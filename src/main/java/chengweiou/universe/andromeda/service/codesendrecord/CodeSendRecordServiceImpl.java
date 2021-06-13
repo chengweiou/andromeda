@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.codesendrecord.CodeSendRecord;
 import chengweiou.universe.blackhole.exception.FailException;
+import chengweiou.universe.blackhole.exception.ProjException;
 
 @Service
 public class CodeSendRecordServiceImpl implements CodeSendRecordService {
@@ -15,7 +16,7 @@ public class CodeSendRecordServiceImpl implements CodeSendRecordService {
     private CodeSendRecordDio dio;
 
     @Override
-    public void save(CodeSendRecord e) throws FailException {
+    public void save(CodeSendRecord e) throws FailException, ProjException {
         dio.save(e);
     }
 

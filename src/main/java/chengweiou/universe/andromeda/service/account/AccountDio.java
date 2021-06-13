@@ -1,16 +1,17 @@
 package chengweiou.universe.andromeda.service.account;
 
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import chengweiou.universe.andromeda.dao.AccountDao;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ProjException;
 import chengweiou.universe.blackhole.model.BasicRestCode;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 
 @Component
@@ -38,7 +39,10 @@ public class AccountDio {
         return dao.update(e);
     }
 
+    // cannot update username, type, will let all account become the same
     public long updateByPerson(Account e) {
+        e.setUsername(null);
+        e.setType(null);
         e.updateAt();
         return dao.updateByPerson(e);
     }

@@ -15,10 +15,16 @@ import org.springframework.web.context.WebApplicationContext;
 import chengweiou.universe.andromeda.data.Data;
 import chengweiou.universe.andromeda.model.Auth;
 import chengweiou.universe.andromeda.model.ProjectRestCode;
+import chengweiou.universe.andromeda.model.entity.Account;
+import chengweiou.universe.andromeda.model.entity.AccountRecover;
 import chengweiou.universe.andromeda.model.entity.LoginRecord;
 import chengweiou.universe.andromeda.model.entity.Twofa;
 import chengweiou.universe.andromeda.model.entity.TwofaType;
+import chengweiou.universe.andromeda.model.entity.codesendrecord.CodeSendRecord;
+import chengweiou.universe.andromeda.service.account.AccountService;
 import chengweiou.universe.andromeda.service.account.TwofaDio;
+import chengweiou.universe.andromeda.service.accountrecover.AccountRecoverDio;
+import chengweiou.universe.andromeda.service.codesendrecord.CodeSendRecordDio;
 import chengweiou.universe.andromeda.service.loginrecord.LoginRecordDio;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Builder;
@@ -36,6 +42,12 @@ public class AccountTest {
 	private LoginRecordDio loginRecordDio;
 	@Autowired
 	private TwofaDio twofaDio;
+	@Autowired
+	private CodeSendRecordDio codeSendRecordDio;
+	@Autowired
+	private AccountService accountService;
+	@Autowired
+	private AccountRecoverDio accountRecoverDio;
 
 	@Test
 	public void login() throws Exception {
@@ -64,15 +76,15 @@ public class AccountTest {
 		String result = mvc.perform(MockMvcRequestBuilders.post("/login")
 				.param("username", "ou").param("password", "123")
 			).andReturn().getResponse().getContentAsString();
-		Rest<Auth> loginRest = Rest.from(result, ProjectRestCode.class);
+		Rest<Auth> loginRest = Rest.from(result, ProjectRestCode.class, Auth.class);
 		Assertions.assertEquals(ProjectRestCode.TWOFA_WAITING, loginRest.getCode());
 		
 		Twofa codedTwofa = twofaDio.findById(data.twofaList.get(0));
 
-		String result2 = mvc.perform(MockMvcRequestBuilders.post("/checkTwofa")
+		result = mvc.perform(MockMvcRequestBuilders.post("/checkTwofa")
 				.param("token", codedTwofa.getToken()).param("code", codedTwofa.getCode())
 			).andReturn().getResponse().getContentAsString();
-		Rest<Auth> twofaRest = Rest.from(result2, Auth.class);
+		Rest<Auth> twofaRest = Rest.from(result, Auth.class);
 		Assertions.assertEquals(BasicRestCode.OK, twofaRest.getCode());
 		Assertions.assertEquals(true, !twofaRest.getData().getToken().equals(""));
 		Assertions.assertEquals(true, !twofaRest.getData().getRefreshToken().equals(""));
@@ -137,6 +149,67 @@ public class AccountTest {
 		rest = Rest.from(result);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
 		Assertions.assertEquals(true, rest.getData());
+	}
+
+	@Test
+	public void forgetPassword() throws Exception {
+		String result = mvc.perform(MockMvcRequestBuilders.post("/forgetPassword/1")
+				.param("username", "ou")
+			).andReturn().getResponse().getContentAsString();
+		Rest<AccountRecover> forgetRest1 = Rest.from(result, AccountRecover.class);
+		Assertions.assertEquals(BasicRestCode.OK, forgetRest1.getCode());
+		Assertions.assertEquals("********00", forgetRest1.getData().getPhone());
+		Assertions.assertEquals("a***@a***", forgetRest1.getData().getEmail());
+
+		// fail wrong a1
+		result = mvc.perform(MockMvcRequestBuilders.post("/forgetPassword/2")
+				.param("id", forgetRest1.getData().getId().toString()).param("a1", "a2")
+			).andReturn().getResponse().getContentAsString();
+		Rest<String> failRest = Rest.from(result, ProjectRestCode.class);
+		Assertions.assertEquals(ProjectRestCode.ACCOUNT_NOT_MATCH, failRest.getCode());
+
+		result = mvc.perform(MockMvcRequestBuilders.post("/forgetPassword/2")
+				.param("id", forgetRest1.getData().getId().toString()).param("phone", "9790000000")
+			).andReturn().getResponse().getContentAsString();
+		Rest<String> forgetRest2 = Rest.from(result);
+		Assertions.assertEquals(BasicRestCode.OK, forgetRest2.getCode());
+		Assertions.assertEquals(null, forgetRest2.getData());
+
+		AccountRecover indb = accountRecoverDio.findById(Builder.set("id", forgetRest1.getData().getId()).to(new AccountRecover()));
+
+		result = mvc.perform(MockMvcRequestBuilders.post("/forgetPassword/3")
+				.param("id", indb.getId().toString()).param("code", indb.getCode()).param("password", "321")
+			).andReturn().getResponse().getContentAsString();
+		Rest<String> forgetRest = Rest.from(result);
+		Assertions.assertEquals(BasicRestCode.OK, forgetRest.getCode());
+		Assertions.assertEquals(null, forgetRest.getData());
+
+		// fail code used
+		result = mvc.perform(MockMvcRequestBuilders.post("/forgetPassword/3")
+				.param("id", indb.getId().toString()).param("code", indb.getCode()).param("password", "321")
+			).andReturn().getResponse().getContentAsString();
+		failRest = Rest.from(result, ProjectRestCode.class);
+		Assertions.assertEquals(ProjectRestCode.CODE_NOT_MATCH, failRest.getCode());
+
+		result = mvc.perform(MockMvcRequestBuilders.post("/login")
+				.param("username", "ou").param("password", "321")
+			).andReturn().getResponse().getContentAsString();
+		Rest<Auth> loginRest = Rest.from(result, Auth.class);
+		Assertions.assertEquals(BasicRestCode.OK, loginRest.getCode());
+		Assertions.assertEquals(true, !loginRest.getData().getToken().equals(""));
+		Assertions.assertEquals(true, !loginRest.getData().getRefreshToken().equals(""));
+
+		result = mvc.perform(MockMvcRequestBuilders.post("/logout")
+				.param("refreshToken", loginRest.getData().getRefreshToken())
+		).andReturn().getResponse().getContentAsString();
+		Rest<Boolean> logoutRest = Rest.from(result);
+		Assertions.assertEquals(BasicRestCode.OK, logoutRest.getCode());
+		LoginRecord delLoginRecord = loginRecordDio.findLast(data.accountList.get(0));
+		loginRecordDio.delete(delLoginRecord);
+		accountService.updateByPerson(Builder.set("person", data.accountList.get(0).getPerson()).set("password", "123").to(new Account()));
+		accountRecoverDio.update(data.accountRecoverList.get(0));
+		CodeSendRecord delCodeSendRecord = codeSendRecordDio.findLastByUsername(Builder.set("username", "9790000000").to(new CodeSendRecord()));
+		codeSendRecordDio.delete(delCodeSendRecord);
 	}
 
 	@BeforeEach

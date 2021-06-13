@@ -22,7 +22,8 @@ import chengweiou.universe.andromeda.model.entity.Twofa;
 @Repository
 @Mapper
 public interface TwofaDao {
-    @Insert("insert into twofa(personId, type, codeTo, loginAccountId, token, code, createAt, updateAt) values(#{person.id}, #{type}, #{codeTo}, #{loginAccount.id}, #{token}, #{code}, #{createAt}, #{updateAt})")
+    @Insert("insert into twofa(personId, type, codeTo, loginAccountId, token, code, codeExp, createAt, updateAt) " + 
+            "values(#{person.id}, #{type}, #{codeTo}, #{loginAccount.id}, #{token}, #{code}, #{codeExp}, #{createAt}, #{updateAt})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     long save(Twofa e);
 
@@ -79,6 +80,7 @@ public interface TwofaDao {
                 if (e.getLoginAccount() != null) SET("loginAccountId = #{loginAccount.id}");
                 if (e.getToken() != null) SET("token = #{token}");
                 if (e.getCode() != null) SET("code = #{code}");
+                if (e.getCodeExp() != null) SET("codeExp = #{codeExp}");
                 SET("updateAt = #{updateAt}");
                 WHERE("id=#{id}");
             }}.toString();
@@ -92,6 +94,7 @@ public interface TwofaDao {
                 if (e.getLoginAccount() != null) SET("loginAccountId = #{loginAccount.id}");
                 if (e.getToken() != null) SET("token = #{token}");
                 if (e.getCode() != null) SET("code = #{code}");
+                if (e.getCodeExp() != null) SET("codeExp = #{codeExp}");
                 SET("updateAt = #{updateAt}");
                 WHERE("personId=#{person.id}");
             }}.toString();
