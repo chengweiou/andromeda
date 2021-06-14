@@ -1,8 +1,6 @@
 package chengweiou.universe.andromeda.controller.me;
 
 
-import java.util.List;
-
 import com.google.gson.Gson;
 
 import org.junit.jupiter.api.Assertions;
@@ -19,51 +17,75 @@ import org.springframework.web.context.WebApplicationContext;
 import chengweiou.universe.andromeda.data.Data;
 import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.andromeda.model.entity.AccountNew;
-import chengweiou.universe.andromeda.model.entity.LoginRecord;
+import chengweiou.universe.andromeda.service.account.AccountNewDio;
+import chengweiou.universe.andromeda.service.account.AccountNewService;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.model.Rest;
 
 @SpringBootTest
 @ActiveProfiles("test")
-public class LoginRecordTest {
+public class AccountNewTest {
 	private MockMvc mvc;
 	@Autowired
 	private WebApplicationContext webApplicationContext;
 	@Autowired
 	private Data data;
+	@Autowired
+	private AccountNewDio dio;
+	@Autowired
+	private AccountNewService service;
 	private AccountNew loginAccount;
 
 	@Test
-	public void count() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.get("/me/loginRecord/count")
+	public void findMe() throws Exception {
+		String result = mvc.perform(MockMvcRequestBuilders.get("/me/accountNew")
 				.header("loginAccount", new Gson().toJson(loginAccount))
-		).andReturn().getResponse().getContentAsString();
-		Rest<Long> rest = Rest.from(result, Long.class);
+			).andReturn().getResponse().getContentAsString();
+		Rest<AccountNew> rest = Rest.from(result, AccountNew.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
-		Assertions.assertEquals(0, rest.getData());
+		Assertions.assertEquals("ou", rest.getData().getUsername());
 	}
+
 	@Test
-	public void find() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.get("/me/loginRecord")
+	public void update() throws Exception {
+		String result = mvc.perform(MockMvcRequestBuilders.put("/me/accountNew")
 				.header("loginAccount", new Gson().toJson(loginAccount))
+				.param("username", "otest1")
 		).andReturn().getResponse().getContentAsString();
-		Rest<List<LoginRecord>> rest = Rest.from(result, List.class);
+		Rest<Boolean> rest = Rest.from(result);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
-		Assertions.assertEquals(0, rest.getData().size());
+		Assertions.assertEquals(true, rest.getData());
+
+		dio.update(Builder.set("id", 1).set("username", "ou").to(new AccountNew()));
 	}
+
 	@Test
-	public void findFailUnauth() throws Exception {
-		String result = mvc.perform(MockMvcRequestBuilders.get("/me/loginRecord")
+	public void updatePassword() throws Exception {
+		String result = mvc.perform(MockMvcRequestBuilders.put("/me/accountNew/password")
+				.header("loginAccount", new Gson().toJson(loginAccount))
+				.param("oldPassword", "123")
+				.param("password", "abcdefg")
 		).andReturn().getResponse().getContentAsString();
-		Rest<List<LoginRecord>> rest = Rest.from(result, List.class);
+		Rest<Boolean> saveRest = Rest.from(result, Boolean.class);
+		Assertions.assertEquals(BasicRestCode.OK, saveRest.getCode());
+
+		service.updateByPerson(Builder.set("person", loginAccount.getPerson()).set("password", "123").to(new AccountNew()));
+	}
+
+	@Test
+	public void updateFailUnauth() throws Exception {
+		String result = mvc.perform(MockMvcRequestBuilders.put("/me/accountNew")
+				.param("username", "otest1")
+		).andReturn().getResponse().getContentAsString();
+		Rest<Boolean> rest = Rest.from(result);
 		Assertions.assertEquals(BasicRestCode.UNAUTH, rest.getCode());
 	}
 
 	@BeforeEach
 	public void before() {
 		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-		loginAccount = Builder.set("person", Builder.set("id", 2L).to(new Person()))
+		loginAccount = Builder.set("person", Builder.set("id", 1L).to(new Person()))
 				.set("extra", "MEMBER")
 				.to(new AccountNew());
 	}

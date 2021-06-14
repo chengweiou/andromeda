@@ -17,7 +17,7 @@ public class Twofa implements NotNullObj, Serializable {
     private Person person;
     private TwofaType type;
     private String codeTo; // 用于接受验证的设备账号
-    private Account loginAccount; // 生成 jwt 时候需要的参数, 本次登录时候的账号
+    private AccountNew loginAccount; // 生成 jwt 时候需要的参数, 本次登录时候的账号
     private String token; // 和 code 一起返回， 也可以用于email的link直接登录
     private String code;
     private LocalDateTime codeExp;
@@ -25,7 +25,7 @@ public class Twofa implements NotNullObj, Serializable {
     private LocalDateTime updateAt;
 
     public void cleanCode() {
-        loginAccount = Builder.set("id", 0).to(new Account());
+        loginAccount = Builder.set("id", 0).to(new AccountNew());
         token = "";
         code = "";
         codeExp = LocalDateTime.of(1000, 1, 1, 0, 0, 0);

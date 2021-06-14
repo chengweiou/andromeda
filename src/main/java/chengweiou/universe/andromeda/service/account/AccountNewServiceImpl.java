@@ -53,8 +53,17 @@ public class AccountNewServiceImpl implements AccountNewService {
     }
 
     @Override
+    public AccountNew findByPerson(AccountNew e) {
+        return dio.findByPerson(e);
+    }
+
+    @Override
     public long countByLoginUsername(AccountNew e) {
         return dio.countByLoginUsername(e);
+    }
+    @Override
+    public AccountNew findByLoginUsername(AccountNew e) {
+        return dio.findByLoginUsername(e);
     }
     @Override
     public AccountNew login(AccountNew e) throws ProjException {

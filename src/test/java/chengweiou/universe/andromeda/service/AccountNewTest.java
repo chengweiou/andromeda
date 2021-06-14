@@ -93,6 +93,13 @@ public class AccountNewTest {
 	}
 
 	@Test
+	public void findByPerson() throws ProjException {
+		AccountNew e = Builder.set("person", data.accountNewList.get(0).getPerson()).to(new AccountNew());
+		AccountNew indb = service.findByPerson(e);
+		Assertions.assertEquals(data.accountNewList.get(0).getEmail(), indb.getEmail());
+	}
+
+	@Test
 	public void count() {
 		long count = service.count(new SearchCondition(), null);
 		Assertions.assertEquals(2, count);
@@ -114,6 +121,14 @@ public class AccountNewTest {
 		Assertions.assertEquals(1, count);
 		count = service.countByLoginUsername(Builder.set("username", username.substring(0, username.length() - 1)).to(new AccountNew()));
 		Assertions.assertEquals(0, count);
+	}
+
+	@Test
+	public void findByLoginUsername() {
+		// todo 是否合法，在家一个config名单,不允许注册的系统名，比如管理员xxx。这边检查要加，注册也要处理。
+		String username = data.accountNewList.get(0).getPhone();
+		AccountNew indb = service.findByLoginUsername(Builder.set("username", username).to(new AccountNew()));
+		Assertions.assertEquals(data.accountNewList.get(0).getId(), indb.getId());
 	}
 
 	@Test
@@ -155,7 +170,7 @@ public class AccountNewTest {
 
 	@Test
 	public void findAfterTokenAndCode() throws ProjException {
-		Twofa twofa = Builder.set("id", 1).set("type", TwofaType.EMAIL).set("codeTo", "a@a.c").set("loginAccount", data.accountList.get(0)).set("token", "aaa").set("code", "111").to(new Twofa());
+		Twofa twofa = Builder.set("id", 1).set("type", TwofaType.EMAIL).set("codeTo", "a@a.c").set("loginAccount", data.accountNewList.get(0)).set("token", "aaa").set("code", "111").to(new Twofa());
 		long count = twofaDio.update(twofa);
 		AccountNew indb = service.findAfterCheckCode(Builder.set("token", "aaa").set("code", "111").to(new Twofa()));
 		Assertions.assertEquals(data.accountNewList.get(0).getId(), indb.getId());
@@ -165,7 +180,7 @@ public class AccountNewTest {
 
 	@Test
 	public void findAfterTokenAndCodeFail() throws ProjException {
-		Twofa twofa = Builder.set("id", 1).set("type", TwofaType.EMAIL).set("codeTo", "a@a.c").set("loginAccount", data.accountList.get(0)).set("token", "aaa").set("code", "111").to(new Twofa());
+		Twofa twofa = Builder.set("id", 1).set("type", TwofaType.EMAIL).set("codeTo", "a@a.c").set("loginAccount", data.accountNewList.get(0)).set("token", "aaa").set("code", "111").to(new Twofa());
 		long count = twofaDio.update(twofa);
 		Assertions.assertThrows(ProjException.class, () -> service.findAfterCheckCode(Builder.set("token", "aaa").set("code", "222").to(new Twofa())));
 		

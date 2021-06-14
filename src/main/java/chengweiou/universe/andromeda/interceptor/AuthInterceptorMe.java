@@ -1,21 +1,24 @@
 package chengweiou.universe.andromeda.interceptor;
 
-import chengweiou.universe.andromeda.model.entity.Account;
-import chengweiou.universe.blackhole.model.BasicRestCode;
-import chengweiou.universe.blackhole.model.Rest;
-import com.google.gson.Gson;
-import org.springframework.web.servlet.HandlerInterceptor;
+import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import com.google.gson.Gson;
+
+import org.springframework.web.servlet.HandlerInterceptor;
+
+import chengweiou.universe.andromeda.model.entity.AccountNew;
+import chengweiou.universe.blackhole.model.BasicRestCode;
+import chengweiou.universe.blackhole.model.Rest;
 
 public class AuthInterceptorMe implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String accountJson = request.getHeader("loginAccount");
         if (accountJson == null) return unauth(response);
-        Account loginAccount = new Gson().fromJson(accountJson, Account.class);
+        AccountNew loginAccount = new Gson().fromJson(accountJson, AccountNew.class);
         if (loginAccount.getPerson() == null) return unauth(response);
         return true;
     }

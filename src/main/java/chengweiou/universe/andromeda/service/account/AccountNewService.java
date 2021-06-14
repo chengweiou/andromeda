@@ -17,8 +17,10 @@ public interface AccountNewService {
     long updateByPerson(AccountNew e) throws ProjException;
 
     AccountNew findById(AccountNew e);
+    AccountNew findByPerson(AccountNew e);
 
     long countByLoginUsername(AccountNew e);
+    AccountNew findByLoginUsername(AccountNew e);
     AccountNew login(AccountNew e) throws ProjException;
 
     long countByUsernameOfOther(AccountNew e);

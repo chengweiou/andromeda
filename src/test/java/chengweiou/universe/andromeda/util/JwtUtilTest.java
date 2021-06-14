@@ -9,7 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 import chengweiou.universe.andromeda.base.jwt.JwtUtil;
 import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.andromeda.model.PersonType;
-import chengweiou.universe.andromeda.model.entity.Account;
+import chengweiou.universe.andromeda.model.entity.AccountNew;
 import chengweiou.universe.blackhole.exception.UnauthException;
 import chengweiou.universe.blackhole.model.Builder;
 
@@ -20,9 +20,9 @@ public class JwtUtilTest {
     private JwtUtil jwtUtil;
     @Test
     public void sign() throws UnauthException {
-        String token = jwtUtil.sign(Builder.set("username", "ou").set("person", Builder.set("id", "1").to(new Person())).set("extra", PersonType.SUPER.toString()).to(new Account()));
+        String token = jwtUtil.sign(Builder.set("username", "ou").set("person", Builder.set("id", "1").to(new Person())).set("extra", PersonType.SUPER.toString()).to(new AccountNew()));
         System.out.println(token);
-        Account account = jwtUtil.verify(token);
+        AccountNew account = jwtUtil.verify(token);
         System.out.println("------------------------");
         Assertions.assertEquals("1", account.getPerson().getId());
         Assertions.assertEquals("aa", account.getExtra());

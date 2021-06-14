@@ -57,23 +57,21 @@ public interface CodeSendRecordDao {
         }
 
         public String count(@Param("searchCondition")final SearchCondition searchCondition, @Param("sample")final CodeSendRecord sample) {
-            return new SQL() {{
-                SELECT("count(*)"); FROM("codeSendRecord");
-                if (searchCondition.getK() != null) WHERE("username LIKE #{searchCondition.like.k}");
-                if (sample != null) {
-                    if (sample.getType() != null) WHERE("type = #{sample.type}"); 
-                }
-            }}.toString();
+            return baseFind(searchCondition, sample).SELECT("count(*)").toString();
         }
 
         public String find(@Param("searchCondition")final SearchCondition searchCondition, @Param("sample")final CodeSendRecord sample) {
+            return baseFind(searchCondition, sample).SELECT("*").toString().concat(searchCondition.getOrderBy()).concat(searchCondition.getSqlLimit());
+        }
+
+        private SQL baseFind(SearchCondition searchCondition, CodeSendRecord sample) {
             return new SQL() {{
-                SELECT("*"); FROM("codeSendRecord");
+                FROM("codeSendRecord");
                 if (searchCondition.getK() != null) WHERE("username LIKE #{searchCondition.like.k}");
                 if (sample != null) {
                     if (sample.getType() != null) WHERE("type = #{sample.type}"); 
                 }
-            }}.toString().concat(searchCondition.getOrderBy()).concat(searchCondition.getSqlLimit());
+            }};
         }
     }
 }

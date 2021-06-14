@@ -101,21 +101,20 @@ public interface TwofaDao {
         }
 
         public String count(@Param("searchCondition")final SearchCondition searchCondition, @Param("sample")final Twofa sample) {
-            return new SQL() {{
-                SELECT("count(*)"); FROM("twofa");
-                if (sample != null) {
-                    if (sample.getType() != null) WHERE("type = #{sample.type}");
-                }
-            }}.toString();
+            return baseFind(searchCondition, sample).SELECT("count(*)").toString();
         }
 
         public String find(@Param("searchCondition")final SearchCondition searchCondition, @Param("sample")final Twofa sample) {
+            return baseFind(searchCondition, sample).SELECT("*").toString().concat(searchCondition.getOrderBy()).concat(searchCondition.getSqlLimit());
+        }
+
+        private SQL baseFind(SearchCondition searchCondition, Twofa sample) {
             return new SQL() {{
-                SELECT("*"); FROM("twofa");
+                FROM("twofa");
                 if (sample != null) {
                     if (sample.getType() != null) WHERE("type = #{sample.type}");
                 }
-            }}.toString().concat(searchCondition.getOrderBy()).concat(searchCondition.getSqlLimit());
+            }};
         }
     }
 }

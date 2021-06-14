@@ -17,12 +17,12 @@ import chengweiou.universe.andromeda.base.jwt.JwtUtil;
 import chengweiou.universe.andromeda.base.redis.JedisUtil;
 import chengweiou.universe.andromeda.model.Auth;
 import chengweiou.universe.andromeda.model.ProjectRestCode;
-import chengweiou.universe.andromeda.model.entity.Account;
+import chengweiou.universe.andromeda.model.entity.AccountNew;
 import chengweiou.universe.andromeda.model.entity.AccountRecover;
 import chengweiou.universe.andromeda.model.entity.LoginRecord;
 import chengweiou.universe.andromeda.model.entity.Twofa;
 import chengweiou.universe.andromeda.model.entity.TwofaType;
-import chengweiou.universe.andromeda.service.account.AccountService;
+import chengweiou.universe.andromeda.service.account.AccountNewService;
 import chengweiou.universe.andromeda.service.account.TwofaService;
 import chengweiou.universe.andromeda.service.accountrecover.AccountRecoverService;
 import chengweiou.universe.andromeda.service.codesendrecord.CodeSendRecordService;
@@ -39,9 +39,9 @@ import chengweiou.universe.blackhole.model.Rest;
 import chengweiou.universe.blackhole.param.Valid;
 
 @RestController
-public class AccountController {
+public class AccountNewController {
     @Autowired
-    private AccountService service;
+    private AccountNewService service;
     @Autowired
     private TwofaService twofaService;
     @Autowired
@@ -64,10 +64,10 @@ public class AccountController {
     private JwtConfig jwtConfig;
 
     @PostMapping("/login")
-    public Rest<Auth> login(Account e) throws ParamException, ProjException, FailException {
-        Valid.check("account.username", e.getUsername()).is().lengthIn(30);
-        Valid.check("account.password", e.getPassword()).is().notEmpty();
-        Account indb = service.login(e);
+    public Rest<Auth> login(AccountNew e) throws ParamException, ProjException, FailException {
+        Valid.check("accountNew.username", e.getUsername()).is().lengthIn(30);
+        Valid.check("accountNew.password", e.getPassword()).is().notEmpty();
+        AccountNew indb = service.login(e);
         Twofa twofa = twofaService.findByPerson(Builder.set("person", indb.getPerson()).to(new Twofa()));
         
         if (twofa.getType() != null && twofa.getType() != TwofaType.NONE) {
@@ -100,12 +100,12 @@ public class AccountController {
         Valid.check("twofa.token", twofa.getToken()).is().notEmpty();
         Valid.check("twofa.code", twofa.getCode()).is().notEmpty();
 
-        Account indb = service.findAfterCheckCode(twofa);
+        AccountNew indb = service.findAfterCheckCode(twofa);
         Auth auth = getAuthBySuccessLogin(indb);
         return Rest.ok(auth);
     }
 
-    private Auth getAuthBySuccessLogin(Account indb) {
+    private Auth getAuthBySuccessLogin(AccountNew indb) {
         String token = jwtUtil.sign(indb);
         String refreshToken = RandomStringUtils.randomAlphabetic(256);
         jedisUtil.set(refreshToken, token, jwtConfig.getRefreshExpMinute().intValue()*60);
@@ -128,16 +128,16 @@ public class AccountController {
     @PostMapping("/token/refresh")
     public Rest<Auth> refresh(Auth auth) throws UnauthException {
         String oldToken = jedisUtil.get(auth.getRefreshToken());
-        Account e = jwtUtil.verify(oldToken);
+        AccountNew e = jwtUtil.verify(oldToken);
         String token = jwtUtil.sign(e);
         jedisUtil.set(auth.getRefreshToken(), token, jwtConfig.getRefreshExpMinute().intValue()*60);
         return Rest.ok(Builder.set("token", token).to(auth));
     }
 
-    @GetMapping("/account/username/check")
-    public Rest<Boolean> checkUsername(Account e) throws ParamException {
-        Valid.check("account.username", e.getUsername()).is().lengthIn(30);
-        long count = service.countByUsername(e);
+    @GetMapping("/accountNew/username/check")
+    public Rest<Boolean> checkUsername(AccountNew e) throws ParamException {
+        Valid.check("accountNew.username", e.getUsername()).is().lengthIn(30);
+        long count = service.countByLoginUsername(e);
         return Rest.ok(count == 0);
     }
 
@@ -148,9 +148,9 @@ public class AccountController {
 
     // 忘记密码：1. 输入用户名，返回可选的恢复账号方式
     @PostMapping("/forgetPassword/1")
-    public Rest<AccountRecover> forgetPassword1(Account e) throws ParamException, ProjException, FailException {
-        Valid.check("account.username", e.getUsername()).is().lengthIn(30);
-        Account indb = service.findByUsername(e);
+    public Rest<AccountRecover> forgetPassword1(AccountNew e) throws ParamException, ProjException, FailException {
+        Valid.check("accountNew.username", e.getUsername()).is().lengthIn(30);
+        AccountNew indb = service.findByLoginUsername(e);
         AccountRecover result = accountRecoverService.findByPerson(Builder.set("person", indb.getPerson()).to(new AccountRecover()));
         if (result.getPhone() != null) {
             result.setPhone("********" + result.getPhone().substring(result.getPhone().length() - 2));
@@ -194,14 +194,14 @@ public class AccountController {
 
     // 忘记密码: 3. 新密码
     @PostMapping("/forgetPassword/3")
-    public Rest<String> forgetPassword3(AccountRecover accountRecover, Account e) throws ParamException, ProjException {
+    public Rest<String> forgetPassword3(AccountRecover accountRecover, AccountNew e) throws ParamException, ProjException {
         Valid.check("accountRecover.id", accountRecover.getId()).is().positive();
         Valid.check("accountRecover.code", accountRecover.getCode()).is().lengthIs(50);
-        Valid.check("account.password", e.getPassword()).is().lengthIn(30);
+        Valid.check("accountNew.password", e.getPassword()).is().lengthIn(30);
         e.setId(null);
         AccountRecover accountRecoverIndb = accountRecoverService.findByActiveCode(accountRecover);        
         // 可能多个账号
-        boolean success = service.updateByPerson(Builder.set("person", accountRecoverIndb.getPerson()).set("password", e.getPassword()).to(new Account())) > 0;
+        boolean success = service.updateByPerson(Builder.set("person", accountRecoverIndb.getPerson()).set("password", e.getPassword()).to(new AccountNew())) > 0;
         if (!success) {
             return Rest.fail(BasicRestCode.FAIL);
         }

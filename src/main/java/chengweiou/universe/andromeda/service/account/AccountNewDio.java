@@ -64,6 +64,10 @@ public class AccountNewDio {
         AccountNew result = dao.findById(e);
         return result != null ? result : AccountNew.NULL;
     }
+    public AccountNew findByPerson(AccountNew e) {
+        AccountNew result = dao.findByPerson(e);
+        return result != null ? result : AccountNew.NULL;
+    }
 
     public long countByUsername(AccountNew e) {
         return dao.countByUsername(e);

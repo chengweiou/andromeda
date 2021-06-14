@@ -1,15 +1,14 @@
 package chengweiou.universe.andromeda.service.loginrecord;
 
-import chengweiou.universe.andromeda.model.Person;
-import chengweiou.universe.andromeda.model.SearchCondition;
-import chengweiou.universe.andromeda.model.entity.Account;
-import chengweiou.universe.andromeda.model.entity.LoginRecord;
-import chengweiou.universe.blackhole.exception.FailException;
-import chengweiou.universe.blackhole.model.Builder;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import chengweiou.universe.andromeda.model.SearchCondition;
+import chengweiou.universe.andromeda.model.entity.AccountNew;
+import chengweiou.universe.andromeda.model.entity.LoginRecord;
+import chengweiou.universe.blackhole.exception.FailException;
 
 @Service
 public class LoginRecordServiceImpl implements LoginRecordService {
@@ -32,7 +31,7 @@ public class LoginRecordServiceImpl implements LoginRecordService {
     }
 
     @Override
-    public LoginRecord findLast(Account account) {
+    public LoginRecord findLast(AccountNew account) {
         return dio.findLast(account);
     }
 

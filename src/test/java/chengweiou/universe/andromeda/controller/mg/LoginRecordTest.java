@@ -1,10 +1,8 @@
-package chengweiou.universe.andromeda.controller.api;
+package chengweiou.universe.andromeda.controller.mg;
 
 
-import chengweiou.universe.andromeda.data.Data;
-import chengweiou.universe.andromeda.model.entity.LoginRecord;
-import chengweiou.universe.blackhole.model.BasicRestCode;
-import chengweiou.universe.blackhole.model.Rest;
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +14,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.List;
+import chengweiou.universe.andromeda.data.Data;
+import chengweiou.universe.andromeda.model.entity.LoginRecord;
+import chengweiou.universe.blackhole.model.BasicRestCode;
+import chengweiou.universe.blackhole.model.Rest;
 
 @SpringBootTest
 @ActiveProfiles("test")

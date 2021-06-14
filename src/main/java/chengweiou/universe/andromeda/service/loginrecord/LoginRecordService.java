@@ -1,13 +1,12 @@
 package chengweiou.universe.andromeda.service.loginrecord;
 
 
-import chengweiou.universe.andromeda.model.Person;
+import java.util.List;
+
 import chengweiou.universe.andromeda.model.SearchCondition;
-import chengweiou.universe.andromeda.model.entity.Account;
+import chengweiou.universe.andromeda.model.entity.AccountNew;
 import chengweiou.universe.andromeda.model.entity.LoginRecord;
 import chengweiou.universe.blackhole.exception.FailException;
-
-import java.util.List;
 
 public interface LoginRecordService {
     void save(LoginRecord e) throws FailException;
@@ -15,7 +14,7 @@ public interface LoginRecordService {
 
     long update(LoginRecord e);
 
-    LoginRecord findLast(Account account);
+    LoginRecord findLast(AccountNew account);
 
     long count(SearchCondition searchCondition, LoginRecord sample);
     List<LoginRecord> find(SearchCondition searchCondition, LoginRecord sample);

@@ -39,6 +39,9 @@ public interface AccountNewDao {
     @Select("select * from accountNew where id=#{id}")
     @Results({@Result(property = "person.id", column = "personId")})
     AccountNew findById(AccountNew e);
+    @Select("select * from accountNew where personId=#{person.id}")
+    @Results({@Result(property = "person.id", column = "personId")})
+    AccountNew findByPerson(AccountNew e);
 
     @Select("select count(*) from accountNew where username=#{username}")
     long countByUsername(AccountNew e);

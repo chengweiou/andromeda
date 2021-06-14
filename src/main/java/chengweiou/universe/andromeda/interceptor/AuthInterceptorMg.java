@@ -1,17 +1,20 @@
 package chengweiou.universe.andromeda.interceptor;
 
-import chengweiou.universe.andromeda.model.PersonType;
-import chengweiou.universe.andromeda.model.entity.Account;
-import chengweiou.universe.blackhole.model.BasicRestCode;
-import chengweiou.universe.blackhole.model.Rest;
-import com.google.gson.Gson;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerInterceptor;
+import java.io.IOException;
+import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Arrays;
+
+import com.google.gson.Gson;
+
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerInterceptor;
+
+import chengweiou.universe.andromeda.model.PersonType;
+import chengweiou.universe.andromeda.model.entity.AccountNew;
+import chengweiou.universe.blackhole.model.BasicRestCode;
+import chengweiou.universe.blackhole.model.Rest;
 
 public class AuthInterceptorMg implements HandlerInterceptor {
     @Override
@@ -19,7 +22,7 @@ public class AuthInterceptorMg implements HandlerInterceptor {
         if (checkInServer(request)) return true;
         String accountJson = request.getHeader("loginAccount");
         if (accountJson == null) return unauth(response);
-        Account loginAccount = new Gson().fromJson(accountJson, Account.class);
+        AccountNew loginAccount = new Gson().fromJson(accountJson, AccountNew.class);
         PersonType personType = PersonType.valueOf(loginAccount.getExtra());
         if (personType == PersonType.SUPER) return true;
         boolean additionalAuth = checkAdditionalAuth(personType, handler);

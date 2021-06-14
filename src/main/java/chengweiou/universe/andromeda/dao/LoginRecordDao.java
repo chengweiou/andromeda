@@ -1,15 +1,24 @@
 package chengweiou.universe.andromeda.dao;
 
 
-import chengweiou.universe.andromeda.model.Person;
-import chengweiou.universe.andromeda.model.SearchCondition;
-import chengweiou.universe.andromeda.model.entity.Account;
-import chengweiou.universe.andromeda.model.entity.LoginRecord;
-import org.apache.ibatis.annotations.*;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import chengweiou.universe.andromeda.model.SearchCondition;
+import chengweiou.universe.andromeda.model.entity.AccountNew;
+import chengweiou.universe.andromeda.model.entity.LoginRecord;
 
 @Repository
 @Mapper
@@ -30,7 +39,7 @@ public interface LoginRecordDao {
             @Result(property = "account.id", column = "accountId"),
             @Result(property = "account.person.id", column = "personId"),
     })
-    LoginRecord findLastByAccount(Account account);
+    LoginRecord findLastByAccount(AccountNew account);
 
     @SelectProvider(type = Sql.class, method = "count")
     long count(@Param("searchCondition") SearchCondition searchCondition, @Param("sample") LoginRecord sample);
@@ -56,23 +65,18 @@ public interface LoginRecordDao {
             }}.toString();
         }
 
+
         public String count(@Param("searchCondition")final SearchCondition searchCondition, @Param("sample")final LoginRecord sample) {
-            return new SQL() {{
-                SELECT("count(*)"); FROM("loginRecord");
-                if (searchCondition.getK() != null) WHERE("ip LIKE #{searchCondition.like.k}")
-                        .OR().WHERE("platform LIKE #{searchCondition.like.k}");
-                if (sample != null) {
-                    if (sample.getAccount() != null) {
-                        if (sample.getAccount().getId() != null) WHERE("accountId=#{sample.account.id}");
-                        if (sample.getAccount().getPerson() != null) WHERE("personId=#{sample.account.person.id}");
-                    }
-                }
-            }}.toString();
+            return baseFind(searchCondition, sample).SELECT("count(*)").toString();
         }
 
         public String find(@Param("searchCondition")final SearchCondition searchCondition, @Param("sample")final LoginRecord sample) {
+            return baseFind(searchCondition, sample).SELECT("*").toString().concat(searchCondition.getOrderBy()).concat(searchCondition.getSqlLimit());
+        }
+
+        private SQL baseFind(SearchCondition searchCondition, LoginRecord sample) {
             return new SQL() {{
-                SELECT("*"); FROM("loginRecord");
+                FROM("loginRecord");
                 if (searchCondition.getK() != null) WHERE("ip LIKE #{searchCondition.like.k}")
                         .OR().WHERE("platform LIKE #{searchCondition.like.k}");
                 if (sample != null) {
@@ -81,7 +85,7 @@ public interface LoginRecordDao {
                         if (sample.getAccount().getPerson() != null) WHERE("personId=#{sample.account.person.id}");
                     }
                 }
-            }}.toString().concat(searchCondition.getOrderBy()).concat(searchCondition.getSqlLimit());
+            }};
         }
     }
 }

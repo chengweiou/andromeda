@@ -73,23 +73,21 @@ public interface AccountRecoverDao {
         }
 
         public String count(@Param("searchCondition")final SearchCondition searchCondition, @Param("sample")final AccountRecover sample) {
-            return new SQL() {{
-                SELECT("count(*)"); FROM("accountRecover");
-                if (searchCondition.getK() != null) WHERE("ip LIKE #{searchCondition.like.k}")
-                        .OR().WHERE("platform LIKE #{searchCondition.like.k}");
-                if (sample != null) {
-                }
-            }}.toString();
+            return baseFind(searchCondition, sample).SELECT("count(*)").toString();
         }
 
         public String find(@Param("searchCondition")final SearchCondition searchCondition, @Param("sample")final AccountRecover sample) {
+            return baseFind(searchCondition, sample).SELECT("*").toString().concat(searchCondition.getOrderBy()).concat(searchCondition.getSqlLimit());
+        }
+
+        private SQL baseFind(SearchCondition searchCondition, AccountRecover sample) {
             return new SQL() {{
-                SELECT("*"); FROM("accountRecover");
+                FROM("accountRecover");
                 if (searchCondition.getK() != null) WHERE("ip LIKE #{searchCondition.like.k}")
                         .OR().WHERE("platform LIKE #{searchCondition.like.k}");
                 if (sample != null) {
                 }
-            }}.toString().concat(searchCondition.getOrderBy()).concat(searchCondition.getSqlLimit());
+            }};
         }
     }
 }
