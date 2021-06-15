@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import chengweiou.universe.andromeda.model.entity.Account;
+import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.blackhole.model.NotNullObj;
 import chengweiou.universe.blackhole.model.NullObj;
 import lombok.Data;
@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 public class LoginRecord implements NotNullObj, Serializable {
     private Long id;
-    private Account account;
+    private Person person;
     private String ip;
     private String platform;
     private String loginTime;
@@ -35,8 +35,6 @@ public class LoginRecord implements NotNullObj, Serializable {
 
     public static final LoginRecord NULL = new Null();
     private static class Null extends LoginRecord implements NullObj {
-        @Override
-        public Account getAccount() { return Account.NULL; }
     }
 
 }

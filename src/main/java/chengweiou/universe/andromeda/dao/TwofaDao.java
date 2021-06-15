@@ -22,8 +22,8 @@ import chengweiou.universe.andromeda.model.entity.twofa.Twofa;
 @Repository
 @Mapper
 public interface TwofaDao {
-    @Insert("insert into twofa(personId, type, codeTo, loginAccountId, token, code, codeExp, createAt, updateAt) " + 
-            "values(#{person.id}, #{type}, #{codeTo}, #{loginAccount.id}, #{token}, #{code}, #{codeExp}, #{createAt}, #{updateAt})")
+    @Insert("insert into twofa(personId, type, codeTo,token, code, codeExp, createAt, updateAt) " + 
+            "values(#{person.id}, #{type}, #{codeTo}, #{token}, #{code}, #{codeExp}, #{createAt}, #{updateAt})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     long save(Twofa e);
 
@@ -37,34 +37,22 @@ public interface TwofaDao {
     long updateByPerson(Twofa e);
 
     @Select("select * from twofa where id=#{id}")
-    @Results({
-        @Result(property = "person.id", column = "personId"),
-        @Result(property = "loginAccount.id", column = "loginAccountId"),
-    })
+    @Results({ @Result(property = "person.id", column = "personId"), })
     Twofa findById(Twofa e);
 
     @Select("select * from twofa where personId=#{person.id}")
-    @Results({
-        @Result(property = "person.id", column = "personId"),
-        @Result(property = "loginAccount.id", column = "loginAccountId"),
-    })
+    @Results({ @Result(property = "person.id", column = "personId"), })
     Twofa findByPerson(Twofa e);
 
     @Select("select * from twofa where token=#{token} and code=#{code}")
-    @Results({
-        @Result(property = "person.id", column = "personId"),
-        @Result(property = "loginAccount.id", column = "loginAccountId"),
-    })
+    @Results({ @Result(property = "person.id", column = "personId"), })
     Twofa findByTokenAndCode(Twofa e);
 
     @SelectProvider(type = Sql.class, method = "count")
     long count(@Param("searchCondition") SearchCondition searchCondition, @Param("sample") Twofa sample);
 
     @SelectProvider(type = Sql.class, method = "find")
-    @Results({
-        @Result(property = "person.id", column = "personId"),
-        @Result(property = "loginAccount.id", column = "loginAccountId"),
-    })
+    @Results({ @Result(property = "person.id", column = "personId"), })
     List<Twofa> find(@Param("searchCondition") SearchCondition searchCondition, @Param("sample") Twofa sample);
 
     @Select("select count(*) from twofa where personId=#{person.id}")
@@ -77,7 +65,6 @@ public interface TwofaDao {
                 if (e.getPerson() != null) SET("personId = #{person.id}");
                 if (e.getType() != null) SET("type = #{type}");
                 if (e.getCodeTo() != null) SET("codeTo = #{codeTo}");
-                if (e.getLoginAccount() != null) SET("loginAccountId = #{loginAccount.id}");
                 if (e.getToken() != null) SET("token = #{token}");
                 if (e.getCode() != null) SET("code = #{code}");
                 if (e.getCodeExp() != null) SET("codeExp = #{codeExp}");
@@ -91,7 +78,6 @@ public interface TwofaDao {
                 UPDATE("twofa");
                 if (e.getType() != null) SET("type = #{type}");
                 if (e.getCodeTo() != null) SET("codeTo = #{codeTo}");
-                if (e.getLoginAccount() != null) SET("loginAccountId = #{loginAccount.id}");
                 if (e.getToken() != null) SET("token = #{token}");
                 if (e.getCode() != null) SET("code = #{code}");
                 if (e.getCodeExp() != null) SET("codeExp = #{codeExp}");

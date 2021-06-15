@@ -94,9 +94,7 @@ public class AccountServiceImpl implements AccountService {
         if (twofaIndb.getId() == null) throw new ProjException(ProjectRestCode.TWOFA_CODE_NOT_MATCH);
         if (twofaIndb.getUpdateAt().plusMinutes(1).isBefore(LocalDateTime.now(ZoneId.of("UTC")))) throw new ProjException(ProjectRestCode.TWOFA_EXPIRED);
 
-        // todo 看看这里还需不需要
-        // Account result = dio.findById(twofaIndb.getLoginAccount());
-        Account result = dio.findById(Builder.set("id", twofaIndb.getLoginAccount().getId()).to(new Account()));
+        Account result = dio.findByPerson(Builder.set("person", twofaIndb.getPerson()).to(new Account()));
         twofaIndb.cleanCode();
         twofaDio.update(twofaIndb);
         return result;

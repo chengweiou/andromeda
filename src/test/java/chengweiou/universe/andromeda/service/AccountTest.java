@@ -170,7 +170,7 @@ public class AccountTest {
 
 	@Test
 	public void findAfterTokenAndCode() throws ProjException {
-		Twofa twofa = Builder.set("id", 1).set("type", TwofaType.EMAIL).set("codeTo", "a@a.c").set("loginAccount", data.accountList.get(0)).set("token", "aaa").set("code", "111").to(new Twofa());
+		Twofa twofa = Builder.set("id", 1).set("type", TwofaType.EMAIL).set("codeTo", "a@a.c").set("person", data.accountList.get(0).getPerson()).set("token", "aaa").set("code", "111").to(new Twofa());
 		long count = twofaDio.update(twofa);
 		Account indb = service.findAfterCheckCode(Builder.set("token", "aaa").set("code", "111").to(new Twofa()));
 		Assertions.assertEquals(data.accountList.get(0).getId(), indb.getId());
@@ -180,7 +180,7 @@ public class AccountTest {
 
 	@Test
 	public void findAfterTokenAndCodeFail() throws ProjException {
-		Twofa twofa = Builder.set("id", 1).set("type", TwofaType.EMAIL).set("codeTo", "a@a.c").set("loginAccount", data.accountList.get(0)).set("token", "aaa").set("code", "111").to(new Twofa());
+		Twofa twofa = Builder.set("id", 1).set("type", TwofaType.EMAIL).set("codeTo", "a@a.c").set("person", data.accountList.get(0).getPerson()).set("token", "aaa").set("code", "111").to(new Twofa());
 		long count = twofaDio.update(twofa);
 		Assertions.assertThrows(ProjException.class, () -> service.findAfterCheckCode(Builder.set("token", "aaa").set("code", "222").to(new Twofa())));
 		

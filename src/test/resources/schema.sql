@@ -22,7 +22,6 @@ CREATE TABLE account (
 DROP TABLE IF EXISTS loginRecord;
 CREATE TABLE loginRecord (
    id bigserial NOT NULL,
-   accountId bigserial NOT NULL,
    personId character varying NOT NULL,
    ip character varying NOT NULL,
    platform character varying NOT NULL,
@@ -39,7 +38,6 @@ CREATE TABLE twofa (
    personId character varying NOT NULL,
    type character varying NOT NULL,
    codeTo character varying NOT NULL, 
-   loginAccountId character varying NOT NULL,
    token character varying NOT NULL,
    code character varying NOT NULL,
    codeExp timestamp without time zone NOT NULL,

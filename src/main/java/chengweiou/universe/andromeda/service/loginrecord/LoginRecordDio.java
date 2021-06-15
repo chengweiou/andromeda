@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import chengweiou.universe.andromeda.dao.LoginRecordDao;
 import chengweiou.universe.andromeda.model.SearchCondition;
-import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.model.entity.loginrecord.LoginRecord;
 import chengweiou.universe.blackhole.exception.FailException;
 
@@ -34,8 +33,8 @@ public class LoginRecordDio {
         return dao.update(e);
     }
 
-    public LoginRecord findLast(Account account) {
-        LoginRecord result = dao.findLastByAccount(account);
+    public LoginRecord findLastByPerson(LoginRecord e) {
+        LoginRecord result = dao.findLastByPerson(e);
         return result != null ? result : LoginRecord.NULL;
     }
 

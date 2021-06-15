@@ -14,9 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import chengweiou.universe.andromeda.data.Data;
-import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.andromeda.model.SearchCondition;
-import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.model.entity.loginrecord.LoginRecord;
 import chengweiou.universe.andromeda.service.loginrecord.LoginRecordService;
 import chengweiou.universe.blackhole.exception.FailException;
@@ -32,7 +30,7 @@ public class LoginRecordTest {
 
 	@Test
 	public void saveDelete() throws FailException {
-		LoginRecord e = Builder.set("account", data.accountList.get(0))
+		LoginRecord e = Builder.set("person", data.accountList.get(0).getPerson())
                 .set("ip", "193.212.242.1").set("platform", "chrome").to(new LoginRecord());
 		service.save(e);
 		Assertions.assertEquals(true, e.getId() > 0);
@@ -45,7 +43,7 @@ public class LoginRecordTest {
 		long count = service.update(e);
 		Assertions.assertEquals(1, count);
 
-		LoginRecord indb = service.findLast(data.accountList.get(0));
+		LoginRecord indb = service.findLastByPerson(Builder.set("person", data.accountList.get(0).getPerson()).to(new LoginRecord()));
 		Assertions.assertEquals(true, indb.getLogoutTime().startsWith(LocalDate.now(ZoneId.of("UTC")).toString()));
 
 		Builder.set("logoutTime", "").to(e);
@@ -63,12 +61,12 @@ public class LoginRecordTest {
 		SearchCondition searchCondition = Builder.set("k", "ch").to(new SearchCondition());
 		List<LoginRecord> list = service.find(searchCondition, null);
 		Assertions.assertEquals(1, list.size());
-		Assertions.assertEquals(1, list.get(0).getAccount().getId());
+		Assertions.assertEquals(data.loginRecordList.get(0).getPerson().getId(), list.get(0).getPerson().getId());
 	}
 
     @Test
     public void countByPerson() {
-			LoginRecord sample = Builder.set("account", Builder.set("person", Builder.set("id", "1").to(new Person())).to(new Account())).to(new LoginRecord());
+			LoginRecord sample = Builder.set("person", data.accountList.get(0).getPerson()).to(new LoginRecord());
 			long count = service.count(new SearchCondition(), sample);
 			Assertions.assertEquals(2, count);
     }
@@ -76,10 +74,10 @@ public class LoginRecordTest {
     @Test
     public void findByPerson() {
 			SearchCondition searchCondition = Builder.set("k", "iphone").to(new SearchCondition());
-			LoginRecord sample = Builder.set("account", Builder.set("person", Builder.set("id", "1").to(new Person())).to(new Account())).to(new LoginRecord());
+			LoginRecord sample = Builder.set("person", data.accountList.get(0).getPerson()).to(new LoginRecord());
 			List<LoginRecord> list = service.find(searchCondition, sample);
 			Assertions.assertEquals(1, list.size());
-			Assertions.assertEquals(2, list.get(0).getAccount().getId());
+			Assertions.assertEquals(data.loginRecordList.get(0).getPerson().getId(), list.get(0).getPerson().getId());
     }
 	@BeforeEach
 	public void init() {

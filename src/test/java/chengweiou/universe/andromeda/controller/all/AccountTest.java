@@ -72,7 +72,7 @@ public class AccountTest {
 		).andReturn().getResponse().getContentAsString();
 		Rest<Boolean> logoutRest = Rest.from(result);
 		Assertions.assertEquals(BasicRestCode.OK, logoutRest.getCode());
-		LoginRecord delLoginRecord = loginRecordDio.findLast(data.accountList.get(0));
+		LoginRecord delLoginRecord = loginRecordDio.findLastByPerson(Builder.set("person", data.accountList.get(0).getPerson()).to(new LoginRecord()));
 		loginRecordDio.delete(delLoginRecord);
 	}
 
@@ -102,7 +102,7 @@ public class AccountTest {
 		).andReturn().getResponse().getContentAsString();
 		Rest<Boolean> logoutRest = Rest.from(result);
 		Assertions.assertEquals(BasicRestCode.OK, logoutRest.getCode());
-		LoginRecord delLoginRecord = loginRecordDio.findLast(data.accountList.get(0));
+		LoginRecord delLoginRecord = loginRecordDio.findLastByPerson(Builder.set("person", data.accountList.get(0).getPerson()).to(new LoginRecord()));
 		loginRecordDio.delete(delLoginRecord);
 		twofaDio.update(data.twofaList.get(0));
 	}
@@ -201,7 +201,7 @@ public class AccountTest {
 		).andReturn().getResponse().getContentAsString();
 		Rest<Boolean> logoutRest = Rest.from(result);
 		Assertions.assertEquals(BasicRestCode.OK, logoutRest.getCode());
-		LoginRecord delLoginRecord = loginRecordDio.findLast(data.accountList.get(0));
+		LoginRecord delLoginRecord = loginRecordDio.findLastByPerson(Builder.set("person", data.accountList.get(0).getPerson()).to(new LoginRecord()));
 		loginRecordDio.delete(delLoginRecord);
 		service.updateByPerson(Builder.set("person", data.accountList.get(0).getPerson()).set("password", "123").to(new Account()));
 		accountRecoverDio.update(data.accountRecoverList.get(0));

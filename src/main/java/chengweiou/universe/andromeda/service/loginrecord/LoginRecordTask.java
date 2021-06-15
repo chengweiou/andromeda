@@ -15,6 +15,7 @@ import chengweiou.universe.andromeda.model.entity.loginrecord.LoginRecord;
 import chengweiou.universe.andromeda.util.UserAgentUtil;
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.UnauthException;
+import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.util.LogUtil;
 
 @Component
@@ -40,7 +41,7 @@ public class LoginRecordTask {
     public Future<Long> logout(String token) {
         try {
             Account account = jwtUtil.verify(token);
-            LoginRecord e = service.findLast(account);
+            LoginRecord e = service.findLastByPerson(Builder.set("person", account.getPerson()).to(new LoginRecord()));
             e.setLogoutTime(LocalDateTime.now(ZoneId.of("UTC")).toString());
             long count = service.update(e);
             return new AsyncResult<>(count);

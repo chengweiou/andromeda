@@ -76,7 +76,6 @@ public class AccountController {
             }
             String code = RandomStringUtils.randomNumeric(6);
             String token = RandomStringUtils.randomAlphabetic(30);
-            twofa.setLoginAccount(indb);
             twofa.setCode(code);
             twofa.setToken(token);
             switch(twofa.getType()) {
@@ -111,7 +110,7 @@ public class AccountController {
         jedisUtil.set(refreshToken, token, jwtConfig.getRefreshExpMinute().intValue()*60);
         Auth result = Builder.set("token", token).set("refreshToken", refreshToken).set("person", indb.getPerson()).to(new Auth());
         loginRecordTask.save(
-                Builder.set("account", indb).set("ip", request.getRemoteAddr()).set("platform", userAgentUtil.getPlatform(request.getHeader("User-Agent")))
+                Builder.set("person", indb.getPerson()).set("ip", request.getRemoteAddr()).set("platform", userAgentUtil.getPlatform(request.getHeader("User-Agent")))
                 .to(new LoginRecord()));
         return result;
     }

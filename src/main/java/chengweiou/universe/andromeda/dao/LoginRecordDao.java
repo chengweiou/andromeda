@@ -17,14 +17,13 @@ import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
 
 import chengweiou.universe.andromeda.model.SearchCondition;
-import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.model.entity.loginrecord.LoginRecord;
 
 @Repository
 @Mapper
 public interface LoginRecordDao {
-    @Insert("insert into loginRecord(accountId, personId, ip, platform, loginTime, logoutTime, createAt, updateAt) " +
-            "values(#{account.id}, #{account.person.id}, #{ip}, #{platform}, #{loginTime}, #{logoutTime}, #{createAt}, #{updateAt})")
+    @Insert("insert into loginRecord(personId, ip, platform, loginTime, logoutTime, createAt, updateAt) " +
+            "values(#{person.id}, #{ip}, #{platform}, #{loginTime}, #{logoutTime}, #{createAt}, #{updateAt})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     long save(LoginRecord e);
 
@@ -34,21 +33,15 @@ public interface LoginRecordDao {
     @UpdateProvider(type = Sql.class, method = "update")
     long update(LoginRecord e);
 
-    @Select("select * from loginRecord where accountId=#{id} order by updateAt desc limit 1")
-    @Results({
-            @Result(property = "account.id", column = "accountId"),
-            @Result(property = "account.person.id", column = "personId"),
-    })
-    LoginRecord findLastByAccount(Account account);
+    @Select("select * from loginRecord where personId=#{person.id} order by updateAt desc limit 1")
+    @Results({ @Result(property = "person.id", column = "personId"), })
+    LoginRecord findLastByPerson(LoginRecord e);
 
     @SelectProvider(type = Sql.class, method = "count")
     long count(@Param("searchCondition") SearchCondition searchCondition, @Param("sample") LoginRecord sample);
 
     @SelectProvider(type = Sql.class, method = "find")
-    @Results({
-            @Result(property = "account.id", column = "accountId"),
-            @Result(property = "account.person.id", column = "personId"),
-    })
+    @Results({ @Result(property = "person.id", column = "personId"), })
     List<LoginRecord> find(@Param("searchCondition") SearchCondition searchCondition, @Param("sample") LoginRecord sample);
 
     class Sql {
@@ -80,10 +73,7 @@ public interface LoginRecordDao {
                 if (searchCondition.getK() != null) WHERE("ip LIKE #{searchCondition.like.k}")
                         .OR().WHERE("platform LIKE #{searchCondition.like.k}");
                 if (sample != null) {
-                    if (sample.getAccount() != null) {
-                        if (sample.getAccount().getId() != null) WHERE("accountId=#{sample.account.id}");
-                        if (sample.getAccount().getPerson() != null) WHERE("personId=#{sample.account.person.id}");
-                    }
+                    if (sample.getPerson() != null) WHERE("personId=#{sample.person.id}");
                 }
             }};
         }

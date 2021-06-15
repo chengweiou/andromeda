@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import chengweiou.universe.andromeda.model.SearchCondition;
-import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.model.entity.loginrecord.LoginRecord;
 import chengweiou.universe.blackhole.exception.FailException;
 
@@ -31,8 +30,8 @@ public class LoginRecordServiceImpl implements LoginRecordService {
     }
 
     @Override
-    public LoginRecord findLast(Account account) {
-        return dio.findLast(account);
+    public LoginRecord findLastByPerson(LoginRecord e) {
+        return dio.findLastByPerson(e);
     }
 
     @Override
