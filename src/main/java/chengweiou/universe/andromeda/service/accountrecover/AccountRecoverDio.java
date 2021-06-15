@@ -37,6 +37,10 @@ public class AccountRecoverDio {
         e.updateAt();
         return dao.update(e);
     }
+    public long updateByPerson(AccountRecover e) {
+        e.updateAt();
+        return dao.updateByPerson(e);
+    }
 
     public AccountRecover findById(AccountRecover e) {
         return dao.findById(e);

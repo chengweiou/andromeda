@@ -13,6 +13,7 @@ public interface AccountRecoverService {
     void delete(AccountRecover e) throws FailException;
 
     long update(AccountRecover e);
+    long updateByPerson(AccountRecover e);
 
     AccountRecover findById(AccountRecover e);
 

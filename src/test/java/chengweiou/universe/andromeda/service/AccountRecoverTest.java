@@ -54,6 +54,18 @@ public class AccountRecoverTest {
 	}
 
 	@Test
+	public void updateByPerson() {
+		AccountRecover e = Builder.set("person", data.accountRecoverList.get(0).getPerson()).set("q1", "q1-service-test").to(new AccountRecover());
+		long count = service.updateByPerson(e);
+		Assertions.assertEquals(1, count);
+
+		AccountRecover indb = service.findById(data.accountRecoverList.get(0));
+		Assertions.assertEquals("q1-service-test", indb.getQ1());
+
+		service.update(data.accountRecoverList.get(0));
+	}
+
+	@Test
 	public void countByPerson() {
 		AccountRecover e = Builder.set("person", data.accountRecoverList.get(0).getPerson()).to(new AccountRecover());
 		long count = service.countByPerson(e);

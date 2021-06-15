@@ -23,6 +23,7 @@ import chengweiou.universe.blackhole.util.LogUtil;
 
 @Component
 public class JwtUtil {
+    // todo to jwt rsa
     @Autowired
     private JwtConfig config;
     public String sign(Account account) {
@@ -30,8 +31,6 @@ public class JwtUtil {
             Date expiresAt = Date.from(LocalDateTime.now(ZoneId.of("UTC")).plus(config.getExpMinute(), ChronoUnit.MINUTES).atZone(ZoneId.of("UTC")).toInstant());
             return JWT.create()
                     .withIssuer(config.getIssuer())
-                    // todo 已经不需要管是哪个account了
-                    .withClaim("accountId", account.getId())
                     .withClaim("personId", account.getPerson().getId())
                     .withClaim("extra", account.getExtra())
                     .withExpiresAt(expiresAt)
@@ -51,7 +50,6 @@ public class JwtUtil {
                     .build(); //Reusable verifier instance
             DecodedJWT jwt = verifier.verify(token);
             return Builder
-                    .set("id", jwt.getClaim("accountId").asLong())
                     .set("person", Builder.set("id", jwt.getClaim("personId").asString()).to(new Person()))
                     .set("extra", jwt.getClaim("extra").asString())
                     .to(new Account());

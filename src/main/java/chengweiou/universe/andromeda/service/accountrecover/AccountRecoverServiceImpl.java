@@ -32,6 +32,10 @@ public class AccountRecoverServiceImpl implements AccountRecoverService {
     public long update(AccountRecover e) {
         return dio.update(e);
     }
+    @Override
+    public long updateByPerson(AccountRecover e) {
+        return dio.updateByPerson(e);
+    }
 
     @Override
     public AccountRecover findById(AccountRecover e) {
