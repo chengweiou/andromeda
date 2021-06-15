@@ -18,8 +18,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import chengweiou.universe.andromeda.data.Data;
 import chengweiou.universe.andromeda.model.Person;
-import chengweiou.universe.andromeda.model.entity.AccountNew;
-import chengweiou.universe.andromeda.model.entity.LoginRecord;
+import chengweiou.universe.andromeda.model.entity.Account;
+import chengweiou.universe.andromeda.model.entity.loginrecord.LoginRecord;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.model.Rest;
@@ -32,7 +32,7 @@ public class LoginRecordTest {
 	private WebApplicationContext webApplicationContext;
 	@Autowired
 	private Data data;
-	private AccountNew loginAccount;
+	private Account loginAccount;
 
 	@Test
 	public void count() throws Exception {
@@ -65,7 +65,7 @@ public class LoginRecordTest {
 		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 		loginAccount = Builder.set("person", Builder.set("id", 2L).to(new Person()))
 				.set("extra", "MEMBER")
-				.to(new AccountNew());
+				.to(new Account());
 	}
 	@BeforeEach
 	public void init() {

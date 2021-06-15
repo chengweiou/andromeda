@@ -16,7 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import chengweiou.universe.andromeda.data.Data;
 import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.andromeda.model.SearchCondition;
-import chengweiou.universe.andromeda.model.entity.AccountRecover;
+import chengweiou.universe.andromeda.model.entity.accountrecover.AccountRecover;
 import chengweiou.universe.andromeda.service.accountrecover.AccountRecoverDio;
 import chengweiou.universe.andromeda.service.accountrecover.AccountRecoverService;
 import chengweiou.universe.blackhole.exception.FailException;

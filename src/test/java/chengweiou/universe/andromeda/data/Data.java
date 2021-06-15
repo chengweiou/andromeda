@@ -9,16 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import chengweiou.universe.andromeda.model.SearchCondition;
-import chengweiou.universe.andromeda.model.entity.AccountNew;
-import chengweiou.universe.andromeda.model.entity.AccountRecover;
-import chengweiou.universe.andromeda.model.entity.LoginRecord;
-import chengweiou.universe.andromeda.model.entity.Twofa;
+import chengweiou.universe.andromeda.model.entity.Account;
+import chengweiou.universe.andromeda.model.entity.accountrecover.AccountRecover;
 import chengweiou.universe.andromeda.model.entity.codesendrecord.CodeSendRecord;
-import chengweiou.universe.andromeda.service.account.AccountNewDio;
-import chengweiou.universe.andromeda.service.account.TwofaDio;
+import chengweiou.universe.andromeda.model.entity.loginrecord.LoginRecord;
+import chengweiou.universe.andromeda.model.entity.twofa.Twofa;
+import chengweiou.universe.andromeda.service.account.AccountDio;
 import chengweiou.universe.andromeda.service.accountrecover.AccountRecoverDio;
 import chengweiou.universe.andromeda.service.codesendrecord.CodeSendRecordDio;
 import chengweiou.universe.andromeda.service.loginrecord.LoginRecordDio;
+import chengweiou.universe.andromeda.service.twofa.TwofaDio;
 
 @Component
 public class Data {
@@ -26,8 +26,8 @@ public class Data {
     // private AccountDio accountDio;
     // public List<Account> accountList;
     @Autowired
-    private AccountNewDio accountNewDio;
-    public List<AccountNew> accountNewList;
+    private AccountDio accountDio;
+    public List<Account> accountList;
 
     @Autowired
     private LoginRecordDio loginRecordDio;
@@ -48,8 +48,8 @@ public class Data {
     public void init() {
         // accountList = accountDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(Account::getId)).collect(Collectors.toList());
         // accountList.forEach(e -> e.setPassword("123"));
-        accountNewList = accountNewDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(AccountNew::getId)).collect(Collectors.toList());
-        accountNewList.forEach(e -> e.setPassword("123"));
+        accountList = accountDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(Account::getId)).collect(Collectors.toList());
+        accountList.forEach(e -> e.setPassword("123"));
         loginRecordList = loginRecordDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(LoginRecord::getId)).collect(Collectors.toList());
         twofaList = twofaDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(Twofa::getId)).collect(Collectors.toList());
         codeSendRecordList = codeSendRecordDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(CodeSendRecord::getId)).collect(Collectors.toList());

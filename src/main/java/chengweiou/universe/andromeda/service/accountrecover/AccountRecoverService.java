@@ -4,7 +4,7 @@ package chengweiou.universe.andromeda.service.accountrecover;
 import java.util.List;
 
 import chengweiou.universe.andromeda.model.SearchCondition;
-import chengweiou.universe.andromeda.model.entity.AccountRecover;
+import chengweiou.universe.andromeda.model.entity.accountrecover.AccountRecover;
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ProjException;
 

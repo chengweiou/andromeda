@@ -17,7 +17,7 @@ import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
 
 import chengweiou.universe.andromeda.model.SearchCondition;
-import chengweiou.universe.andromeda.model.entity.Twofa;
+import chengweiou.universe.andromeda.model.entity.twofa.Twofa;
 
 @Repository
 @Mapper

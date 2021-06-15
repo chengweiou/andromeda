@@ -17,7 +17,7 @@ import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
 
 import chengweiou.universe.andromeda.model.SearchCondition;
-import chengweiou.universe.andromeda.model.entity.AccountRecover;
+import chengweiou.universe.andromeda.model.entity.accountrecover.AccountRecover;
 
 @Repository
 @Mapper

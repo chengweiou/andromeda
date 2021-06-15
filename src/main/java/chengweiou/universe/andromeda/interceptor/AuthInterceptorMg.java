@@ -12,7 +12,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import chengweiou.universe.andromeda.model.PersonType;
-import chengweiou.universe.andromeda.model.entity.AccountNew;
+import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Rest;
 
@@ -22,7 +22,7 @@ public class AuthInterceptorMg implements HandlerInterceptor {
         if (checkInServer(request)) return true;
         String accountJson = request.getHeader("loginAccount");
         if (accountJson == null) return unauth(response);
-        AccountNew loginAccount = new Gson().fromJson(accountJson, AccountNew.class);
+        Account loginAccount = new Gson().fromJson(accountJson, Account.class);
         PersonType personType = PersonType.valueOf(loginAccount.getExtra());
         if (personType == PersonType.SUPER) return true;
         boolean additionalAuth = checkAdditionalAuth(personType, handler);

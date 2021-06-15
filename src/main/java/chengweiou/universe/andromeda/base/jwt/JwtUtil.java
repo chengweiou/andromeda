@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import chengweiou.universe.andromeda.model.Person;
-import chengweiou.universe.andromeda.model.entity.AccountNew;
+import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.blackhole.exception.UnauthException;
 import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.util.LogUtil;
@@ -25,7 +25,7 @@ import chengweiou.universe.blackhole.util.LogUtil;
 public class JwtUtil {
     @Autowired
     private JwtConfig config;
-    public String sign(AccountNew account) {
+    public String sign(Account account) {
         try {
             Date expiresAt = Date.from(LocalDateTime.now(ZoneId.of("UTC")).plus(config.getExpMinute(), ChronoUnit.MINUTES).atZone(ZoneId.of("UTC")).toInstant());
             return JWT.create()
@@ -43,7 +43,7 @@ public class JwtUtil {
         }
     }
 
-    public AccountNew verify(String token) throws UnauthException {
+    public Account verify(String token) throws UnauthException {
         try {
             Algorithm algorithm = Algorithm.HMAC512(config.getSign());
             JWTVerifier verifier = JWT.require(algorithm)
@@ -54,7 +54,7 @@ public class JwtUtil {
                     .set("id", jwt.getClaim("accountId").asLong())
                     .set("person", Builder.set("id", jwt.getClaim("personId").asString()).to(new Person()))
                     .set("extra", jwt.getClaim("extra").asString())
-                    .to(new AccountNew());
+                    .to(new Account());
         } catch (JWTVerificationException exception){
             //Invalid signature/claims
             throw new UnauthException();

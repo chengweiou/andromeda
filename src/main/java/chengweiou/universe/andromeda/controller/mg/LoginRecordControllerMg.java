@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import chengweiou.universe.andromeda.model.SearchCondition;
-import chengweiou.universe.andromeda.model.entity.LoginRecord;
+import chengweiou.universe.andromeda.model.entity.loginrecord.LoginRecord;
 import chengweiou.universe.andromeda.service.loginrecord.LoginRecordService;
 import chengweiou.universe.blackhole.model.Rest;
 
 @RestController
 @RequestMapping("mg")
-public class LoginRecordControllerApi {
+public class LoginRecordControllerMg {
     @Autowired
     private LoginRecordService service;
 

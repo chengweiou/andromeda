@@ -9,9 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import chengweiou.universe.andromeda.data.Data;
-import chengweiou.universe.andromeda.model.entity.AccountRecover;
-import chengweiou.universe.andromeda.model.entity.Twofa;
+import chengweiou.universe.andromeda.model.entity.accountrecover.AccountRecover;
 import chengweiou.universe.andromeda.model.entity.codesendrecord.CodeSendRecord;
+import chengweiou.universe.andromeda.model.entity.twofa.Twofa;
 import chengweiou.universe.andromeda.service.codesendrecord.CodeSendRecordDio;
 import chengweiou.universe.andromeda.service.phonemsg.PhoneMsgService;
 import chengweiou.universe.blackhole.exception.FailException;

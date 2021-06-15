@@ -1,5 +1,4 @@
-package chengweiou.universe.andromeda.service.account;
-
+package chengweiou.universe.andromeda.service.twofa;
 
 import java.util.List;
 
@@ -8,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import chengweiou.universe.andromeda.dao.TwofaDao;
 import chengweiou.universe.andromeda.model.SearchCondition;
-import chengweiou.universe.andromeda.model.entity.Twofa;
+import chengweiou.universe.andromeda.model.entity.twofa.Twofa;
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ProjException;
 import chengweiou.universe.blackhole.model.BasicRestCode;

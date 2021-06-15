@@ -9,7 +9,7 @@ import com.google.gson.Gson;
 
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import chengweiou.universe.andromeda.model.entity.AccountNew;
+import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Rest;
 
@@ -18,7 +18,7 @@ public class AuthInterceptorMe implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String accountJson = request.getHeader("loginAccount");
         if (accountJson == null) return unauth(response);
-        AccountNew loginAccount = new Gson().fromJson(accountJson, AccountNew.class);
+        Account loginAccount = new Gson().fromJson(accountJson, Account.class);
         if (loginAccount.getPerson() == null) return unauth(response);
         return true;
     }

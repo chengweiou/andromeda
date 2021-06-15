@@ -1,10 +1,6 @@
 set search_path = andromeda;
 
-INSERT INTO account (type, username, password, personId, active, extra, createAt, updateAt) VALUES
-    ('NORMAL', 'ou', '$2a$12$OOw7Nx4IgoVAOkOyc61lK.GUqC.vxjYlyDJK4AnIj/qPxhX32moEi', '1', true, 'SUPER', '2019-01-01T00:00:00', '2019-01-01T00:00:00'),
-    ('WECHAT', 'chiu', '$2a$12$OOw7Nx4IgoVAOkOyc61lK.GUqC.vxjYlyDJK4AnIj/qPxhX32moEi', '1', true, 'SUPER', '2019-01-01T00:00:00', '2019-01-01T00:00:00');
-
-INSERT INTO accountNew (username, phone, email, wechat, weibo, google, facebook, password, personId, active, extra, createAt, updateAt) VALUES
+INSERT INTO account (username, phone, email, wechat, weibo, google, facebook, password, personId, active, extra, createAt, updateAt) VALUES
     ('ou', '9790000000', 'a@a.c', '', '', '', '', '$2a$12$OOw7Nx4IgoVAOkOyc61lK.GUqC.vxjYlyDJK4AnIj/qPxhX32moEi', '1', true, 'SUPER', '2019-01-01T00:00:00', '2019-01-01T00:00:00'),
     ('chiu', '', '', '', '', '', '', '$2a$12$OOw7Nx4IgoVAOkOyc61lK.GUqC.vxjYlyDJK4AnIj/qPxhX32moEi', '2', true, 'SUPER', '2019-01-01T00:00:00', '2019-01-01T00:00:00');
 

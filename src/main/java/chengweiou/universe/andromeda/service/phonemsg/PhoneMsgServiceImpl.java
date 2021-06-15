@@ -4,10 +4,10 @@ package chengweiou.universe.andromeda.service.phonemsg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import chengweiou.universe.andromeda.model.entity.AccountRecover;
-import chengweiou.universe.andromeda.model.entity.Twofa;
+import chengweiou.universe.andromeda.model.entity.accountrecover.AccountRecover;
 import chengweiou.universe.andromeda.model.entity.codesendrecord.CodeSendRecord;
 import chengweiou.universe.andromeda.model.entity.codesendrecord.CodeSendRecordType;
+import chengweiou.universe.andromeda.model.entity.twofa.Twofa;
 import chengweiou.universe.andromeda.service.codesendrecord.CodeSendRecordDio;
 import chengweiou.universe.andromeda.service.vonage.VonageManager;
 import chengweiou.universe.blackhole.exception.FailException;

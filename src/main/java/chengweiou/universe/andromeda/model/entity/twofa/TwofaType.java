@@ -1,4 +1,4 @@
-package chengweiou.universe.andromeda.model.entity;
+package chengweiou.universe.andromeda.model.entity.twofa;
 
 public enum TwofaType {
     NONE,

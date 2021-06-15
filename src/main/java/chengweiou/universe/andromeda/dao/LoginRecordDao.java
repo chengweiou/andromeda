@@ -17,8 +17,8 @@ import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
 
 import chengweiou.universe.andromeda.model.SearchCondition;
-import chengweiou.universe.andromeda.model.entity.AccountNew;
-import chengweiou.universe.andromeda.model.entity.LoginRecord;
+import chengweiou.universe.andromeda.model.entity.Account;
+import chengweiou.universe.andromeda.model.entity.loginrecord.LoginRecord;
 
 @Repository
 @Mapper
@@ -39,7 +39,7 @@ public interface LoginRecordDao {
             @Result(property = "account.id", column = "accountId"),
             @Result(property = "account.person.id", column = "personId"),
     })
-    LoginRecord findLastByAccount(AccountNew account);
+    LoginRecord findLastByAccount(Account account);
 
     @SelectProvider(type = Sql.class, method = "count")
     long count(@Param("searchCondition") SearchCondition searchCondition, @Param("sample") LoginRecord sample);

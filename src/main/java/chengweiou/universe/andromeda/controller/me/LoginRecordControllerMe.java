@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import chengweiou.universe.andromeda.model.SearchCondition;
-import chengweiou.universe.andromeda.model.entity.AccountNew;
-import chengweiou.universe.andromeda.model.entity.LoginRecord;
+import chengweiou.universe.andromeda.model.entity.Account;
+import chengweiou.universe.andromeda.model.entity.loginrecord.LoginRecord;
 import chengweiou.universe.andromeda.service.loginrecord.LoginRecordService;
 import chengweiou.universe.blackhole.exception.ParamException;
 import chengweiou.universe.blackhole.model.Builder;
@@ -26,19 +26,19 @@ public class LoginRecordControllerMe {
 
     // todo 可以去掉person了
     @GetMapping("/loginRecord/count")
-    public Rest<Long> count(SearchCondition searchCondition, LoginRecord sample, @RequestHeader("loginAccount") AccountNew loginAccount) throws ParamException {
+    public Rest<Long> count(SearchCondition searchCondition, LoginRecord sample, @RequestHeader("loginAccount") Account loginAccount) throws ParamException {
         Valid.check("loginAccount.person", loginAccount.getPerson()).isNotNull();
         Valid.check("loginAccount.person.id", loginAccount.getPerson().getId()).is().notEmpty();
-        sample.setAccount(Builder.set("person", loginAccount.getPerson()).to(new AccountNew()));
+        sample.setAccount(Builder.set("person", loginAccount.getPerson()).to(new Account()));
         long count = service.count(searchCondition, sample);
         return Rest.ok(count);
     }
 
     @GetMapping("/loginRecord")
-    public Rest<List<LoginRecord>> find(SearchCondition searchCondition, LoginRecord sample, @RequestHeader("loginAccount") AccountNew loginAccount) throws ParamException {
+    public Rest<List<LoginRecord>> find(SearchCondition searchCondition, LoginRecord sample, @RequestHeader("loginAccount") Account loginAccount) throws ParamException {
         Valid.check("loginAccount.person", loginAccount.getPerson()).isNotNull();
         Valid.check("loginAccount.person.id", loginAccount.getPerson().getId()).is().notEmpty();
-        sample.setAccount(Builder.set("person", loginAccount.getPerson()).to(new AccountNew()));
+        sample.setAccount(Builder.set("person", loginAccount.getPerson()).to(new Account()));
         List<LoginRecord> list = service.find(searchCondition, sample);
         return Rest.ok(list);
     }
