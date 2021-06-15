@@ -21,6 +21,10 @@ spring:
         
 jwt:
   issuer: o
+  # use sign (rsa path empty)
   sign: andromeda
+  # use rsa (rsa path not empty)
+  rsaPrivatePath: src/main/resources/jwt-private.pem
+  rsaPublicPath: src/main/resources/jwt-public.pem
   expMinute: 10
   refreshExpMinute: 600

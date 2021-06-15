@@ -41,7 +41,7 @@ public class AccountRecoverControllerMe {
         // 发code才是重点，多人重复无所谓，你要能接收验证码，10个账号同一个验证邮箱的都行
         if (e.getPhone() != null) {
             // todo
-            // phoneMsgService.sendCode();
+            // phoneMsgService.sendValid(Builder.set("k", "v").to(new Twofa()));
         }
         if (e.getEmail() != null) {
 

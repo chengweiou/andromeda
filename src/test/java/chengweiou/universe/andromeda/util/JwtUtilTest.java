@@ -1,5 +1,7 @@
 package chengweiou.universe.andromeda.util;
 
+import java.io.IOException;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,7 @@ public class JwtUtilTest {
     @Autowired
     private JwtUtil jwtUtil;
     @Test
-    public void sign() throws UnauthException {
+    public void sign() throws UnauthException, IllegalArgumentException, IOException {
         String token = jwtUtil.sign(Builder.set("username", "ou").set("person", Builder.set("id", "1").to(new Person())).set("extra", PersonType.SUPER.toString()).to(new Account()));
         System.out.println(token);
         Account account = jwtUtil.verify(token);
