@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import chengweiou.universe.andromeda.model.ProjectRestCode;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
+import chengweiou.universe.andromeda.model.entity.accountrecover.AccountRecover;
 import chengweiou.universe.andromeda.model.entity.twofa.Twofa;
+import chengweiou.universe.andromeda.service.accountrecover.AccountRecoverDio;
 import chengweiou.universe.andromeda.service.twofa.TwofaDio;
 import chengweiou.universe.andromeda.util.SecurityUtil;
 import chengweiou.universe.blackhole.exception.FailException;
@@ -24,11 +26,16 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private AccountDio dio;
     @Autowired
+    private AccountRecoverDio accountRecoverDio;
+    @Autowired
     private TwofaDio twofaDio;
 
     public void save(Account e) throws FailException, ProjException {
         e.setPassword(SecurityUtil.hash(e.getPassword()));
         dio.save(e);
+        // todo 还有udpate的时候，dao的id插入, delete的时候
+        AccountRecover accountRecover = Builder.set("id", e.getId()).set("person", e.getPerson()).set("phone", e.getPhone()).set("email", e.getEmail()).to(new AccountRecover());
+        accountRecoverDio.save(accountRecover);
     }
 
     @Override
