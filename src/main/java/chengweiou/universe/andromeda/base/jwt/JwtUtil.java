@@ -63,7 +63,7 @@ public class JwtUtil {
                 .build(); //Reusable verifier instance
             DecodedJWT jwt = verifier.verify(token);
             return Builder
-                    .set("person", Builder.set("id", jwt.getClaim("personId").asString()).to(new Person()))
+                    .set("person", Builder.set("id", jwt.getClaim("personId").asLong()).to(new Person()))
                     .set("extra", jwt.getClaim("extra").asString())
                     .to(new Account());
         } catch (JWTVerificationException exception){
@@ -84,7 +84,7 @@ public class JwtUtil {
     public void init() throws IOException {
         useRsa = !config.getRsaPublicPath().isBlank() && !config.getRsaPrivatePath().isBlank();
         if (useRsa) {
-            try { 
+            try {
                 rsaPublicKey = (RSAPublicKey) JwtPemUtils.readPublicKeyFromFile(config.getRsaPublicPath(), "RSA");
                 rsaPrivateKey = (RSAPrivateKey) JwtPemUtils.readPrivateKeyFromFile(config.getRsaPrivatePath(), "RSA");
             } catch (IOException exception) {
