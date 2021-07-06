@@ -15,6 +15,7 @@ import chengweiou.universe.andromeda.model.PersonType;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Rest;
+import chengweiou.universe.blackhole.util.GsonUtil;
 
 public class AuthInterceptorMg implements HandlerInterceptor {
     @Override
@@ -22,7 +23,7 @@ public class AuthInterceptorMg implements HandlerInterceptor {
         if (checkInServer(request)) return true;
         String accountJson = request.getHeader("loginAccount");
         if (accountJson == null) return unauth(response);
-        Account loginAccount = new Gson().fromJson(accountJson, Account.class);
+        Account loginAccount = GsonUtil.create().fromJson(accountJson, Account.class);
         PersonType personType = PersonType.valueOf(loginAccount.getExtra());
         if (personType == PersonType.SUPER) return true;
         boolean additionalAuth = checkAdditionalAuth(personType, handler);
@@ -33,7 +34,7 @@ public class AuthInterceptorMg implements HandlerInterceptor {
     private boolean unauth(HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
-        response.getWriter().write(new Gson().toJson(Rest.fail(BasicRestCode.UNAUTH)));
+        response.getWriter().write(GsonUtil.create().toJson(Rest.fail(BasicRestCode.UNAUTH)));
         return false;
     }
 

@@ -3,8 +3,6 @@ package chengweiou.universe.andromeda.controller.me;
 
 import java.util.List;
 
-import com.google.gson.Gson;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +21,7 @@ import chengweiou.universe.andromeda.model.entity.loginrecord.LoginRecord;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.model.Rest;
+import chengweiou.universe.blackhole.util.GsonUtil;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -37,7 +36,7 @@ public class LoginRecordTest {
 	@Test
 	public void count() throws Exception {
 		String result = mvc.perform(MockMvcRequestBuilders.get("/me/loginRecord/count")
-				.header("loginAccount", new Gson().toJson(loginAccount))
+				.header("loginAccount", GsonUtil.create().toJson(loginAccount))
 		).andReturn().getResponse().getContentAsString();
 		Rest<Long> rest = Rest.from(result, Long.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
@@ -46,7 +45,7 @@ public class LoginRecordTest {
 	@Test
 	public void find() throws Exception {
 		String result = mvc.perform(MockMvcRequestBuilders.get("/me/loginRecord")
-				.header("loginAccount", new Gson().toJson(loginAccount))
+				.header("loginAccount", GsonUtil.create().toJson(loginAccount))
 		).andReturn().getResponse().getContentAsString();
 		Rest<List<LoginRecord>> rest = Rest.from(result, List.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());

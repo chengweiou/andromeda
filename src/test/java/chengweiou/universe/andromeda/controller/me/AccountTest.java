@@ -1,8 +1,6 @@
 package chengweiou.universe.andromeda.controller.me;
 
 
-import com.google.gson.Gson;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +20,7 @@ import chengweiou.universe.andromeda.service.account.AccountService;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.model.Rest;
+import chengweiou.universe.blackhole.util.GsonUtil;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -40,7 +39,7 @@ public class AccountTest {
 	@Test
 	public void findMe() throws Exception {
 		String result = mvc.perform(MockMvcRequestBuilders.get("/me/account")
-				.header("loginAccount", new Gson().toJson(loginAccount))
+				.header("loginAccount", GsonUtil.create().toJson(loginAccount))
 			).andReturn().getResponse().getContentAsString();
 		Rest<Account> rest = Rest.from(result, Account.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
@@ -50,7 +49,7 @@ public class AccountTest {
 	@Test
 	public void update() throws Exception {
 		String result = mvc.perform(MockMvcRequestBuilders.put("/me/account")
-				.header("loginAccount", new Gson().toJson(loginAccount))
+				.header("loginAccount", GsonUtil.create().toJson(loginAccount))
 				.param("username", "otest1")
 		).andReturn().getResponse().getContentAsString();
 		Rest<Boolean> rest = Rest.from(result);
@@ -63,7 +62,7 @@ public class AccountTest {
 	@Test
 	public void updatePassword() throws Exception {
 		String result = mvc.perform(MockMvcRequestBuilders.put("/me/account/password")
-				.header("loginAccount", new Gson().toJson(loginAccount))
+				.header("loginAccount", GsonUtil.create().toJson(loginAccount))
 				.param("oldPassword", "123")
 				.param("password", "abcdefg")
 		).andReturn().getResponse().getContentAsString();

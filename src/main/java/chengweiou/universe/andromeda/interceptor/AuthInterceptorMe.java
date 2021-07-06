@@ -12,13 +12,14 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Rest;
+import chengweiou.universe.blackhole.util.GsonUtil;
 
 public class AuthInterceptorMe implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String accountJson = request.getHeader("loginAccount");
         if (accountJson == null) return unauth(response);
-        Account loginAccount = new Gson().fromJson(accountJson, Account.class);
+        Account loginAccount = GsonUtil.create().fromJson(accountJson, Account.class);
         if (loginAccount.getPerson() == null) return unauth(response);
         return true;
     }
@@ -26,7 +27,7 @@ public class AuthInterceptorMe implements HandlerInterceptor {
     private boolean unauth(HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
-        response.getWriter().write(new Gson().toJson(Rest.fail(BasicRestCode.UNAUTH)));
+        response.getWriter().write(GsonUtil.create().toJson(Rest.fail(BasicRestCode.UNAUTH)));
         return false;
     }
 }

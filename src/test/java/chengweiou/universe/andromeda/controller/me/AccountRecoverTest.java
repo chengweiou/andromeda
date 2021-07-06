@@ -23,6 +23,7 @@ import chengweiou.universe.andromeda.service.codesendrecord.CodeSendRecordDio;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.model.Rest;
+import chengweiou.universe.blackhole.util.GsonUtil;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -41,7 +42,7 @@ public class AccountRecoverTest {
 	@Test
 	public void findMe() throws Exception {
 		String result = mvc.perform(MockMvcRequestBuilders.get("/me/accountRecover")
-				.header("loginAccount", new Gson().toJson(loginAccount))
+				.header("loginAccount", GsonUtil.create().toJson(loginAccount))
 			).andReturn().getResponse().getContentAsString();
 		Rest<AccountRecover> rest = Rest.from(result, AccountRecover.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
@@ -51,7 +52,7 @@ public class AccountRecoverTest {
 	@Test
 	public void update() throws Exception {
 		String result = mvc.perform(MockMvcRequestBuilders.put("/me/accountRecover")
-				.header("loginAccount", new Gson().toJson(loginAccount))
+				.header("loginAccount", GsonUtil.create().toJson(loginAccount))
 				.param("phone", "9790000001")
 		).andReturn().getResponse().getContentAsString();
 		Rest<Boolean> rest = Rest.from(result);
