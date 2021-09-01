@@ -78,6 +78,13 @@ public class AccountControllerMg {
         return Rest.ok(data);
     }
 
+    @GetMapping("/account/person/{person.id}")
+    public Rest<Account> findByPerson(Account e) throws ParamException {
+        Valid.check("account.person.id", e.getPerson().getId()).is().notEmpty();
+        Account data = service.findByPerson(e);
+        return Rest.ok(data);
+    }
+
     @GetMapping("/account/count")
     public Rest<Long> count(SearchCondition searchCondition, Account sample) {
         long count = service.count(searchCondition, sample);

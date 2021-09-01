@@ -144,6 +144,16 @@ public class AccountTest {
 	}
 
 	@Test
+	public void findByPerson() throws Exception {
+		String result = mvc.perform(MockMvcRequestBuilders.get("/mg/account/person/1")
+				.header("inServer", "true")
+			).andReturn().getResponse().getContentAsString();
+		Rest<Account> rest = Rest.from(result, Account.class);
+		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
+		Assertions.assertEquals("ou", rest.getData().getUsername());
+	}
+
+	@Test
 	public void count() throws Exception {
 		String result = mvc.perform(MockMvcRequestBuilders.get("/mg/account/count")
 				.header("inServer", "true")
