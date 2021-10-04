@@ -1,6 +1,7 @@
 package chengweiou.universe.andromeda.service.twofa;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,52 +20,61 @@ public class TwofaDio {
     private TwofaDao dao;
 
     public void save(Twofa e) throws ProjException, FailException {
-        long count = dao.countByPerson(e);
+
+        long count = dao.countByKey(e.toDto());
         if (count != 0) throw new ProjException("dup key: " + e.getPerson() + " exists", BasicRestCode.EXISTS);
         e.cleanCode();
         e.fillNotRequire();
         e.createAt();
         e.updateAt();
-        count = dao.save(e);
+        Twofa.Dto dto = e.toDto();
+        count = dao.save(dto);
         if (count != 1) throw new FailException();
+        e.setId(dto.getId());
     }
 
     public void delete(Twofa e) throws FailException {
-        long count = dao.delete(e);
+        long count = dao.delete(e.toDto());
         if (count != 1) throw new FailException();
     }
 
     public long update(Twofa e) {
         e.updateAt();
-        return dao.update(e);
+        System.out.println(e.toDto());
+        return dao.update(e.toDto());
     }
 
     public long updateByPerson(Twofa e) {
         e.updateAt();
-        return dao.updateByPerson(e);
+        return dao.updateByPerson(e.toDto());
     }
 
     public Twofa findById(Twofa e) {
-        Twofa result = dao.findById(e);
-        return result != null ? result : Twofa.NULL;
+        Twofa.Dto result = dao.findById(e.toDto());
+        if (result == null) return Twofa.NULL;
+        return result.toBean();
     }
 
     public Twofa findByPerson(Twofa e) {
-        Twofa result = dao.findByPerson(e);
-        return result != null ? result : Twofa.NULL;
+        Twofa.Dto result = dao.findByPerson(e.toDto());
+        if (result == null) return Twofa.NULL;
+        return result.toBean();
     }
 
     public Twofa findByTokenAndCode(Twofa e) {
-        Twofa result = dao.findByTokenAndCode(e);
-        return result != null ? result : Twofa.NULL;
+        Twofa.Dto result = dao.findByTokenAndCode(e.toDto());
+        if (result == null) return Twofa.NULL;
+        return result.toBean();
     }
 
     public long count(SearchCondition searchCondition, Twofa sample) {
-        return dao.count(searchCondition, sample);
+        return dao.count(searchCondition, sample!=null ? sample.toDto() : null);
+    }
+    public List<Twofa> find(SearchCondition searchCondition, Twofa sample) {
+        searchCondition.setDefaultSort("createAt");
+        List<Twofa.Dto> dtoList = dao.find(searchCondition, sample!=null ? sample.toDto() : null);
+        List<Twofa> result = dtoList.stream().map(e -> e.toBean()).collect(Collectors.toList());
+        return result;
     }
 
-    public List<Twofa> find(SearchCondition searchCondition, Twofa sample) {
-        searchCondition.setDefaultSort("updateAt");
-        return dao.find(searchCondition, sample);
-    }
 }

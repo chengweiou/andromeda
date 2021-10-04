@@ -29,7 +29,7 @@ public class AccountRecoverControllerMg {
     @PostMapping("/accountRecover")
     public Rest<Long> save(AccountRecover e) throws ParamException, FailException, ProjException {
         Valid.check("accountRecover.person", e.getPerson()).isNotNull();
-        Valid.check("accountRecover.person.id", e.getPerson().getId()).is().notEmpty();
+        Valid.check("accountRecover.person.id", e.getPerson().getId()).is().positive();
         service.save(e);
         return Rest.ok(e.getId());
     }

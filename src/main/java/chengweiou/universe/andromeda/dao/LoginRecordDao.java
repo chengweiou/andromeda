@@ -3,77 +3,47 @@ package chengweiou.universe.andromeda.dao;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
-import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
 
+import chengweiou.universe.andromeda.base.dao.BaseDao;
 import chengweiou.universe.andromeda.model.SearchCondition;
-import chengweiou.universe.andromeda.model.entity.loginrecord.LoginRecord;
+import chengweiou.universe.andromeda.model.entity.loginrecord.LoginRecord.Dto;
 
 @Repository
 @Mapper
-public interface LoginRecordDao {
-    @Insert("insert into loginRecord(personId, ip, platform, loginTime, logoutTime, createAt, updateAt) " +
-            "values(#{person.id}, #{ip}, #{platform}, #{loginTime}, #{logoutTime}, #{createAt}, #{updateAt})")
-    @Options(useGeneratedKeys = true, keyProperty = "id")
-    long save(LoginRecord e);
+public interface LoginRecordDao extends BaseDao<Dto> {
 
-    @Delete("delete from loginRecord where id=#{id}")
-    long delete(LoginRecord e);
-
-    @UpdateProvider(type = Sql.class, method = "update")
-    long update(LoginRecord e);
-
-    @Select("select * from loginRecord where personId=#{person.id} order by updateAt desc limit 1")
-    @Results({ @Result(property = "person.id", column = "personId"), })
-    LoginRecord findLastByPerson(LoginRecord e);
+    @Select("select * from loginRecord where personId=#{personId} order by updateAt desc limit 1")
+    Dto findLastByPerson(Dto e);
 
     @SelectProvider(type = Sql.class, method = "count")
-    long count(@Param("searchCondition") SearchCondition searchCondition, @Param("sample") LoginRecord sample);
+    long count(@Param("searchCondition") SearchCondition searchCondition, @Param("sample") Dto sample);
 
     @SelectProvider(type = Sql.class, method = "find")
-    @Results({ @Result(property = "person.id", column = "personId"), })
-    List<LoginRecord> find(@Param("searchCondition") SearchCondition searchCondition, @Param("sample") LoginRecord sample);
+    List<Dto> find(@Param("searchCondition") SearchCondition searchCondition, @Param("sample") Dto sample);
 
     class Sql {
 
-        public String update(final LoginRecord e) {
-            return new SQL() {{
-                UPDATE("loginRecord");
-                if (e.getIp() != null) SET("ip = #{ip}");
-                if (e.getPlatform() != null) SET("platform = #{platform}");
-                if (e.getLoginTime() != null) SET("loginTime = #{loginTime}");
-                if (e.getLogoutTime() != null) SET("logoutTime = #{logoutTime}");
-                SET("updateAt = #{updateAt}");
-                WHERE("id=#{id}");
-            }}.toString();
-        }
-
-
-        public String count(@Param("searchCondition")final SearchCondition searchCondition, @Param("sample")final LoginRecord sample) {
+        public String count(@Param("searchCondition")final SearchCondition searchCondition, @Param("sample")final Dto sample) {
             return baseFind(searchCondition, sample).SELECT("count(*)").toString();
         }
 
-        public String find(@Param("searchCondition")final SearchCondition searchCondition, @Param("sample")final LoginRecord sample) {
+        public String find(@Param("searchCondition")final SearchCondition searchCondition, @Param("sample")final Dto sample) {
             return baseFind(searchCondition, sample).SELECT("*").toString().concat(searchCondition.getOrderBy()).concat(searchCondition.getSqlLimit());
         }
 
-        private SQL baseFind(SearchCondition searchCondition, LoginRecord sample) {
+        private SQL baseFind(SearchCondition searchCondition, Dto sample) {
             return new SQL() {{
                 FROM("loginRecord");
                 if (searchCondition.getK() != null) WHERE("ip LIKE #{searchCondition.like.k}")
                         .OR().WHERE("platform LIKE #{searchCondition.like.k}");
                 if (sample != null) {
-                    if (sample.getPerson() != null) WHERE("personId=#{sample.person.id}");
+                    if (sample.getPersonId() != null) WHERE("personId=#{sample.personId}");
                 }
             }};
         }

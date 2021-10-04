@@ -26,7 +26,8 @@ public class JwtUtilTest {
         System.out.println(token);
         Account account = jwtUtil.verify(token);
         System.out.println("------------------------");
-        Assertions.assertEquals("1", account.getPerson().getId());
-        Assertions.assertEquals("aa", account.getExtra());
+        System.out.println(account);
+        Assertions.assertEquals(1, account.getPerson().getId());
+        Assertions.assertEquals("SUPER", account.getExtra());
     }
 }

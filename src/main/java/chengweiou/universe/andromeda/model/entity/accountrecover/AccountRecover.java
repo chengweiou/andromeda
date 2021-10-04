@@ -1,18 +1,24 @@
 package chengweiou.universe.andromeda.model.entity.accountrecover;
 
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
+import org.springframework.beans.BeanUtils;
+
+import chengweiou.universe.andromeda.base.entity.DtoEntity;
+import chengweiou.universe.andromeda.base.entity.DtoKey;
+import chengweiou.universe.andromeda.base.entity.ServiceEntity;
 import chengweiou.universe.andromeda.model.Person;
-import chengweiou.universe.blackhole.model.NotNullObj;
+import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.model.NullObj;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
-public class AccountRecover implements NotNullObj, Serializable {
-    private Long id;
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public class AccountRecover extends ServiceEntity {
     private Person person;
     private String phone;
     private String email;
@@ -25,8 +31,6 @@ public class AccountRecover implements NotNullObj, Serializable {
     private String code;
     private LocalDateTime codeExp;
     private Integer codeCount;
-    private LocalDateTime createAt;
-    private LocalDateTime updateAt;
     public void cleanCode() {
         code = "";
         codeExp = LocalDateTime.of(1000, 1, 1, 0, 0, 0);
@@ -42,14 +46,40 @@ public class AccountRecover implements NotNullObj, Serializable {
         a2 = a2!=null ? a2 : "";
         a3 = a3!=null ? a3 : "";
     }
-    public void createAt() {
-        createAt = LocalDateTime.now(ZoneId.of("UTC"));
-    }
-    public void updateAt() {
-        updateAt = LocalDateTime.now(ZoneId.of("UTC"));
-    }
 
     public static final AccountRecover NULL = new Null();
     private static class Null extends AccountRecover implements NullObj {
+    }
+    public Dto toDto() {
+        Dto result = new Dto();
+        BeanUtils.copyProperties(this, result);
+        if (person != null) result.setPersonId(person.getId());
+        System.out.println(result);
+        return result;
+    }
+    @Data
+    @ToString(callSuper = true)
+    @EqualsAndHashCode(callSuper = true)
+    public static class Dto extends DtoEntity {
+        @DtoKey
+        private Long personId;
+        private String phone;
+        private String email;
+        private String q1;
+        private String q2;
+        private String q3;
+        private String a1;
+        private String a2;
+        private String a3;
+        private String code;
+        private LocalDateTime codeExp;
+        private Integer codeCount;
+
+        public AccountRecover toBean() {
+            AccountRecover result = new AccountRecover();
+            BeanUtils.copyProperties(this, result);
+            result.setPerson(Builder.set("id", personId).to(new Person()));
+            return result;
+        }
     }
 }

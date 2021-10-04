@@ -11,7 +11,7 @@ CREATE TABLE account (
    google character varying NOT NULL,
    facebook character varying NOT NULL,
    password character varying NOT NULL,
-   personId character varying NOT NULL,
+   personId integer NOT NULL,
    active boolean NOT NULL,
    extra character varying NOT NULL,
    createAt timestamp without time zone NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE account (
 DROP TABLE IF EXISTS loginRecord;
 CREATE TABLE loginRecord (
    id bigserial NOT NULL,
-   personId character varying NOT NULL,
+   personId integer NOT NULL,
    ip character varying NOT NULL,
    platform character varying NOT NULL,
    loginTime character varying NOT NULL,
@@ -35,9 +35,9 @@ CREATE TABLE loginRecord (
 DROP TABLE IF EXISTS twofa;
 CREATE TABLE twofa (
    id bigserial NOT NULL,
-   personId character varying NOT NULL,
+   personId integer NOT NULL,
    type character varying NOT NULL,
-   codeTo character varying NOT NULL, 
+   codeTo character varying NOT NULL,
    token character varying NOT NULL,
    code character varying NOT NULL,
    codeExp timestamp without time zone NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE codeSendRecord (
 DROP TABLE IF EXISTS accountRecover;
 CREATE TABLE accountRecover (
    id bigserial NOT NULL,
-   personId character varying NOT NULL,
+   personId integer NOT NULL,
    phone character varying NOT NULL,
    email character varying NOT NULL,
    q1 character varying NOT NULL,

@@ -69,7 +69,7 @@ public class AccountController {
         Valid.check("account.password", e.getPassword()).is().notEmpty();
         Account indb = service.login(e);
         Twofa twofa = twofaService.findByPerson(Builder.set("person", indb.getPerson()).to(new Twofa()));
-        
+
         if (twofa.getType() != null && twofa.getType() != TwofaType.NONE) {
             if (LocalDateTime.now(ZoneId.of("UTC")).isBefore(twofa.getCodeExp())) {
                 throw new ProjException(ProjectRestCode.PHONE_MSG_TOO_MANY);
@@ -150,7 +150,7 @@ public class AccountController {
     public Rest<AccountRecover> forgetPassword1(Account e) throws ParamException, ProjException, FailException {
         Valid.check("account.username", e.getUsername()).is().lengthIn(30);
         Account indb = service.findByLoginUsername(e);
-        AccountRecover result = accountRecoverService.findByPerson(Builder.set("person", indb.getPerson()).to(new AccountRecover()));
+        AccountRecover result = accountRecoverService.findByKey(Builder.set("person", indb.getPerson()).to(new AccountRecover()));
         if (result.getPhone() != null) {
             result.setPhone("********" + result.getPhone().substring(result.getPhone().length() - 2));
         }
@@ -168,7 +168,7 @@ public class AccountController {
     @PostMapping("/forgetPassword/2")
     public Rest<String> forgetPassword2(AccountRecover userConfirm) throws ParamException, ProjException, FailException {
         Valid.check("accountRecover.id", userConfirm.getId()).is().positive();
-        Valid.check("accountRecover.phone | email | a1 | a2 | a3", 
+        Valid.check("accountRecover.phone | email | a1 | a2 | a3",
                 userConfirm.getPhone(), userConfirm.getEmail(), userConfirm.getA1(), userConfirm.getA2(), userConfirm.getA3()
             ).are().notAllNull();
         String result = null;
@@ -198,7 +198,7 @@ public class AccountController {
         Valid.check("accountRecover.code", accountRecover.getCode()).is().lengthIs(50);
         Valid.check("account.password", e.getPassword()).is().lengthIn(30);
         e.setId(null);
-        AccountRecover accountRecoverIndb = accountRecoverService.findByActiveCode(accountRecover);        
+        AccountRecover accountRecoverIndb = accountRecoverService.findByActiveCode(accountRecover);
         // 可能多个账号
         boolean success = service.updateByPerson(Builder.set("person", accountRecoverIndb.getPerson()).set("password", e.getPassword()).to(new Account())) > 0;
         if (!success) {

@@ -62,6 +62,7 @@ public class JwtUtil {
                 .withIssuer(config.getIssuer())
                 .build(); //Reusable verifier instance
             DecodedJWT jwt = verifier.verify(token);
+            System.out.println(jwt);
             return Builder
                     .set("person", Builder.set("id", jwt.getClaim("personId").asLong()).to(new Person()))
                     .set("extra", jwt.getClaim("extra").asString())

@@ -27,11 +27,11 @@ public class AccountControllerMe {
 
     @PutMapping("/account")
     public Rest<Boolean> update(Account e, @RequestHeader("loginAccount") Account loginAccount) throws ParamException, UnauthException, ProjException {
-        Valid.check("loginAccount.person.id", loginAccount.getPerson().getId()).is().notEmpty();
+        Valid.check("loginAccount.person.id", loginAccount.getPerson().getId()).is().positive();
         Valid.check("account.username | phone | email | wechat | weibo | google | facebook | active | extra",
                 e.getUsername(), e.getPhone(), e.getEmail(), e.getWechat(), e.getWeibo(), e.getGoogle(), e.getFacebook(), e.getActive(), e.getExtra()
             ).are().notAllNull();
-        
+
         Account indb = service.findByPerson(loginAccount);
         if (!indb.getPerson().getId().equals(loginAccount.getPerson().getId())) throw new UnauthException();
         e.setId(indb.getId());
@@ -45,7 +45,7 @@ public class AccountControllerMe {
 
     @PutMapping("/account/password")
     public Rest<Boolean> updatePassword(Account e, @RequestHeader("loginAccount") Account loginAccount) throws ParamException, ProjException {
-        Valid.check("loginAccount.person.id", loginAccount.getPerson().getId()).is().notEmpty();
+        Valid.check("loginAccount.person.id", loginAccount.getPerson().getId()).is().positive();
         Account indb = service.findByPerson(loginAccount);
         boolean success = SecurityUtil.check(e.getOldPassword(), indb.getPassword());
         if (!success) throw new ProjException(ProjectRestCode.USERNAME_PASSWORD_MISMATCH);

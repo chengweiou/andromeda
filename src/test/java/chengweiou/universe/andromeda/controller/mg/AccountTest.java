@@ -123,7 +123,7 @@ public class AccountTest {
 		).andReturn().getResponse().getContentAsString();
 		Rest<Account> findRest = Rest.from(result, Account.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
-		Assertions.assertEquals("3", findRest.getData().getPerson().getId());
+		Assertions.assertEquals(3, findRest.getData().getPerson().getId());
 		Assertions.assertEquals(true, findRest.getData().getActive());
 
 		result = mvc.perform(MockMvcRequestBuilders.delete("/mg/account/" + saveRest.getData())

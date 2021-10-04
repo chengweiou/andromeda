@@ -66,16 +66,16 @@ public class AccountRecoverTest {
 	}
 
 	@Test
-	public void countByPerson() {
+	public void countByKey() {
 		AccountRecover e = Builder.set("person", data.accountRecoverList.get(0).getPerson()).to(new AccountRecover());
-		long count = service.countByPerson(e);
+		long count = service.countByKey(e);
 		Assertions.assertEquals(1, count);
 	}
 
 	@Test
-	public void findByPerson() {
+	public void findByKey() {
 		AccountRecover e = Builder.set("person", data.accountRecoverList.get(0).getPerson()).to(new AccountRecover());
-		AccountRecover indb = service.findByPerson(e);
+		AccountRecover indb = service.findByKey(e);
 		Assertions.assertEquals("a2", indb.getA2());
 	}
 

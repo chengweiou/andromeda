@@ -1,10 +1,42 @@
 package chengweiou.universe.andromeda.base.dao;
 
 
-public interface BaseDao<T> {
-//    void save(T e) throws FailException;
-//    long delete(T e);
-//    T findById(T e);
-//    long count(SearchCondition searchCondition);
-//    List<T> find(SearchCondition searchCondition);
+import org.apache.ibatis.annotations.DeleteProvider;
+import org.apache.ibatis.annotations.InsertProvider;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.UpdateProvider;
+import org.springframework.stereotype.Repository;
+
+import chengweiou.universe.andromeda.base.entity.DtoEntity;
+
+@Repository
+@Mapper
+public interface BaseDao<Dto extends DtoEntity> {
+    @InsertProvider(type = BaseDaoImpl.class, method = "save")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    long save(Dto e);
+
+    @DeleteProvider(type = BaseDaoImpl.class, method = "delete")
+    long delete(Dto e);
+
+    @UpdateProvider(type = BaseDaoImpl.class, method = "update")
+    long update(Dto e);
+
+    @SelectProvider(type = BaseDaoImpl.class, method = "findById")
+    Dto findById(Dto e);
+
+    @SelectProvider(type = BaseDaoImpl.class, method = "countByKey")
+    long countByKey(Dto e);
+    @SelectProvider(type = BaseDaoImpl.class, method = "findByKey")
+    Dto findByKey(Dto e);
+
+    // @SelectProvider(type = BaseDaoImpl.class, method = "count")
+    // long count(SearchCondition searchCondition, Dto sample);
+
+    // @SelectProvider(type = BaseDaoImpl.class, method = "find")
+    // List<Dto> find(SearchCondition searchCondition, Dto sample);
+
+    // SQL baseFind(SearchCondition searchCondition, Dto sample);
 }

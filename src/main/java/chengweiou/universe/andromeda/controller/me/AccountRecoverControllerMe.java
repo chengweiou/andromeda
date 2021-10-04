@@ -29,7 +29,7 @@ public class AccountRecoverControllerMe {
 
     @PutMapping("/accountRecover")
     public Rest<Boolean> update(AccountRecover e, @RequestHeader("loginAccount") Account loginAccount) throws ParamException, UnauthException, ProjException {
-        Valid.check("loginAccount.person.id", loginAccount.getPerson().getId()).is().notEmpty();
+        Valid.check("loginAccount.person.id", loginAccount.getPerson().getId()).is().positive();
         Valid.check("accountRecover.phone | email | q1 | q2 | q3 | a1 | a2 | a3",
                 e.getPhone(), e.getEmail(), e.getQ1(), e.getQ2(), e.getQ3(), e.getA1(), e.getA2(), e.getA3()
             ).are().notAllNull();
@@ -51,8 +51,8 @@ public class AccountRecoverControllerMe {
 
     @GetMapping("/accountRecover")
     public Rest<Account> find(@RequestHeader("loginAccount") Account loginAccount) throws ParamException {
-        Valid.check("loginAccount.person.id", loginAccount.getPerson().getId()).is().notEmpty();
-        AccountRecover indb = service.findByPerson(Builder.set("person", loginAccount.getPerson()).to(new AccountRecover()));
+        Valid.check("loginAccount.person.id", loginAccount.getPerson().getId()).is().positive();
+        AccountRecover indb = service.findByKey(Builder.set("person", loginAccount.getPerson()).to(new AccountRecover()));
         return Rest.ok(indb);
     }
 }

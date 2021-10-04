@@ -1,21 +1,23 @@
 package chengweiou.universe.andromeda.model.entity;
 
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.springframework.beans.BeanUtils;
+
+import chengweiou.universe.andromeda.base.entity.DtoEntity;
+import chengweiou.universe.andromeda.base.entity.ServiceEntity;
 import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.blackhole.model.Builder;
-import chengweiou.universe.blackhole.model.NotNullObj;
 import chengweiou.universe.blackhole.model.NullObj;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
-public class Account implements NotNullObj, Serializable {
-    private Long id;
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public class Account extends ServiceEntity {
     private String username;
     private String phone;
     private String email;
@@ -29,8 +31,6 @@ public class Account implements NotNullObj, Serializable {
     private Person person;
     private Boolean active;
     private String extra;
-    private LocalDateTime createAt;
-    private LocalDateTime updateAt;
 
     public void fillNotRequire() {
         username = username!=null ? username : "";
@@ -45,14 +45,36 @@ public class Account implements NotNullObj, Serializable {
         extra = extra!=null ? extra : "";
     }
 
-    public void createAt() {
-        createAt = LocalDateTime.now(ZoneId.of("UTC"));
-    }
-    public void updateAt() {
-        updateAt = LocalDateTime.now(ZoneId.of("UTC"));
-    }
-
     public static final Account NULL = new Null();
     private static class Null extends Account implements NullObj {
+    }
+    public Dto toDto() {
+        Dto result = new Dto();
+        BeanUtils.copyProperties(this, result);
+        if (person != null) result.setPersonId(person.getId());
+        return result;
+    }
+    @Data
+    @ToString(callSuper = true)
+    @EqualsAndHashCode(callSuper = true)
+    public static class Dto extends DtoEntity {
+        private String username;
+        private String phone;
+        private String email;
+        private String wechat;
+        private String weibo;
+        private String google;
+        private String facebook;
+        private String password;
+        private Long personId;
+        private Boolean active;
+        private String extra;
+
+        public Account toBean() {
+            Account result = new Account();
+            BeanUtils.copyProperties(this, result);
+            result.setPerson(Builder.set("id", personId).to(new Person()));
+            return result;
+        }
     }
 }

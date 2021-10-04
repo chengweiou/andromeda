@@ -26,7 +26,7 @@ public class LoginRecordControllerMe {
     @GetMapping("/loginRecord/count")
     public Rest<Long> count(SearchCondition searchCondition, LoginRecord sample, @RequestHeader("loginAccount") Account loginAccount) throws ParamException {
         Valid.check("loginAccount.person", loginAccount.getPerson()).isNotNull();
-        Valid.check("loginAccount.person.id", loginAccount.getPerson().getId()).is().notEmpty();
+        Valid.check("loginAccount.person.id", loginAccount.getPerson().getId()).is().positive();
         sample.setPerson(loginAccount.getPerson());
         long count = service.count(searchCondition, sample);
         return Rest.ok(count);
@@ -35,7 +35,7 @@ public class LoginRecordControllerMe {
     @GetMapping("/loginRecord")
     public Rest<List<LoginRecord>> find(SearchCondition searchCondition, LoginRecord sample, @RequestHeader("loginAccount") Account loginAccount) throws ParamException {
         Valid.check("loginAccount.person", loginAccount.getPerson()).isNotNull();
-        Valid.check("loginAccount.person.id", loginAccount.getPerson().getId()).is().notEmpty();
+        Valid.check("loginAccount.person.id", loginAccount.getPerson().getId()).is().positive();
         sample.setPerson(loginAccount.getPerson());
         List<LoginRecord> list = service.find(searchCondition, sample);
         return Rest.ok(list);

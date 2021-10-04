@@ -88,7 +88,7 @@ public class AccountTest {
 		long count = service.update(e);
 		Assertions.assertEquals(1, count);
 		Account indb = service.findById(data.accountList.get(0));
-		Assertions.assertEquals("666", indb.getPerson().getId());
+		Assertions.assertEquals(666, indb.getPerson().getId());
 		service.update(data.accountList.get(0));
 	}
 
@@ -183,7 +183,7 @@ public class AccountTest {
 		Twofa twofa = Builder.set("id", 1).set("type", TwofaType.EMAIL).set("codeTo", "a@a.c").set("person", data.accountList.get(0).getPerson()).set("token", "aaa").set("code", "111").to(new Twofa());
 		long count = twofaDio.update(twofa);
 		Assertions.assertThrows(ProjException.class, () -> service.findAfterCheckCode(Builder.set("token", "aaa").set("code", "222").to(new Twofa())));
-		
+
 		twofaDio.update(data.twofaList.get(0));
 	}
 
