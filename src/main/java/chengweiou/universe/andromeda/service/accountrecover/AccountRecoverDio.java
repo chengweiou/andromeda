@@ -61,14 +61,14 @@ public class AccountRecoverDio {
         return result.toBean();
     }
 
-        public long count(SearchCondition searchCondition, AccountRecover sample) {
-            return dao.count(searchCondition, sample!=null ? sample.toDto() : null);
-        }
+    public long count(SearchCondition searchCondition, AccountRecover sample) {
+        return dao.count(searchCondition, sample!=null ? sample.toDto() : null);
+    }
 
-        public List<AccountRecover> find(SearchCondition searchCondition, AccountRecover sample) {
-            searchCondition.setDefaultSort("updateAt");
-            List<AccountRecover.Dto> dtoList = dao.find(searchCondition, sample!=null ? sample.toDto() : null);
-            List<AccountRecover> result = dtoList.stream().map(e -> e.toBean()).collect(Collectors.toList());
-            return result;
-        }
+    public List<AccountRecover> find(SearchCondition searchCondition, AccountRecover sample) {
+        searchCondition.setDefaultSort("updateAt");
+        List<AccountRecover.Dto> dtoList = dao.find(searchCondition, sample!=null ? sample.toDto() : null);
+        List<AccountRecover> result = dtoList.stream().map(e -> e.toBean()).collect(Collectors.toList());
+        return result;
+    }
 }

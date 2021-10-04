@@ -54,7 +54,6 @@ public class AccountRecover extends ServiceEntity {
         Dto result = new Dto();
         BeanUtils.copyProperties(this, result);
         if (person != null) result.setPersonId(person.getId());
-        System.out.println(result);
         return result;
     }
     @Data
