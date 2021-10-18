@@ -116,7 +116,8 @@ public class AccountController {
     }
 
     @PostMapping("/logout")
-    public Rest<Boolean> logout(Auth auth) {
+    public Rest<Boolean> logout(Auth auth) throws ParamException {
+        Valid.check("auth.refreshToken", auth.getRefreshToken()).is().notEmpty();
         // todo put token to block list
         String token = jedisUtil.get(auth.getRefreshToken());
         jedisUtil.del(auth.getRefreshToken());
@@ -125,7 +126,8 @@ public class AccountController {
     }
 
     @PostMapping("/token/refresh")
-    public Rest<Auth> refresh(Auth auth) throws UnauthException {
+    public Rest<Auth> refresh(Auth auth) throws UnauthException, ParamException {
+        Valid.check("auth.refreshToken", auth.getRefreshToken()).is().notEmpty();
         String oldToken = jedisUtil.get(auth.getRefreshToken());
         Account e = jwtUtil.verify(oldToken);
         String token = jwtUtil.sign(e);
