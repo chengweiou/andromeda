@@ -53,6 +53,7 @@ public class JwtUtil {
     }
 
     public Account verify(String token) throws UnauthException {
+        if (token == null) throw new UnauthException();
         Algorithm algorithm = useRsa ? Algorithm.RSA256(rsaPublicKey, rsaPrivateKey) : Algorithm.HMAC512(config.getSign());
         return verify(token, algorithm);
     }
@@ -62,7 +63,6 @@ public class JwtUtil {
                 .withIssuer(config.getIssuer())
                 .build(); //Reusable verifier instance
             DecodedJWT jwt = verifier.verify(token);
-            System.out.println(jwt);
             return Builder
                     .set("person", Builder.set("id", jwt.getClaim("personId").asLong()).to(new Person()))
                     .set("extra", jwt.getClaim("extra").asString())
