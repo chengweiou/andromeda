@@ -129,7 +129,7 @@ public class AccountController {
     public Rest<Auth> refresh(Auth auth) throws UnauthException, ParamException {
         Valid.check("auth.refreshToken", auth.getRefreshToken()).is().notEmpty();
         String oldToken = jedisUtil.get(auth.getRefreshToken());
-        Account e = jwtUtil.verify(oldToken);
+        Account e = jwtUtil.decode(oldToken);
         String token = jwtUtil.sign(e);
         jedisUtil.set(auth.getRefreshToken(), token, jwtConfig.getRefreshExpMinute().intValue()*60);
         return Rest.ok(Builder.set("token", token).to(auth));
