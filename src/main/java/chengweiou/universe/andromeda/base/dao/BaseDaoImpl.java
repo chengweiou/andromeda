@@ -5,14 +5,13 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.ibatis.jdbc.SQL;
 
-import chengweiou.universe.blackhole.util.LogUtil;
 import chengweiou.universe.andromeda.base.entity.DtoKey;
+import chengweiou.universe.blackhole.util.LogUtil;
 
 public class BaseDaoImpl<T> {
     public String save(T e) {
