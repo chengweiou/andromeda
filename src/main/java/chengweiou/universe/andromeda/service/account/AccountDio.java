@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import chengweiou.universe.andromeda.dao.AccountDao;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
+import chengweiou.universe.blackhole.dao.BaseSQL;
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ProjException;
 import chengweiou.universe.blackhole.model.BasicRestCode;
@@ -129,14 +130,31 @@ public class AccountDio {
     }
 
     public long count(SearchCondition searchCondition, Account sample) {
-        return dao.count(searchCondition, sample!=null ? sample.toDto() : null);
+        Account.Dto dtoSample = sample!=null ? sample.toDto() : Account.NULL.toDto();
+        String where = baseFind(searchCondition, dtoSample);
+        return dao.count(searchCondition, dtoSample, where);
     }
 
     public List<Account> find(SearchCondition searchCondition, Account sample) {
-        searchCondition.setDefaultSort("createAt");
-        List<Account.Dto> dtoList = dao.find(searchCondition, sample!=null ? sample.toDto() : null);
+        searchCondition.setDefaultSort("updateAt");
+        Account.Dto dtoSample = sample!=null ? sample.toDto() : Account.NULL.toDto();
+        String where = baseFind(searchCondition, dtoSample);
+        List<Account.Dto> dtoList = dao.find(searchCondition, dtoSample, where);
         List<Account> result = dtoList.stream().map(e -> e.toBean()).collect(Collectors.toList());
         return result;
+    }
+
+    private String baseFind(SearchCondition searchCondition, Account.Dto sample) {
+        return new BaseSQL() {{
+            if (searchCondition.getK() != null) WHERE("""
+                (username LIKE #{searchCondition.like.k}
+                or phone LIKE #{searchCondition.like.k}
+                or email LIKE #{searchCondition.like.k})
+                """);
+            if (sample != null) {
+                if (sample.getPersonId() != null) WHERE("personId = #{sample.personId}");
+            }
+        }}.toString();
     }
 
 

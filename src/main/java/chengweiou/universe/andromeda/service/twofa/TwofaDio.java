@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import chengweiou.universe.andromeda.dao.TwofaDao;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.twofa.Twofa;
+import chengweiou.universe.blackhole.dao.BaseSQL;
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ProjException;
 import chengweiou.universe.blackhole.model.BasicRestCode;
@@ -68,13 +69,26 @@ public class TwofaDio {
     }
 
     public long count(SearchCondition searchCondition, Twofa sample) {
-        return dao.count(searchCondition, sample!=null ? sample.toDto() : null);
+        Twofa.Dto dtoSample = sample!=null ? sample.toDto() : Twofa.NULL.toDto();
+        String where = baseFind(searchCondition, dtoSample);
+        return dao.count(searchCondition, dtoSample, where);
     }
+
     public List<Twofa> find(SearchCondition searchCondition, Twofa sample) {
         searchCondition.setDefaultSort("createAt");
-        List<Twofa.Dto> dtoList = dao.find(searchCondition, sample!=null ? sample.toDto() : null);
+        Twofa.Dto dtoSample = sample!=null ? sample.toDto() : Twofa.NULL.toDto();
+        String where = baseFind(searchCondition, dtoSample);
+        List<Twofa.Dto> dtoList = dao.find(searchCondition, dtoSample, where);
         List<Twofa> result = dtoList.stream().map(e -> e.toBean()).collect(Collectors.toList());
         return result;
+    }
+
+    private String baseFind(SearchCondition searchCondition, Twofa.Dto sample) {
+        return new BaseSQL() {{
+            if (sample != null) {
+                if (sample.getType() != null) WHERE("type = #{sample.type}");
+            }
+        }}.toString();
     }
 
 }

@@ -1,17 +1,12 @@
 package chengweiou.universe.andromeda.dao;
 
 
-import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
 
 import chengweiou.universe.andromeda.base.dao.BaseDao;
-import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.accountrecover.AccountRecover.Dto;
 
 @Repository
@@ -19,11 +14,6 @@ import chengweiou.universe.andromeda.model.entity.accountrecover.AccountRecover.
 public interface AccountRecoverDao extends BaseDao<Dto> {
     @UpdateProvider(type = Sql.class, method = "updateByPerson")
     long updateByPerson(Dto e);
-    @SelectProvider(type = Sql.class, method = "count")
-    long count(@Param("searchCondition") SearchCondition searchCondition, @Param("sample") Dto sample);
-
-    @SelectProvider(type = Sql.class, method = "find")
-    List<Dto> find(@Param("searchCondition") SearchCondition searchCondition, @Param("sample") Dto sample);
 
     class Sql {
 
@@ -46,22 +36,5 @@ public interface AccountRecoverDao extends BaseDao<Dto> {
             }}.toString();
         }
 
-        public String count(@Param("searchCondition")final SearchCondition searchCondition, @Param("sample")final Dto sample) {
-            return baseFind(searchCondition, sample).SELECT("count(*)").toString();
-        }
-
-        public String find(@Param("searchCondition")final SearchCondition searchCondition, @Param("sample")final Dto sample) {
-            return baseFind(searchCondition, sample).SELECT("*").toString().concat(searchCondition.getOrderBy()).concat(searchCondition.getSqlLimit());
-        }
-
-        private SQL baseFind(SearchCondition searchCondition, Dto sample) {
-            return new SQL() {{
-                FROM("accountRecover");
-                if (searchCondition.getK() != null) WHERE("phone LIKE #{searchCondition.like.k}")
-                        .OR().WHERE("email LIKE #{searchCondition.like.k}");
-                if (sample != null) {
-                }
-            }};
-        }
     }
 }

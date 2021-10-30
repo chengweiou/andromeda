@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import chengweiou.universe.andromeda.dao.LoginRecordDao;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.loginrecord.LoginRecord;
+import chengweiou.universe.blackhole.dao.BaseSQL;
 import chengweiou.universe.blackhole.exception.FailException;
 
 @Component
@@ -43,12 +44,28 @@ public class LoginRecordDio {
     }
 
     public long count(SearchCondition searchCondition, LoginRecord sample) {
-        return dao.count(searchCondition, sample!=null ? sample.toDto() : null);
+        LoginRecord.Dto dtoSample = sample!=null ? sample.toDto() : LoginRecord.NULL.toDto();
+        String where = baseFind(searchCondition, dtoSample);
+        return dao.count(searchCondition, dtoSample, where);
     }
+
     public List<LoginRecord> find(SearchCondition searchCondition, LoginRecord sample) {
         searchCondition.setDefaultSort("createAt");
-        List<LoginRecord.Dto> dtoList = dao.find(searchCondition, sample!=null ? sample.toDto() : null);
+        LoginRecord.Dto dtoSample = sample!=null ? sample.toDto() : LoginRecord.NULL.toDto();
+        String where = baseFind(searchCondition, dtoSample);
+        List<LoginRecord.Dto> dtoList = dao.find(searchCondition, dtoSample, where);
         List<LoginRecord> result = dtoList.stream().map(e -> e.toBean()).collect(Collectors.toList());
         return result;
+    }
+
+    private String baseFind(SearchCondition searchCondition, LoginRecord.Dto sample) {
+        return new BaseSQL() {{
+            if (searchCondition.getK() != null) WHERE("""
+            (ip LIKE #{searchCondition.like.k} or platform LIKE #{searchCondition.like.k})
+            """);
+            if (sample != null) {
+                if (sample.getPersonId() != null) WHERE("personId=#{sample.personId}");
+            }
+        }}.toString();
     }
 }

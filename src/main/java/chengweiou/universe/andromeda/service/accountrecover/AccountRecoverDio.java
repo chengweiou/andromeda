@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import chengweiou.universe.andromeda.dao.AccountRecoverDao;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.accountrecover.AccountRecover;
+import chengweiou.universe.blackhole.dao.BaseSQL;
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ProjException;
 import chengweiou.universe.blackhole.model.BasicRestCode;
@@ -62,13 +63,27 @@ public class AccountRecoverDio {
     }
 
     public long count(SearchCondition searchCondition, AccountRecover sample) {
-        return dao.count(searchCondition, sample!=null ? sample.toDto() : null);
+        AccountRecover.Dto dtoSample = sample!=null ? sample.toDto() : AccountRecover.NULL.toDto();
+        String where = baseFind(searchCondition, dtoSample);
+        return dao.count(searchCondition, dtoSample, where);
     }
 
     public List<AccountRecover> find(SearchCondition searchCondition, AccountRecover sample) {
         searchCondition.setDefaultSort("updateAt");
-        List<AccountRecover.Dto> dtoList = dao.find(searchCondition, sample!=null ? sample.toDto() : null);
+        AccountRecover.Dto dtoSample = sample!=null ? sample.toDto() : AccountRecover.NULL.toDto();
+        String where = baseFind(searchCondition, dtoSample);
+        List<AccountRecover.Dto> dtoList = dao.find(searchCondition, dtoSample, where);
         List<AccountRecover> result = dtoList.stream().map(e -> e.toBean()).collect(Collectors.toList());
         return result;
+    }
+
+    private String baseFind(SearchCondition searchCondition, AccountRecover.Dto sample) {
+        return new BaseSQL() {{
+            if (searchCondition.getK() != null) WHERE("""
+            (phone LIKE #{searchCondition.like.k} or email LIKE #{searchCondition.like.k})
+            """);
+            if (sample != null) {
+            }
+        }}.toString();
     }
 }

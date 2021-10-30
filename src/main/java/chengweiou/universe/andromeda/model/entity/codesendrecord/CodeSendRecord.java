@@ -3,8 +3,8 @@ package chengweiou.universe.andromeda.model.entity.codesendrecord;
 
 import org.springframework.beans.BeanUtils;
 
-import chengweiou.universe.andromeda.base.entity.DtoEntity;
-import chengweiou.universe.andromeda.base.entity.ServiceEntity;
+import chengweiou.universe.blackhole.model.entity.DtoEntity;
+import chengweiou.universe.blackhole.model.entity.ServiceEntity;
 import chengweiou.universe.blackhole.model.NullObj;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

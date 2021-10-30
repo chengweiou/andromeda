@@ -6,9 +6,9 @@ import java.time.ZoneId;
 
 import org.springframework.beans.BeanUtils;
 
-import chengweiou.universe.andromeda.base.entity.DtoEntity;
-import chengweiou.universe.andromeda.base.entity.DtoKey;
-import chengweiou.universe.andromeda.base.entity.ServiceEntity;
+import chengweiou.universe.blackhole.model.entity.DtoEntity;
+import chengweiou.universe.blackhole.model.entity.DtoKey;
+import chengweiou.universe.blackhole.model.entity.ServiceEntity;
 import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.model.NullObj;
