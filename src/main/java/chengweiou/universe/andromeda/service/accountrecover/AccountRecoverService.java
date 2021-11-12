@@ -1,8 +1,7 @@
 package chengweiou.universe.andromeda.service.accountrecover;
 
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +48,7 @@ public class AccountRecoverService {
         AccountRecover result = dio.findById(e);
         if (result.getId() == null) throw new ProjException(ProjectRestCode.CODE_NOT_MATCH);
         if (!result.getCode().equals(e.getCode())) throw new ProjException(ProjectRestCode.CODE_NOT_MATCH);
-        if (LocalDateTime.now(ZoneId.of("UTC")).isAfter(result.getCodeExp())) throw new ProjException(ProjectRestCode.CODE_EXPIRED);
+        if (Instant.now().isAfter(result.getCodeExp())) throw new ProjException(ProjectRestCode.CODE_EXPIRED);
         result.cleanCode();
         dio.update(result);
         return result;

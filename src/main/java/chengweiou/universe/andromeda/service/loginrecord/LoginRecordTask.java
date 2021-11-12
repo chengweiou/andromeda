@@ -1,7 +1,6 @@
 package chengweiou.universe.andromeda.service.loginrecord;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.Instant;
 import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +41,7 @@ public class LoginRecordTask {
         try {
             Account account = jwtUtil.verify(token);
             LoginRecord e = service.findLastByPerson(Builder.set("person", account.getPerson()).to(new LoginRecord()));
-            e.setLogoutTime(LocalDateTime.now(ZoneId.of("UTC")).toString());
+            e.setLogoutTime(Instant.now().toString());
             long count = service.update(e);
             return new AsyncResult<>(count);
         } catch (UnauthException e) {

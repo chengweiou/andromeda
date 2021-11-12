@@ -1,16 +1,15 @@
 package chengweiou.universe.andromeda.model.entity.loginrecord;
 
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.Instant;
 
 import org.springframework.beans.BeanUtils;
 
-import chengweiou.universe.blackhole.model.entity.DtoEntity;
-import chengweiou.universe.blackhole.model.entity.ServiceEntity;
 import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.model.NullObj;
+import chengweiou.universe.blackhole.model.entity.DtoEntity;
+import chengweiou.universe.blackhole.model.entity.ServiceEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -26,7 +25,7 @@ public class LoginRecord extends ServiceEntity {
     private String logoutTime;
 
     public void fillNotRequire() {
-        loginTime = loginTime != null ? loginTime : LocalDateTime.now(ZoneId.of("UTC")).toString();
+        loginTime = loginTime != null ? loginTime : Instant.now().toString();
         logoutTime = logoutTime != null ? logoutTime : "";
     }
 

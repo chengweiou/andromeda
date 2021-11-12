@@ -1,8 +1,8 @@
 package chengweiou.universe.andromeda.service;
 
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class LoginRecordTest {
 
 	@Test
 	public void update() {
-		LoginRecord e = Builder.set("id", data.loginRecordList.get(0).getId()).set("logoutTime", LocalDateTime.now(ZoneId.of("UTC")).toString()).to(new LoginRecord());
+		LoginRecord e = Builder.set("id", data.loginRecordList.get(0).getId()).set("logoutTime", Instant.now().toString()).to(new LoginRecord());
 		long count = service.update(e);
 		Assertions.assertEquals(1, count);
 

@@ -1,8 +1,8 @@
 package chengweiou.universe.andromeda.controller.all;
 
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -71,7 +71,7 @@ public class AccountController {
         Twofa twofa = twofaService.findByPerson(Builder.set("person", indb.getPerson()).to(new Twofa()));
 
         if (twofa.getType() != null && twofa.getType() != TwofaType.NONE) {
-            if (LocalDateTime.now(ZoneId.of("UTC")).isBefore(twofa.getCodeExp())) {
+            if (Instant.now().isBefore(twofa.getCodeExp())) {
                 throw new ProjException(ProjectRestCode.PHONE_MSG_TOO_MANY);
             }
             String code = RandomStringUtils.randomNumeric(6);
@@ -176,7 +176,7 @@ public class AccountController {
         String result = null;
         AccountRecover indb = accountRecoverService.findById(userConfirm);
         // 在过期前，只能发三次
-        if (LocalDateTime.now(ZoneId.of("UTC")).isBefore(indb.getCodeExp()) && indb.getCodeCount() == 3) throw new ProjException(ProjectRestCode.CODE_TOO_MANY);
+        if (Instant.now().isBefore(indb.getCodeExp()) && indb.getCodeCount() == 3) throw new ProjException(ProjectRestCode.CODE_TOO_MANY);
         if (
             (userConfirm.getPhone() == null || !userConfirm.getPhone().equals(indb.getPhone()))
             && (userConfirm.getEmail() == null || !userConfirm.getEmail().equals(indb.getEmail()))
@@ -185,7 +185,7 @@ public class AccountController {
             && (userConfirm.getA3() == null || !userConfirm.getA3().equals(indb.getA3()))
         ) throw new ProjException(ProjectRestCode.ACCOUNT_NOT_MATCH);
         String code = RandomStringUtils.randomAlphanumeric(50);
-        Builder.set("code", code).set("codeExp", LocalDateTime.now(ZoneId.of("UTC")).plusMinutes(10)).set("codeCount", indb.getCodeCount()+1).to(indb);
+        Builder.set("code", code).set("codeExp", Instant.now().plus(10, ChronoUnit.MINUTES)).set("codeCount", indb.getCodeCount()+1).to(indb);
         if (userConfirm.getPhone() != null) phoneMsgService.sendForgetUrl(indb);
         else if (userConfirm.getEmail() != null) phoneMsgService.sendForgetUrl(indb);
         else result = code;

@@ -1,8 +1,8 @@
 package chengweiou.universe.andromeda.service;
 
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -95,7 +95,7 @@ public class AccountRecoverTest {
 	@Test
 	public void findByActiveCode() throws FailException, ProjException {
 		String code = RandomStringUtils.random(50);
-		AccountRecover e = Builder.set("id", data.accountRecoverList.get(0).getId()).set("code", code).set("codeExp", LocalDateTime.now(ZoneId.of("UTC")).plusMinutes(10)).to(new AccountRecover());
+		AccountRecover e = Builder.set("id", data.accountRecoverList.get(0).getId()).set("code", code).set("codeExp", Instant.now().minus(10, ChronoUnit.MINUTES)).to(new AccountRecover());
 		dio.update(e);
 		AccountRecover indb = service.findByActiveCode(e);
 		Assertions.assertEquals(data.accountRecoverList.get(0).getA1(), indb.getA1());
@@ -106,7 +106,7 @@ public class AccountRecoverTest {
 	@Test
 	public void findByActiveCodeFail() throws FailException, ProjException {
 		String code = RandomStringUtils.random(50);
-		AccountRecover e = Builder.set("id", data.accountRecoverList.get(0).getId()).set("code", code).set("codeExp", LocalDateTime.now(ZoneId.of("UTC")).minusMinutes(10)).to(new AccountRecover());
+		AccountRecover e = Builder.set("id", data.accountRecoverList.get(0).getId()).set("code", code).set("codeExp", Instant.now().minus(10, ChronoUnit.MINUTES)).to(new AccountRecover());
 		dio.update(e);
 		// expired code
 		Assertions.assertThrows(ProjException.class, () -> service.findByActiveCode(e));

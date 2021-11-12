@@ -12,6 +12,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import chengweiou.universe.andromeda.base.formatter.InstantFormatter;
 import chengweiou.universe.andromeda.base.formatter.LocalDateFormatter;
 import chengweiou.universe.andromeda.base.formatter.LocalDateTimeFormatter;
 import chengweiou.universe.andromeda.interceptor.AuthInterceptorMe;
@@ -24,6 +25,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addFormatters(FormatterRegistry registry) {
         registry.addFormatter(new LocalDateFormatter());
         registry.addFormatter(new LocalDateTimeFormatter());
+        registry.addFormatter(new InstantFormatter());
     }
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

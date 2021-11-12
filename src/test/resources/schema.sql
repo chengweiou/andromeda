@@ -14,8 +14,8 @@ CREATE TABLE account (
    personId integer NOT NULL,
    active boolean NOT NULL,
    extra character varying NOT NULL,
-   createAt timestamp without time zone NOT NULL,
-   updateAt timestamp without time zone NOT NULL,
+   createAt timestamp with time zone NOT NULL,
+   updateAt timestamp with time zone NOT NULL,
    PRIMARY KEY (id)
 );
 
@@ -27,8 +27,8 @@ CREATE TABLE loginRecord (
    platform character varying NOT NULL,
    loginTime character varying NOT NULL,
    logoutTime character varying NOT NULL,
-   createAt timestamp without time zone NOT NULL,
-   updateAt timestamp without time zone NOT NULL,
+   createAt timestamp with time zone NOT NULL,
+   updateAt timestamp with time zone NOT NULL,
    PRIMARY KEY (id)
 );
 
@@ -40,9 +40,9 @@ CREATE TABLE twofa (
    codeTo character varying NOT NULL,
    token character varying NOT NULL,
    code character varying NOT NULL,
-   codeExp timestamp without time zone NOT NULL,
-   createAt timestamp without time zone NOT NULL,
-   updateAt timestamp without time zone NOT NULL,
+   codeExp timestamp with time zone NOT NULL,
+   createAt timestamp with time zone NOT NULL,
+   updateAt timestamp with time zone NOT NULL,
    PRIMARY KEY (id)
 );
 
@@ -52,8 +52,8 @@ CREATE TABLE codeSendRecord (
    type character varying NOT NULL,
    username character varying NOT NULL,
    code character varying NOT NULL,
-   createAt timestamp without time zone NOT NULL,
-   updateAt timestamp without time zone NOT NULL,
+   createAt timestamp with time zone NOT NULL,
+   updateAt timestamp with time zone NOT NULL,
    PRIMARY KEY (id)
 );
 
@@ -70,9 +70,9 @@ CREATE TABLE accountRecover (
    a2 character varying NOT NULL,
    a3 character varying NOT NULL,
    code character varying NOT NULL,
-   codeExp timestamp without time zone NOT NULL,
+   codeExp timestamp with time zone NOT NULL,
    codeCount smallint NOT NULL,
-   createAt timestamp without time zone NOT NULL,
-   updateAt timestamp without time zone NOT NULL,
+   createAt timestamp with time zone NOT NULL,
+   updateAt timestamp with time zone NOT NULL,
    PRIMARY KEY (id)
 );

@@ -1,16 +1,18 @@
 package chengweiou.universe.andromeda.model.entity.accountrecover;
 
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 import org.springframework.beans.BeanUtils;
 
-import chengweiou.universe.blackhole.model.entity.DtoEntity;
-import chengweiou.universe.blackhole.model.entity.DtoKey;
-import chengweiou.universe.blackhole.model.entity.ServiceEntity;
 import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.model.NullObj;
+import chengweiou.universe.blackhole.model.entity.DtoEntity;
+import chengweiou.universe.blackhole.model.entity.DtoKey;
+import chengweiou.universe.blackhole.model.entity.ServiceEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -29,11 +31,11 @@ public class AccountRecover extends ServiceEntity {
     private String a2;
     private String a3;
     private String code;
-    private LocalDateTime codeExp;
+    private Instant codeExp;
     private Integer codeCount;
     public void cleanCode() {
         code = "";
-        codeExp = LocalDateTime.of(1000, 1, 1, 0, 0, 0);
+        codeExp = LocalDateTime.of(1000, 1, 1, 0, 0, 0).toInstant(ZoneOffset.UTC);
         codeCount = 0;
     }
     public void fillNotRequire() {
@@ -71,7 +73,7 @@ public class AccountRecover extends ServiceEntity {
         private String a2;
         private String a3;
         private String code;
-        private LocalDateTime codeExp;
+        private Instant codeExp;
         private Integer codeCount;
 
         public AccountRecover toBean() {

@@ -1,8 +1,8 @@
 package chengweiou.universe.andromeda.service.account;
 
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +93,7 @@ public class AccountService {
     public Account findAfterCheckCode(Twofa twofa) throws ProjException {
         Twofa twofaIndb = twofaDio.findByTokenAndCode(twofa);
         if (twofaIndb.getId() == null) throw new ProjException(ProjectRestCode.TWOFA_CODE_NOT_MATCH);
-        if (twofaIndb.getUpdateAt().plusMinutes(1).isBefore(LocalDateTime.now(ZoneId.of("UTC")))) throw new ProjException(ProjectRestCode.TWOFA_EXPIRED);
+        if (twofaIndb.getUpdateAt().plus(1, ChronoUnit.MINUTES).isBefore(Instant.now())) throw new ProjException(ProjectRestCode.TWOFA_EXPIRED);
 
         Account result = dio.findByPerson(Builder.set("person", twofaIndb.getPerson()).to(new Account()));
         twofaIndb.cleanCode();
