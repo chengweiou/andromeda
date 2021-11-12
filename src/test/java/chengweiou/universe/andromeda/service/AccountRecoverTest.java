@@ -94,8 +94,10 @@ public class AccountRecoverTest {
 
 	@Test
 	public void findByActiveCode() throws FailException, ProjException {
+		System.out.println(Instant.now());
+		System.out.println(Instant.now().minus(10, ChronoUnit.MINUTES));
 		String code = RandomStringUtils.random(50);
-		AccountRecover e = Builder.set("id", data.accountRecoverList.get(0).getId()).set("code", code).set("codeExp", Instant.now().minus(10, ChronoUnit.MINUTES)).to(new AccountRecover());
+		AccountRecover e = Builder.set("id", data.accountRecoverList.get(0).getId()).set("code", code).set("codeExp", Instant.now().plus(10, ChronoUnit.MINUTES)).to(new AccountRecover());
 		dio.update(e);
 		AccountRecover indb = service.findByActiveCode(e);
 		Assertions.assertEquals(data.accountRecoverList.get(0).getA1(), indb.getA1());
