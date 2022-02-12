@@ -24,8 +24,8 @@ public class Twofa extends ServiceEntity {
     private Person person;
     private TwofaType type;
     private String codeTo; // 用于接受验证的设备账号
-    private String token; // 和 code 一起返回， 也可以用于email的link直接登录
-    private String code;
+    private String token; // 和 code 一起返回， 也可以用于email的link直接登录, 用来匹配用户
+    private String code; // 手机收到的验证码
     private Instant codeExp;
 
     public void cleanCode() {

@@ -18,6 +18,7 @@ import chengweiou.universe.andromeda.service.twofa.TwofaDio;
 import chengweiou.universe.andromeda.util.SecurityUtil;
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ProjException;
+import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Builder;
 
 @Service
@@ -26,13 +27,13 @@ public class AccountService {
     private AccountDio dio;
     @Autowired
     private AccountRecoverDio accountRecoverDio;
-    @Autowired
-    private TwofaDio twofaDio;
 
     public void save(Account e) throws FailException, ProjException {
+        checkDupKey(e);
         e.setPassword(SecurityUtil.hash(e.getPassword()));
         dio.save(e);
         AccountRecover accountRecover = Builder.set("id", e.getId()).set("person", e.getPerson()).set("phone", e.getPhone()).set("email", e.getEmail()).to(new AccountRecover());
+        accountRecover.cleanCode();
         accountRecoverDio.save(accountRecover);
     }
 
@@ -43,29 +44,32 @@ public class AccountService {
     }
 
     public long update(Account e) throws ProjException {
+        checkDupKey(e);
         if (e.getPassword() != null) e.setPassword(SecurityUtil.hash(e.getPassword()));
         return dio.update(e);
     }
 
-    public long updateByPerson(Account e) throws ProjException {
+    public long updateByKey(Account e) throws ProjException {
+        checkDupKey(e);
         if (e.getPassword() != null) e.setPassword(SecurityUtil.hash(e.getPassword()));
-        return dio.updateByPerson(e);
+        return dio.updateByKey(e);
     }
 
-    public Account findById(Account e) {
-        return dio.findById(e);
+    private void checkDupKey(Account e) throws ProjException {
+        if (e.getUsername() != null && !e.getUsername().isEmpty()) {
+            long count = dio.countByUsernameOfOther(e);
+            if (count != 0) throw new ProjException("dup key: " + e.getUsername() + " exists", BasicRestCode.EXISTS);
+        }
+        if (e.getPhone() != null && !e.getPhone().isEmpty()) {
+            long count = dio.countByPhoneOfOther(e);
+            if (count != 0) throw new ProjException("dup key: " + e.getPhone() + " exists", BasicRestCode.EXISTS);
+        }
+        if (e.getEmail() != null && !e.getEmail().isEmpty()) {
+            long count = dio.countByEmailOfOther(e);
+            if (count != 0) throw new ProjException("dup key: " + e.getEmail() + " exists", BasicRestCode.EXISTS);
+        }
     }
 
-    public Account findByPerson(Account e) {
-        return dio.findByPerson(e);
-    }
-
-    public long countByLoginUsername(Account e) {
-        return dio.countByLoginUsername(e);
-    }
-    public Account findByLoginUsername(Account e) {
-        return dio.findByLoginUsername(e);
-    }
     public Account login(Account e) throws ProjException {
         Account indb = dio.findByLoginUsername(e);
         if (indb.getId() == null) throw new ProjException(ProjectRestCode.USERNAME_PASSWORD_MISMATCH);
@@ -74,38 +78,16 @@ public class AccountService {
         return indb;
     }
 
-    public long countByUsernameOfOther(Account e) {
-        return dio.countByUsernameOfOther(e);
-    }
-    public long countByPhoneOfOther(Account e) {
-        return dio.countByPhoneOfOther(e);
-    }
-    public long countByEmailOfOther(Account e) {
-        return dio.countByEmailOfOther(e);
-    }
-
-        /**
-     * check code needs token+code
-     * @param twofa
+    /**
+     *
+     * @param e 需要 account.person
      * @return
      * @throws ProjException
      */
-    public Account findAfterCheckCode(Twofa twofa) throws ProjException {
-        Twofa twofaIndb = twofaDio.findByTokenAndCode(twofa);
-        if (twofaIndb.getId() == null) throw new ProjException(ProjectRestCode.TWOFA_CODE_NOT_MATCH);
-        if (twofaIndb.getUpdateAt().plus(1, ChronoUnit.MINUTES).isBefore(Instant.now())) throw new ProjException(ProjectRestCode.TWOFA_EXPIRED);
-
-        Account result = dio.findByPerson(Builder.set("person", twofaIndb.getPerson()).to(new Account()));
-        twofaIndb.cleanCode();
-        twofaDio.update(twofaIndb);
-        return result;
-    }
-
-    public long count(SearchCondition searchCondition, Account sample) {
-        return dio.count(searchCondition, sample);
-    }
-
-    public List<Account> find(SearchCondition searchCondition, Account sample) {
-        return dio.find(searchCondition, sample);
+    public long changePassword(Account e) throws ProjException {
+        Account indb = dio.findByKey(e);
+        boolean success = SecurityUtil.check(e.getOldPassword(), indb.getPassword());
+        if (!success) throw new ProjException(ProjectRestCode.USERNAME_PASSWORD_MISMATCH);
+        return dio.update(Builder.set("id", indb.getId()).set("password", SecurityUtil.hash(e.getPassword())).to(new Account()));
     }
 }

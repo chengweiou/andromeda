@@ -10,69 +10,37 @@ import org.springframework.stereotype.Component;
 import chengweiou.universe.andromeda.dao.AccountDao;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
+import chengweiou.universe.andromeda.model.entity.Account.Dto;
+import chengweiou.universe.blackhole.dao.BaseDio;
 import chengweiou.universe.blackhole.dao.BaseSQL;
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ProjException;
+import chengweiou.universe.blackhole.model.AbstractSearchCondition;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 
 
 @Component
-public class AccountDio {
+public class AccountDio extends BaseDio<Account, Account.Dto> {
     @Autowired
     private AccountDao dao;
-
-    public void save(Account e) throws ProjException, FailException {
-        checkDupKey(e);
-        e.fillNotRequire();
-        e.createAt();
-        e.updateAt();
-        Account.Dto dto = e.toDto();
-        long count = dao.save(dto);
-        if (count != 1) throw new FailException();
-        e.setId(dto.getId());
-    }
-
-    public void delete(Account e) throws FailException {
-        long count = dao.delete(e.toDto());
-        if (count != 1) throw new FailException();
-    }
-
-    public long update(Account e) throws ProjException {
-        checkDupKey(e);
-        e.updateAt();
-        return dao.update(e.toDto());
-    }
-
-    public long updateByPerson(Account e) throws ProjException {
-        checkDupKey(e);
-        e.updateAt();
-        return dao.updateByPerson(e.toDto());
-    }
-
-    private void checkDupKey(Account e) throws ProjException {
-        if (e.getUsername() != null && !e.getUsername().isEmpty()) {
-            long count = dao.countByUsernameOfOther(e.toDto());
-            if (count != 0) throw new ProjException("dup key: " + e.getUsername() + " exists", BasicRestCode.EXISTS);
-        }
-        if (e.getPhone() != null && !e.getPhone().isEmpty()) {
-            long count = dao.countByPhoneOfOther(e.toDto());
-            if (count != 0) throw new ProjException("dup key: " + e.getPhone() + " exists", BasicRestCode.EXISTS);
-        }
-        if (e.getEmail() != null && !e.getEmail().isEmpty()) {
-            long count = dao.countByEmailOfOther(e.toDto());
-            if (count != 0) throw new ProjException("dup key: " + e.getEmail() + " exists", BasicRestCode.EXISTS);
-        }
-    }
-
-    public Account findById(Account e) {
-        Account.Dto result = dao.findById(e.toDto());
-        if (result == null) return Account.NULL;
-        return result.toBean();
-    }
-    public Account findByPerson(Account e) {
-        Account.Dto result = dao.findByPerson(e.toDto());
-        if (result == null) return Account.NULL;
-        return result.toBean();
+    @Override
+    protected AccountDao getDao() { return dao; }
+    @Override
+    protected Class getTClass() { return Account.class; };
+    @Override
+    protected String getDefaultSort() { return "updateAt"; };
+    @Override
+    protected String baseFind(AbstractSearchCondition searchCondition, Dto sample) {
+        return new BaseSQL() {{
+            if (searchCondition.getK() != null) WHERE("""
+                (username LIKE #{searchCondition.like.k}
+                or phone LIKE #{searchCondition.like.k}
+                or email LIKE #{searchCondition.like.k})
+                """);
+            if (sample != null) {
+                if (sample.getPersonId() != null) WHERE("personId = #{sample.personId}");
+            }
+        }}.toString();
     }
 
     public long countByUsername(Account e) {
@@ -128,35 +96,5 @@ public class AccountDio {
     public long countByEmailOfOther(Account e) {
         return dao.countByEmailOfOther(e.toDto());
     }
-
-    public long count(SearchCondition searchCondition, Account sample) {
-        Account.Dto dtoSample = sample!=null ? sample.toDto() : Account.NULL.toDto();
-        String where = baseFind(searchCondition, dtoSample);
-        return dao.count(searchCondition, dtoSample, where);
-    }
-
-    public List<Account> find(SearchCondition searchCondition, Account sample) {
-        searchCondition.setDefaultSort("updateAt");
-        Account.Dto dtoSample = sample!=null ? sample.toDto() : Account.NULL.toDto();
-        String where = baseFind(searchCondition, dtoSample);
-        List<Account.Dto> dtoList = dao.find(searchCondition, dtoSample, where);
-        List<Account> result = dtoList.stream().map(e -> e.toBean()).collect(Collectors.toList());
-        return result;
-    }
-
-    private String baseFind(SearchCondition searchCondition, Account.Dto sample) {
-        return new BaseSQL() {{
-            if (searchCondition.getK() != null) WHERE("""
-                (username LIKE #{searchCondition.like.k}
-                or phone LIKE #{searchCondition.like.k}
-                or email LIKE #{searchCondition.like.k})
-                """);
-            if (sample != null) {
-                if (sample.getPersonId() != null) WHERE("personId = #{sample.personId}");
-            }
-        }}.toString();
-    }
-
-
 
 }

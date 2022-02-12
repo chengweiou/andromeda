@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.model.entity.accountrecover.AccountRecover;
+import chengweiou.universe.andromeda.service.accountrecover.AccountRecoverDio;
 import chengweiou.universe.andromeda.service.accountrecover.AccountRecoverService;
 import chengweiou.universe.andromeda.service.phonemsg.PhoneMsgService;
 import chengweiou.universe.blackhole.exception.ParamException;
@@ -23,7 +24,7 @@ import chengweiou.universe.blackhole.param.Valid;
 @RequestMapping("me")
 public class AccountRecoverControllerMe {
     @Autowired
-    private AccountRecoverService service;
+    private AccountRecoverDio dio;
     @Autowired
     private PhoneMsgService phoneMsgService;
 
@@ -37,7 +38,7 @@ public class AccountRecoverControllerMe {
         e.setCode(null);
         e.setCodeExp(null);
         e.setCodeCount(null);
-        boolean success = service.updateByPerson(e) == 1;
+        boolean success = dio.updateByKey(e) == 1;
         // 发code才是重点，多人重复无所谓，你要能接收验证码，10个账号同一个验证邮箱的都行
         if (e.getPhone() != null) {
             // todo
@@ -52,7 +53,7 @@ public class AccountRecoverControllerMe {
     @GetMapping("/accountRecover")
     public Rest<Account> find(@RequestHeader("loginAccount") Account loginAccount) throws ParamException {
         Valid.check("loginAccount.person.id", loginAccount.getPerson().getId()).is().positive();
-        AccountRecover indb = service.findByKey(Builder.set("person", loginAccount.getPerson()).to(new AccountRecover()));
+        AccountRecover indb = dio.findByKey(Builder.set("person", loginAccount.getPerson()).to(new AccountRecover()));
         return Rest.ok(indb);
     }
 }

@@ -1,17 +1,12 @@
 package chengweiou.universe.andromeda.dao;
 
 
-import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.SelectProvider;
-import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
 
 import chengweiou.universe.andromeda.base.dao.BaseDao;
-import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.codesendrecord.CodeSendRecord.Dto;
 
 @Repository

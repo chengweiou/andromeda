@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.model.entity.loginrecord.LoginRecord;
+import chengweiou.universe.andromeda.service.loginrecord.LoginRecordDio;
 import chengweiou.universe.andromeda.service.loginrecord.LoginRecordService;
 import chengweiou.universe.blackhole.exception.ParamException;
 import chengweiou.universe.blackhole.model.Rest;
@@ -21,14 +22,14 @@ import chengweiou.universe.blackhole.param.Valid;
 @RequestMapping("me")
 public class LoginRecordControllerMe {
     @Autowired
-    private LoginRecordService service;
+    private LoginRecordDio dio;
 
     @GetMapping("/loginRecord/count")
     public Rest<Long> count(SearchCondition searchCondition, LoginRecord sample, @RequestHeader("loginAccount") Account loginAccount) throws ParamException {
         Valid.check("loginAccount.person", loginAccount.getPerson()).isNotNull();
         Valid.check("loginAccount.person.id", loginAccount.getPerson().getId()).is().positive();
         sample.setPerson(loginAccount.getPerson());
-        long count = service.count(searchCondition, sample);
+        long count = dio.count(searchCondition, sample);
         return Rest.ok(count);
     }
 
@@ -37,7 +38,7 @@ public class LoginRecordControllerMe {
         Valid.check("loginAccount.person", loginAccount.getPerson()).isNotNull();
         Valid.check("loginAccount.person.id", loginAccount.getPerson().getId()).is().positive();
         sample.setPerson(loginAccount.getPerson());
-        List<LoginRecord> list = service.find(searchCondition, sample);
+        List<LoginRecord> list = dio.find(searchCondition, sample);
         return Rest.ok(list);
     }
 

@@ -16,27 +16,4 @@ public class CodeSendRecordService {
     @Autowired
     private CodeSendRecordDio dio;
 
-    public void save(CodeSendRecord e) throws FailException, ProjException {
-        dio.save(e);
-    }
-
-    public void delete(CodeSendRecord e) throws FailException {
-        dio.delete(e);
-    }
-
-    public long update(CodeSendRecord e) {
-        return dio.update(e);
-    }
-
-    public CodeSendRecord findLastByUsername(CodeSendRecord e) {
-        return dio.findLastByUsername(e);
-    }
-
-    public long count(SearchCondition searchCondition, CodeSendRecord sample) {
-        return dio.count(searchCondition, sample);
-    }
-    public List<CodeSendRecord> find(SearchCondition searchCondition, CodeSendRecord sample) {
-        return dio.find(searchCondition, sample);
-    }
-
 }

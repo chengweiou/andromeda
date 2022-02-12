@@ -10,24 +10,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.loginrecord.LoginRecord;
-import chengweiou.universe.andromeda.service.loginrecord.LoginRecordService;
+import chengweiou.universe.andromeda.service.loginrecord.LoginRecordDio;
 import chengweiou.universe.blackhole.model.Rest;
 
 @RestController
 @RequestMapping("mg")
 public class LoginRecordControllerMg {
     @Autowired
-    private LoginRecordService service;
+    private LoginRecordDio dio;
 
     @GetMapping("/loginRecord/count")
     public Rest<Long> count(SearchCondition searchCondition, LoginRecord sample) {
-        long count = service.count(searchCondition, sample);
+        long count = dio.count(searchCondition, sample);
         return Rest.ok(count);
     }
 
     @GetMapping("/loginRecord")
     public Rest<List<LoginRecord>> find(SearchCondition searchCondition, LoginRecord sample) {
-        List<LoginRecord> list = service.find(searchCondition, sample);
+        List<LoginRecord> list = dio.find(searchCondition, sample);
         return Rest.ok(list);
     }
 

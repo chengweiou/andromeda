@@ -20,7 +20,7 @@ import chengweiou.universe.blackhole.util.LogUtil;
 @Component
 public class LoginRecordTask {
     @Autowired
-    private LoginRecordService service;
+    private LoginRecordDio dio;
     @Autowired
     private UserAgentUtil userAgentUtil;
     @Autowired
@@ -29,7 +29,7 @@ public class LoginRecordTask {
     @Async
     public Future<Boolean> save(LoginRecord e) {
         try {
-            service.save(e);
+            dio.save(e);
             return new AsyncResult<>(true);
         } catch (FailException ex) {
             return new AsyncResult<>(false);
@@ -40,9 +40,9 @@ public class LoginRecordTask {
     public Future<Long> logout(String token) {
         try {
             Account account = jwtUtil.verify(token);
-            LoginRecord e = service.findLastByPerson(Builder.set("person", account.getPerson()).to(new LoginRecord()));
+            LoginRecord e = dio.findLastByPerson(Builder.set("person", account.getPerson()).to(new LoginRecord()));
             e.setLogoutTime(Instant.now().toString());
-            long count = service.update(e);
+            long count = dio.update(e);
             return new AsyncResult<>(count);
         } catch (UnauthException e) {
             LogUtil.i("logout update record fail <-- jwt verify fail");

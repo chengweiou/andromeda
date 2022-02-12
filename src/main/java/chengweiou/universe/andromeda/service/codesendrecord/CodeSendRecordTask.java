@@ -14,11 +14,11 @@ import chengweiou.universe.blackhole.exception.ProjException;
 @Component
 public class CodeSendRecordTask {
     @Autowired
-    private CodeSendRecordService service;
+    private CodeSendRecordDio dio;
     @Async
     public Future<Boolean> save(CodeSendRecord e) throws ProjException {
         try {
-            service.save(e);
+            dio.save(e);
             return new AsyncResult<>(true);
         } catch (FailException ex) {
             return new AsyncResult<>(false);

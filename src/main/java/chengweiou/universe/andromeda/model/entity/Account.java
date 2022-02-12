@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.BeanUtils;
 
 import chengweiou.universe.blackhole.model.entity.DtoEntity;
+import chengweiou.universe.blackhole.model.entity.DtoKey;
 import chengweiou.universe.blackhole.model.entity.ServiceEntity;
 import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.blackhole.model.Builder;
@@ -66,6 +67,7 @@ public class Account extends ServiceEntity {
         private String google;
         private String facebook;
         private String password;
+        @DtoKey
         private Long personId;
         private Boolean active;
         private String extra;

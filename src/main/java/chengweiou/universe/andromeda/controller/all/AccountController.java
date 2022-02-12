@@ -22,6 +22,7 @@ import chengweiou.universe.andromeda.model.entity.accountrecover.AccountRecover;
 import chengweiou.universe.andromeda.model.entity.loginrecord.LoginRecord;
 import chengweiou.universe.andromeda.model.entity.twofa.Twofa;
 import chengweiou.universe.andromeda.model.entity.twofa.TwofaType;
+import chengweiou.universe.andromeda.service.account.AccountDio;
 import chengweiou.universe.andromeda.service.account.AccountService;
 import chengweiou.universe.andromeda.service.accountrecover.AccountRecoverService;
 import chengweiou.universe.andromeda.service.codesendrecord.CodeSendRecordService;
@@ -42,6 +43,8 @@ import chengweiou.universe.blackhole.param.Valid;
 public class AccountController {
     @Autowired
     private AccountService service;
+    @Autowired
+    private AccountDio dio;
     @Autowired
     private TwofaService twofaService;
     @Autowired
@@ -68,16 +71,8 @@ public class AccountController {
         Valid.check("account.username", e.getUsername()).is().lengthIn(30);
         Valid.check("account.password", e.getPassword()).is().notEmpty();
         Account indb = service.login(e);
-        Twofa twofa = twofaService.findByPerson(Builder.set("person", indb.getPerson()).to(new Twofa()));
-
-        if (twofa.getType() != null && twofa.getType() != TwofaType.NONE) {
-            if (Instant.now().isBefore(twofa.getCodeExp())) {
-                throw new ProjException(ProjectRestCode.PHONE_MSG_TOO_MANY);
-            }
-            String code = RandomStringUtils.randomNumeric(6);
-            String token = RandomStringUtils.randomAlphabetic(30);
-            twofa.setCode(code);
-            twofa.setToken(token);
+        Twofa twofa = twofaService.findAndWaitForLogin(Builder.set("person", indb.getPerson()).to(new Twofa()));
+        if (twofa.notNull()) {
             switch(twofa.getType()) {
                 case PHONE_MSG:
                     phoneMsgService.sendLogin(twofa);
@@ -87,8 +82,7 @@ public class AccountController {
                     break;
                 default:
             }
-            twofaService.update(twofa);
-            return Rest.ok(ProjectRestCode.TWOFA_WAITING, Builder.set("token", token).to(new Auth()));
+            return Rest.ok(ProjectRestCode.TWOFA_WAITING, Builder.set("token", twofa.getToken()).to(new Auth()));
         }
         Auth auth = getAuthBySuccessLogin(indb);
         return Rest.ok(auth);
@@ -98,8 +92,8 @@ public class AccountController {
     public Rest<Auth> checkTwofa(Twofa twofa) throws ParamException, ProjException {
         Valid.check("twofa.token", twofa.getToken()).is().notEmpty();
         Valid.check("twofa.code", twofa.getCode()).is().notEmpty();
-
-        Account indb = service.findAfterCheckCode(twofa);
+        Twofa twofaIndb = twofaService.findAfterCheckCode(twofa);
+        Account indb = dio.findByKey(Builder.set("person", twofaIndb.getPerson()).to(new Account()));
         Auth auth = getAuthBySuccessLogin(indb);
         return Rest.ok(auth);
     }
@@ -117,7 +111,8 @@ public class AccountController {
 
     @PostMapping("/logout")
     public Rest<Boolean> logout(Auth auth) throws ParamException {
-        Valid.check("auth.refreshToken", auth.getRefreshToken()).is().notEmpty();
+        if (auth.getRefreshToken()==null || auth.getRefreshToken().isEmpty()) return Rest.ok(false);
+        // Valid.check("auth.refreshToken", auth.getRefreshToken()).is().notEmpty();
         // todo put token to block list
         String token = jedisUtil.get(auth.getRefreshToken());
         jedisUtil.del(auth.getRefreshToken());
@@ -138,7 +133,7 @@ public class AccountController {
     @GetMapping("/account/username/check")
     public Rest<Boolean> checkUsername(Account e) throws ParamException {
         Valid.check("account.username", e.getUsername()).is().lengthIn(30);
-        long count = service.countByLoginUsername(e);
+        long count = dio.countByLoginUsername(e);
         return Rest.ok(count == 0);
     }
 
@@ -149,61 +144,37 @@ public class AccountController {
 
     // 忘记密码：1. 输入用户名，返回可选的恢复账号方式
     @PostMapping("/forgetPassword/1")
-    public Rest<AccountRecover> forgetPassword1(Account e) throws ParamException, ProjException, FailException {
+    public Rest<AccountRecover> forgetPasswordS1(Account e) throws ParamException, ProjException, FailException {
         Valid.check("account.username", e.getUsername()).is().lengthIn(30);
-        Account indb = service.findByLoginUsername(e);
-        AccountRecover result = accountRecoverService.findByKey(Builder.set("person", indb.getPerson()).to(new AccountRecover()));
-        if (result.getPhone() != null) {
-            result.setPhone("********" + result.getPhone().substring(result.getPhone().length() - 2));
-        }
-        if (result.getEmail() != null) {
-            int atIndex = result.getEmail().indexOf("@");
-            result.setEmail(result.getEmail().substring(0, Math.min(2, atIndex)) + "***@" + result.getEmail().substring(atIndex+1, atIndex+2) + "***");
-        }
-        result.setA1(null);
-        result.setA2(null);
-        result.setA3(null);
+        AccountRecover result = accountRecoverService.forgetPasswordS1(e);
         return Rest.ok(result);
     }
 
     // 忘记密码：2. 客户端填充完整信息。服务端发送code
     @PostMapping("/forgetPassword/2")
-    public Rest<String> forgetPassword2(AccountRecover userConfirm) throws ParamException, ProjException, FailException {
+    public Rest<String> forgetPasswordS2(AccountRecover userConfirm) throws ParamException, ProjException, FailException {
         Valid.check("accountRecover.id", userConfirm.getId()).is().positive();
         Valid.check("accountRecover.phone | email | a1 | a2 | a3",
                 userConfirm.getPhone(), userConfirm.getEmail(), userConfirm.getA1(), userConfirm.getA2(), userConfirm.getA3()
             ).are().notAllNull();
         String result = null;
-        AccountRecover indb = accountRecoverService.findById(userConfirm);
-        // 在过期前，只能发三次
-        if (Instant.now().isBefore(indb.getCodeExp()) && indb.getCodeCount() == 3) throw new ProjException(ProjectRestCode.CODE_TOO_MANY);
-        if (
-            (userConfirm.getPhone() == null || !userConfirm.getPhone().equals(indb.getPhone()))
-            && (userConfirm.getEmail() == null || !userConfirm.getEmail().equals(indb.getEmail()))
-            && (userConfirm.getA1() == null || !userConfirm.getA1().equals(indb.getA1()))
-            && (userConfirm.getA2() == null || !userConfirm.getA2().equals(indb.getA2()))
-            && (userConfirm.getA3() == null || !userConfirm.getA3().equals(indb.getA3()))
-        ) throw new ProjException(ProjectRestCode.ACCOUNT_NOT_MATCH);
-        String code = RandomStringUtils.randomAlphanumeric(50);
-        Builder.set("code", code).set("codeExp", Instant.now().plus(10, ChronoUnit.MINUTES)).set("codeCount", indb.getCodeCount()+1).to(indb);
-        if (userConfirm.getPhone() != null) phoneMsgService.sendForgetUrl(indb);
-        else if (userConfirm.getEmail() != null) phoneMsgService.sendForgetUrl(indb);
+        String code = accountRecoverService.forgetPasswordS2(userConfirm);
+        userConfirm.setCode(code);
+        // 输入电话发送短信，输入email发送email， 如果是密保问题，直接返回
+        if (userConfirm.getPhone() != null) phoneMsgService.sendForgetUrl(userConfirm);
+        else if (userConfirm.getEmail() != null) phoneMsgService.sendForgetUrl(userConfirm);
         else result = code;
-        accountRecoverService.update(indb);
         return Rest.ok(result);
     }
 
     // 忘记密码: 3. 新密码
     @PostMapping("/forgetPassword/3")
-    public Rest<String> forgetPassword3(AccountRecover accountRecover, Account e) throws ParamException, ProjException {
+    public Rest<String> forgetPasswordS3(AccountRecover accountRecover, Account e) throws ParamException, ProjException {
         Valid.check("accountRecover.id", accountRecover.getId()).is().positive();
         Valid.check("accountRecover.code", accountRecover.getCode()).is().lengthIs(50);
         Valid.check("account.password", e.getPassword()).is().lengthIn(30);
-        e.setId(null);
-        AccountRecover accountRecoverIndb = accountRecoverService.findByActiveCode(accountRecover);
-        // 可能多个账号
-        boolean success = service.updateByPerson(Builder.set("person", accountRecoverIndb.getPerson()).set("password", e.getPassword()).to(new Account())) > 0;
-        if (!success) {
+        long count = accountRecoverService.forgetPasswordS3(accountRecover, e);
+        if (count != 1) {
             return Rest.fail(BasicRestCode.FAIL);
         }
         return Rest.ok(null);

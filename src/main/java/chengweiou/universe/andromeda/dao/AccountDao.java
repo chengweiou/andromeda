@@ -4,7 +4,6 @@ package chengweiou.universe.andromeda.dao;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
-import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.jdbc.SQL;
 import org.springframework.stereotype.Repository;
 
@@ -14,11 +13,6 @@ import chengweiou.universe.andromeda.model.entity.Account.Dto;
 @Repository
 @Mapper
 public interface AccountDao extends BaseDao<Dto> {
-
-    @UpdateProvider(type = Sql.class, method = "updateByPerson")
-    long updateByPerson(Dto e);
-    @Select("select * from account where personId=#{personId}")
-    Dto findByPerson(Dto e);
 
     @Select("select count(*) from account where username=#{username}")
     long countByUsername(Dto e);
@@ -48,24 +42,6 @@ public interface AccountDao extends BaseDao<Dto> {
     long countByEmailOfOther(Dto e);
 
     class Sql {
-
-        public String updateByPerson(final Dto e) {
-            return new SQL() {{
-                UPDATE("account");
-                if (e.getUsername() != null) SET("username = #{username}");
-                if (e.getPhone() != null) SET("phone = #{phone}");
-                if (e.getEmail() != null) SET("email = #{email}");
-                if (e.getWechat() != null) SET("wechat = #{wechat}");
-                if (e.getWeibo() != null) SET("weibo = #{weibo}");
-                if (e.getGoogle() != null) SET("google = #{google}");
-                if (e.getFacebook() != null) SET("facebook = #{facebook}");
-                if (e.getPassword() != null) SET("password = #{password}");
-                if (e.getActive() != null) SET("active = #{active}");
-                if (e.getExtra() != null) SET("extra = #{extra}");
-                SET("updateAt = #{updateAt}");
-                WHERE("personId=#{personId}");
-            }}.toString();
-        }
 
         public String countByUsernameOfOther(final Dto e) {
             return otherFind(e).SELECT("count(*)").WHERE("username=#{username}").toString();

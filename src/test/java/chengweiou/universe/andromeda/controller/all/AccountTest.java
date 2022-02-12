@@ -86,7 +86,7 @@ public class AccountTest {
 			).andReturn().getResponse().getContentAsString();
 		Rest<Auth> loginRest = Rest.from(result, ProjectRestCode.class, Auth.class);
 		Assertions.assertEquals(ProjectRestCode.TWOFA_WAITING, loginRest.getCode());
-		
+
 		Twofa codedTwofa = twofaDio.findById(data.twofaList.get(0));
 
 		result = mvc.perform(MockMvcRequestBuilders.post("/checkTwofa")
@@ -203,7 +203,7 @@ public class AccountTest {
 		Assertions.assertEquals(BasicRestCode.OK, logoutRest.getCode());
 		LoginRecord delLoginRecord = loginRecordDio.findLastByPerson(Builder.set("person", data.accountList.get(0).getPerson()).to(new LoginRecord()));
 		loginRecordDio.delete(delLoginRecord);
-		service.updateByPerson(Builder.set("person", data.accountList.get(0).getPerson()).set("password", "123").to(new Account()));
+		service.updateByKey(Builder.set("person", data.accountList.get(0).getPerson()).set("password", "123").to(new Account()));
 		accountRecoverDio.update(data.accountRecoverList.get(0));
 		CodeSendRecord delCodeSendRecord = codeSendRecordDio.findLastByUsername(Builder.set("username", "9790000000").to(new CodeSendRecord()));
 		codeSendRecordDio.delete(delCodeSendRecord);

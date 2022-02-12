@@ -69,7 +69,7 @@ public class AccountTest {
 		Rest<Boolean> saveRest = Rest.from(result, Boolean.class);
 		Assertions.assertEquals(BasicRestCode.OK, saveRest.getCode());
 
-		service.updateByPerson(Builder.set("person", loginAccount.getPerson()).set("password", "123").to(new Account()));
+		service.updateByKey(Builder.set("person", loginAccount.getPerson()).set("password", "123").to(new Account()));
 	}
 
 	@Test

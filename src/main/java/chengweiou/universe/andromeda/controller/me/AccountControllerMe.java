@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import chengweiou.universe.andromeda.model.ProjectRestCode;
 import chengweiou.universe.andromeda.model.entity.Account;
+import chengweiou.universe.andromeda.service.account.AccountDio;
 import chengweiou.universe.andromeda.service.account.AccountService;
 import chengweiou.universe.andromeda.util.SecurityUtil;
 import chengweiou.universe.blackhole.exception.ParamException;
@@ -24,6 +25,8 @@ import chengweiou.universe.blackhole.param.Valid;
 public class AccountControllerMe {
     @Autowired
     private AccountService service;
+    @Autowired
+    private AccountDio dio;
 
     @PutMapping("/account")
     public Rest<Boolean> update(Account e, @RequestHeader("loginAccount") Account loginAccount) throws ParamException, UnauthException, ProjException {
@@ -32,8 +35,8 @@ public class AccountControllerMe {
                 e.getUsername(), e.getPhone(), e.getEmail(), e.getWechat(), e.getWeibo(), e.getGoogle(), e.getFacebook(), e.getActive(), e.getExtra()
             ).are().notAllNull();
 
-        Account indb = service.findByPerson(loginAccount);
-        if (!indb.getPerson().getId().equals(loginAccount.getPerson().getId())) throw new UnauthException();
+        Account indb = dio.findByKey(loginAccount);
+        if (indb.getPerson().getId().longValue() != loginAccount.getPerson().getId()) throw new UnauthException();
         e.setId(indb.getId());
         e.setPerson(null);
         e.setPassword(null);
@@ -44,18 +47,17 @@ public class AccountControllerMe {
     }
 
     @PutMapping("/account/password")
-    public Rest<Boolean> updatePassword(Account e, @RequestHeader("loginAccount") Account loginAccount) throws ParamException, ProjException {
+    public Rest<Boolean> changePassword(Account e, @RequestHeader("loginAccount") Account loginAccount) throws ParamException, ProjException {
         Valid.check("loginAccount.person.id", loginAccount.getPerson().getId()).is().positive();
-        Account indb = service.findByPerson(loginAccount);
-        boolean success = SecurityUtil.check(e.getOldPassword(), indb.getPassword());
-        if (!success) throw new ProjException(ProjectRestCode.USERNAME_PASSWORD_MISMATCH);
-        success = service.update(Builder.set("id", indb.getId()).set("password", e.getPassword()).to(new Account())) == 1;
-        return Rest.ok(true);
+        e.setPerson(loginAccount.getPerson());
+        long count = service.changePassword(e);
+
+        return Rest.ok(count == 1);
     }
 
     @GetMapping("/account")
     public Rest<Account> find(@RequestHeader("loginAccount") Account loginAccount) throws ParamException {
-        Account indb = service.findByPerson(loginAccount);
+        Account indb = dio.findByKey(loginAccount);
         return Rest.ok(indb);
     }
 }
