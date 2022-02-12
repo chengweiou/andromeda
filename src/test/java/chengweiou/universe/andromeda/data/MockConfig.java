@@ -10,8 +10,8 @@ import chengweiou.universe.andromeda.service.vonage.VonageManager;
 @Profile("test")
 @Configuration
 public class MockConfig {
-    @Bean("monageManager")
-    public VonageManager monageManager() {
+    @Bean("vonageManager")
+    public VonageManager vonageManager() {
         return Mockito.mock(VonageManager.class);
     }
 }
