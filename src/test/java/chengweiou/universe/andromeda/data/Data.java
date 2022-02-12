@@ -46,13 +46,13 @@ public class Data {
     public List<AccountRecover> accountRecoverList;
 
     public void init() {
-        // accountList = accountDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(Account::getId)).collect(Collectors.toList());
+        // accountList = accountDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(Account::getId)).toList();
         // accountList.forEach(e -> e.setPassword("123"));
-        accountList = accountDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(Account::getId)).collect(Collectors.toList());
+        accountList = accountDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(Account::getId)).toList();
         accountList.forEach(e -> e.setPassword("123"));
-        loginRecordList = loginRecordDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(LoginRecord::getId)).collect(Collectors.toList());
-        twofaList = twofaDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(Twofa::getId)).collect(Collectors.toList());
-        codeSendRecordList = codeSendRecordDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(CodeSendRecord::getId)).collect(Collectors.toList());
-        accountRecoverList =  accountRecoverDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(AccountRecover::getId)).collect(Collectors.toList());
+        loginRecordList = loginRecordDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(LoginRecord::getId)).toList();
+        twofaList = twofaDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(Twofa::getId)).toList();
+        codeSendRecordList = codeSendRecordDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(CodeSendRecord::getId)).toList();
+        accountRecoverList =  accountRecoverDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(AccountRecover::getId)).toList();
     }
 }
