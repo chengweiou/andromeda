@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.model.entity.accountrecover.AccountRecover;
 import chengweiou.universe.andromeda.service.accountrecover.AccountRecoverDio;
-import chengweiou.universe.andromeda.service.accountrecover.AccountRecoverService;
 import chengweiou.universe.andromeda.service.phonemsg.PhoneMsgService;
 import chengweiou.universe.blackhole.exception.ParamException;
 import chengweiou.universe.blackhole.exception.ProjException;

@@ -13,11 +13,8 @@ import chengweiou.universe.andromeda.data.Data;
 import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
-import chengweiou.universe.andromeda.model.entity.twofa.Twofa;
-import chengweiou.universe.andromeda.model.entity.twofa.TwofaType;
 import chengweiou.universe.andromeda.service.account.AccountDio;
 import chengweiou.universe.andromeda.service.account.AccountService;
-import chengweiou.universe.andromeda.service.twofa.TwofaDio;
 import chengweiou.universe.andromeda.util.SecurityUtil;
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ProjException;
@@ -30,8 +27,6 @@ public class AccountTest {
 	private AccountService service;
 	@Autowired
 	private AccountDio dio;
-	@Autowired
-	private TwofaDio twofaDio;
 	@Autowired
 	private Data data;
 
@@ -88,7 +83,7 @@ public class AccountTest {
 	@Test
 	public void changePasswordByMeFail() throws ProjException {
 		String old = "123";
-		Account e = Builder.set("person", data.accountList.get(0).getPerson()).set("oldPassword", "123456").set("password", "123").to(new Account());
+		Account e = Builder.set("person", data.accountList.get(0).getPerson()).set("oldPassword", "123456").set("password", old).to(new Account());
 		Assertions.assertThrows(ProjException.class, () -> service.changePassword(e));
 	}
 

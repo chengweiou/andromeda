@@ -1,8 +1,6 @@
 package chengweiou.universe.andromeda.controller.me;
 
 
-import com.google.gson.Gson;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
