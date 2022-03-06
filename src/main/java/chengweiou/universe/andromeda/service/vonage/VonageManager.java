@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import chengweiou.universe.blackhole.exception.FailException;
 
-@Profile("!test & apiTest")
+@Profile("!test")
 @Service
 public class VonageManager {
     @Autowired
