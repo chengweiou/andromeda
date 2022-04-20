@@ -61,7 +61,7 @@ public class AccountControllerMg {
         Valid.check("account.username | phone | email | wechat | weibo | google | facebook | password | active | extra",
                 e.getUsername(), e.getPhone(), e.getEmail(), e.getWechat(), e.getWeibo(), e.getGoogle(), e.getFacebook(), e.getPassword(), e.getActive(), e.getExtra()
             ).are().notAllNull();
-        boolean success = dio.updateByKey(e) == 1 ;
+        boolean success = service.updateByKey(e) == 1 ;
         return Rest.ok(success);
     }
 
