@@ -37,7 +37,7 @@ public class AccountRecoverTest {
 	@Autowired
 	private Data data;
 
-	// @Test
+	@Test
 	public void saveDelete() throws FailException, ProjException {
 		AccountRecover e = Builder.set("person", Builder.set("id", "10").to(new Person())).set("q1", "q1-service-test").set("a1", "a1-service-test").to(new AccountRecover());
 		service.save(e);
@@ -45,7 +45,7 @@ public class AccountRecoverTest {
 		dio.delete(e);
 	}
 
-	// @Test
+	@Test
 	public void update() {
 		AccountRecover e = Builder.set("id", data.accountRecoverList.get(0).getId()).set("q1", "q1-service-test").to(new AccountRecover());
 		long count = dio.update(e);
@@ -57,7 +57,7 @@ public class AccountRecoverTest {
 		dio.update(data.accountRecoverList.get(0));
 	}
 
-	// @Test
+	@Test
 	public void updateByPerson() {
 		AccountRecover e = Builder.set("person", data.accountRecoverList.get(0).getPerson()).set("q1", "q1-service-test").to(new AccountRecover());
 		long count = dio.updateByKey(e);
@@ -69,27 +69,27 @@ public class AccountRecoverTest {
 		dio.update(data.accountRecoverList.get(0));
 	}
 
-	// @Test
+	@Test
 	public void countByKey() {
 		AccountRecover e = Builder.set("person", data.accountRecoverList.get(0).getPerson()).to(new AccountRecover());
 		long count = dio.countByKey(e);
 		Assertions.assertEquals(1, count);
 	}
 
-	// @Test
+	@Test
 	public void findByKey() {
 		AccountRecover e = Builder.set("person", data.accountRecoverList.get(0).getPerson()).to(new AccountRecover());
 		AccountRecover indb = dio.findByKey(e);
 		Assertions.assertEquals("a2", indb.getA2());
 	}
 
-	// @Test
+	@Test
 	public void count() {
 		long count = dio.count(new SearchCondition(), null);
 		Assertions.assertEquals(1, count);
 	}
 
-	// @Test
+	@Test
 	public void find() {
 		List<AccountRecover> list = dio.find(new SearchCondition(), null);
 		Assertions.assertEquals(1, list.size());
@@ -102,11 +102,11 @@ public class AccountRecoverTest {
 		Assertions.assertEquals("********00", indb.getPhone());
 		Assertions.assertEquals("a***@a***", indb.getEmail());
 	}
-	// @Test
+	@Test
 	public void forgetPasswordS1Fail() throws Exception {
 		Assertions.assertThrows(ProjException.class, () -> service.forgetPasswordS1(Builder.set("username", "9790001111").to(new Account())));
 	}
-	// @Test
+	@Test
 	public void forgetPasswordS2() throws Exception {
 		String code = service.forgetPasswordS2(Builder.set("id", data.accountRecoverList.get(0).getId()).set("phone", "9790000000").to(new AccountRecover()));
 		Assertions.assertEquals(true, code != null);
@@ -115,14 +115,14 @@ public class AccountRecoverTest {
 
 		dio.update(data.accountRecoverList.get(0));
 	}
-	// @Test
+	@Test
 	public void forgetPasswordS2Fail() throws Exception {
 		Assertions.assertThrows(ProjException.class, () -> service.forgetPasswordS2(Builder.set("id", data.accountRecoverList.get(0).getId()).set("phone", "9790001111").to(new AccountRecover())));
 		Assertions.assertThrows(ProjException.class, () -> service.forgetPasswordS2(Builder.set("id", data.accountRecoverList.get(0).getId()).set("a1", "a2").to(new AccountRecover())));
 		Assertions.assertThrows(ProjException.class, () -> service.forgetPasswordS2(Builder.set("id", data.accountRecoverList.get(0).getId()).to(new AccountRecover())));
 	}
 
-	// @Test
+	@Test
 	public void forgetPasswordS3() throws Exception {
 		dio.update(Builder.set("id", data.accountRecoverList.get(0).getId()).set("code", "123").set("codeExp", Instant.now().plus(10, ChronoUnit.MINUTES)).to(new AccountRecover()));
 
