@@ -17,10 +17,6 @@ public class AccountRecoverDio extends BaseDio<AccountRecover, AccountRecover.Dt
     @Override
     protected AccountRecoverDao getDao() { return dao; }
     @Override
-    protected Class getTClass() { return AccountRecover.class; };
-    @Override
-    protected String getDefaultSort() { return "updateAt"; };
-    @Override
     protected String baseFind(AbstractSearchCondition searchCondition, Dto sample) {
         return new BaseSQL() {{
             if (searchCondition.getK() != null) WHERE("""

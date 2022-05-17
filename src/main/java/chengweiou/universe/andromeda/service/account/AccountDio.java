@@ -19,10 +19,6 @@ public class AccountDio extends BaseDio<Account, Account.Dto> {
     @Override
     protected AccountDao getDao() { return dao; }
     @Override
-    protected Class getTClass() { return Account.class; };
-    @Override
-    protected String getDefaultSort() { return "updateAt"; };
-    @Override
     protected String baseFind(AbstractSearchCondition searchCondition, Dto sample) {
         return new BaseSQL() {{
             if (searchCondition.getK() != null) WHERE("""

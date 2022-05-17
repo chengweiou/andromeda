@@ -17,10 +17,6 @@ public class TwofaDio extends BaseDio<Twofa, Twofa.Dto> {
     @Override
     protected TwofaDao getDao() { return dao; }
     @Override
-    protected Class getTClass() { return Twofa.class; };
-    @Override
-    protected String getDefaultSort() { return "createAt"; };
-    @Override
     protected String baseFind(AbstractSearchCondition searchCondition, Dto sample) {
         return new BaseSQL() {{
             if (sample != null) {

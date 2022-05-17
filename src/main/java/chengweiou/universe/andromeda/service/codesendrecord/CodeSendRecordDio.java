@@ -17,10 +17,6 @@ public class CodeSendRecordDio extends BaseDio<CodeSendRecord, CodeSendRecord.Dt
     @Override
     protected CodeSendRecordDao getDao() { return dao; }
     @Override
-    protected Class getTClass() { return CodeSendRecord.class; };
-    @Override
-    protected String getDefaultSort() { return "createAt"; };
-    @Override
     protected String baseFind(AbstractSearchCondition searchCondition, Dto sample) {
         return new BaseSQL() {{
             if (searchCondition.getK() != null) WHERE("username LIKE #{searchCondition.like.k}");

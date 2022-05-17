@@ -8,18 +8,19 @@ import chengweiou.universe.andromeda.model.entity.loginrecord.LoginRecord;
 import chengweiou.universe.andromeda.model.entity.loginrecord.LoginRecord.Dto;
 import chengweiou.universe.blackhole.dao.BaseDio;
 import chengweiou.universe.blackhole.dao.BaseSQL;
+import chengweiou.universe.blackhole.dao.DioCache;
+import chengweiou.universe.blackhole.dao.DioDefaultSort;
 import chengweiou.universe.blackhole.model.AbstractSearchCondition;
 
+@DioCache(false)
 @Component
 public class LoginRecordDio extends BaseDio<LoginRecord, LoginRecord.Dto> {
     @Autowired
     private LoginRecordDao dao;
     @Override
     protected LoginRecordDao getDao() { return dao; }
-    @Override
-    protected Class getTClass() { return LoginRecord.class; };
-    @Override
-    protected String getDefaultSort() { return "createAt"; };
+    @DioDefaultSort("createAt")
+    private String defaultSort;
     @Override
     protected String baseFind(AbstractSearchCondition searchCondition, Dto sample) {
         return new BaseSQL() {{
