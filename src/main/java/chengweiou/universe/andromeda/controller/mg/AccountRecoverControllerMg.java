@@ -45,7 +45,7 @@ public class AccountRecoverControllerMg {
     }
 
     @PutMapping("/accountRecover/{id}")
-    public Rest<Boolean> update(AccountRecover e) throws ParamException, ProjException {
+    public Rest<Boolean> update(AccountRecover e) throws ParamException, ProjException, FailException {
         Valid.check("accountRecover.id", e.getId()).is().positive();
         Valid.check("accountRecover.phone | email | q1 | q2 | q3 | a1 | a2 | a3 | code | codeExp | codeCount",
                 e.getPhone(), e.getEmail(), e.getQ1(), e.getQ2(), e.getQ3(), e.getA1(), e.getA2(), e.getA3(), e.getCode(), e.getCodeExp(), e.getCodeExp()

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.service.account.AccountDio;
 import chengweiou.universe.andromeda.service.account.AccountService;
+import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ParamException;
 import chengweiou.universe.blackhole.exception.ProjException;
 import chengweiou.universe.blackhole.exception.UnauthException;
@@ -26,7 +27,7 @@ public class AccountControllerMe {
     private AccountDio dio;
 
     @PutMapping("/account")
-    public Rest<Boolean> update(Account e, @RequestHeader("loginAccount") Account loginAccount) throws ParamException, UnauthException, ProjException {
+    public Rest<Boolean> update(Account e, @RequestHeader("loginAccount") Account loginAccount) throws ParamException, UnauthException, ProjException, FailException {
         Valid.check("loginAccount.person.id", loginAccount.getPerson().getId()).is().positive();
         Valid.check("account.username | phone | email | wechat | weibo | google | facebook | active | extra",
                 e.getUsername(), e.getPhone(), e.getEmail(), e.getWechat(), e.getWeibo(), e.getGoogle(), e.getFacebook(), e.getActive(), e.getExtra()
@@ -44,7 +45,7 @@ public class AccountControllerMe {
     }
 
     @PutMapping("/account/password")
-    public Rest<Boolean> changePassword(Account e, @RequestHeader("loginAccount") Account loginAccount) throws ParamException, ProjException {
+    public Rest<Boolean> changePassword(Account e, @RequestHeader("loginAccount") Account loginAccount) throws ParamException, ProjException, FailException {
         Valid.check("loginAccount.person.id", loginAccount.getPerson().getId()).is().positive();
         e.setPerson(loginAccount.getPerson());
         long count = service.changePassword(e);

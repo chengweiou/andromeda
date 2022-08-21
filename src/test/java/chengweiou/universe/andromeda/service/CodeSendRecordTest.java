@@ -36,7 +36,7 @@ public class CodeSendRecordTest {
 	}
 
 	@Test
-	public void updateAndFindLast() {
+	public void updateAndFindLast() throws FailException {
 		CodeSendRecord e = Builder.set("id", data.codeSendRecordList.get(0).getId()).set("code", "aaa").to(new CodeSendRecord());
 		long count = dio.update(e);
 		Assertions.assertEquals(1, count);

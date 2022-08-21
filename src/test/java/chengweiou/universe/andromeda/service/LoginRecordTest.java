@@ -38,7 +38,7 @@ public class LoginRecordTest {
 	}
 
 	@Test
-	public void update() {
+	public void update() throws FailException {
 		LoginRecord e = Builder.set("id", data.loginRecordList.get(0).getId()).set("logoutTime", Instant.now().toString()).to(new LoginRecord());
 		long count = dio.update(e);
 		Assertions.assertEquals(1, count);

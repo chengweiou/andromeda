@@ -22,7 +22,6 @@ public class AccountService {
     private AccountRecoverDio accountRecoverDio;
 
     public void save(Account e) throws FailException, ProjException {
-        checkDupKey(e);
         e.setPassword(SecurityUtil.hash(e.getPassword()));
         dio.save(e);
         AccountRecover accountRecover = Builder.set("id", e.getId()).set("person", e.getPerson()).set("phone", e.getPhone()).set("email", e.getEmail()).to(new AccountRecover());
@@ -36,31 +35,14 @@ public class AccountService {
         accountRecoverDio.delete(accountRecover);
     }
 
-    public long update(Account e) throws ProjException {
-        checkDupKey(e);
+    public long update(Account e) throws FailException {
         if (e.getPassword() != null) e.setPassword(SecurityUtil.hash(e.getPassword()));
         return dio.update(e);
     }
 
-    public long updateByKey(Account e) throws ProjException {
-        checkDupKey(e);
+    public long updateByKey(Account e) throws FailException {
         if (e.getPassword() != null) e.setPassword(SecurityUtil.hash(e.getPassword()));
         return dio.updateByKey(e);
-    }
-
-    private void checkDupKey(Account e) throws ProjException {
-        if (e.getUsername() != null && !e.getUsername().isEmpty()) {
-            long count = dio.countByUsernameOfOther(e);
-            if (count != 0) throw new ProjException("dup key: " + e.getUsername() + " exists", BasicRestCode.EXISTS);
-        }
-        if (e.getPhone() != null && !e.getPhone().isEmpty()) {
-            long count = dio.countByPhoneOfOther(e);
-            if (count != 0) throw new ProjException("dup key: " + e.getPhone() + " exists", BasicRestCode.EXISTS);
-        }
-        if (e.getEmail() != null && !e.getEmail().isEmpty()) {
-            long count = dio.countByEmailOfOther(e);
-            if (count != 0) throw new ProjException("dup key: " + e.getEmail() + " exists", BasicRestCode.EXISTS);
-        }
     }
 
     public Account login(Account e) throws ProjException {
@@ -76,8 +58,9 @@ public class AccountService {
      * @param e 需要 account.person
      * @return
      * @throws ProjException
+     * @throws FailException
      */
-    public long changePassword(Account e) throws ProjException {
+    public long changePassword(Account e) throws ProjException, FailException {
         Account indb = dio.findByKey(e);
         boolean success = SecurityUtil.check(e.getOldPassword(), indb.getPassword());
         if (!success) throw new ProjException(ProjectRestCode.USERNAME_PASSWORD_MISMATCH);

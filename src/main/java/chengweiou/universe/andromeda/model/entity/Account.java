@@ -59,8 +59,11 @@ public class Account extends ServiceEntity {
     @ToString(callSuper = true)
     @EqualsAndHashCode(callSuper = true)
     public static class Dto extends DtoEntity {
+        @DtoKey(single=true)
         private String username;
+        @DtoKey(single=true)
         private String phone;
+        @DtoKey(single=true)
         private String email;
         private String wechat;
         private String weibo;

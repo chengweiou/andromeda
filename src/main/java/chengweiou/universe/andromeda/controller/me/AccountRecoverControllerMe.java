@@ -12,6 +12,7 @@ import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.model.entity.accountrecover.AccountRecover;
 import chengweiou.universe.andromeda.service.accountrecover.AccountRecoverDio;
 import chengweiou.universe.andromeda.service.phonemsg.PhoneMsgService;
+import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ParamException;
 import chengweiou.universe.blackhole.exception.ProjException;
 import chengweiou.universe.blackhole.exception.UnauthException;
@@ -28,7 +29,7 @@ public class AccountRecoverControllerMe {
     private PhoneMsgService phoneMsgService;
 
     @PutMapping("/accountRecover")
-    public Rest<Boolean> update(AccountRecover e, @RequestHeader("loginAccount") Account loginAccount) throws ParamException, UnauthException, ProjException {
+    public Rest<Boolean> update(AccountRecover e, @RequestHeader("loginAccount") Account loginAccount) throws ParamException, UnauthException, ProjException, FailException {
         Valid.check("loginAccount.person.id", loginAccount.getPerson().getId()).is().positive();
         Valid.check("accountRecover.phone | email | q1 | q2 | q3 | a1 | a2 | a3",
                 e.getPhone(), e.getEmail(), e.getQ1(), e.getQ2(), e.getQ3(), e.getA1(), e.getA2(), e.getA3()

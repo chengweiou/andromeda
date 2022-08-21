@@ -47,7 +47,7 @@ public class TwofaTest {
 	}
 
 	@Test
-	public void update() {
+	public void update() throws FailException {
 		Twofa e = Builder.set("id", 1).set("type", TwofaType.EMAIL).set("codeTo", "a@a.c").to(new Twofa());
 		long count = dio.update(e);
 		Assertions.assertEquals(1, count);
@@ -58,7 +58,7 @@ public class TwofaTest {
 	}
 
 	@Test
-	public void updateByPerson() {
+	public void updateByPerson() throws FailException {
 		Twofa e = Builder.set("person", data.twofaList.get(0).getPerson()).set("codeTo", "update by person").to(new Twofa());
 		long count = dio.updateByKey(e);
 		Assertions.assertEquals(1, count);
@@ -88,7 +88,7 @@ public class TwofaTest {
 	}
 
 	@Test
-	public void findAndWaitForLogin() throws ProjException {
+	public void findAndWaitForLogin() throws ProjException, FailException {
 		Twofa twofa = service.findAndWaitForLogin(Builder.set("person", data.accountList.get(0).getPerson()).to(new Twofa()));
 		Assertions.assertEquals(true, !twofa.notNull());
 		dio.update(Builder.set("id", data.twofaList.get(0).getId()).set("type", TwofaType.PHONE_MSG).to(new Twofa()));
@@ -100,14 +100,14 @@ public class TwofaTest {
 	}
 
 	@Test
-	public void findAndWaitForLoginFail() throws ProjException {
+	public void findAndWaitForLoginFail() throws ProjException, FailException {
 		dio.update(Builder.set("id", data.twofaList.get(0).getId()).set("type", TwofaType.PHONE_MSG).set("codeExp", Instant.now().plus(1, ChronoUnit.MINUTES)).to(new Twofa()));
 		Assertions.assertThrows(ProjException.class, () -> service.findAndWaitForLogin(Builder.set("person", data.accountList.get(0).getPerson()).to(new Twofa())));
 		dio.update(data.twofaList.get(0));
 	}
 
 	@Test
-	public void findAfterCheckCode() throws ProjException {
+	public void findAfterCheckCode() throws ProjException, FailException {
 		dio.update(Builder.set("id", data.twofaList.get(0).getId()).set("code", "123").set("token", "123").set("codeExp", Instant.now().plus(1, ChronoUnit.MINUTES)).to(new Twofa()));
 		Twofa twofa = service.findAfterCheckCode(Builder.set("code", "123").set("token", "123").to(new Twofa()));
 		Assertions.assertEquals(twofa.getPerson().getId(), data.twofaList.get(0).getPerson().getId());
@@ -123,7 +123,7 @@ public class TwofaTest {
 	}
 
 	@Test
-	public void findAfterCheckCodeFail() throws ProjException {
+	public void findAfterCheckCodeFail() throws ProjException, FailException {
 		dio.update(Builder.set("id", data.twofaList.get(0).getId()).set("code", "123").set("token", "123").set("codeExp", Instant.now().minus(1, ChronoUnit.MINUTES)).to(new Twofa()));
 		Assertions.assertThrows(ProjException.class, () -> service.findAfterCheckCode(new Twofa()));
 		Assertions.assertThrows(ProjException.class, () -> service.findAfterCheckCode(new Twofa()));

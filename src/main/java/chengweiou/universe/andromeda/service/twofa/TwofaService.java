@@ -32,8 +32,9 @@ public class TwofaService {
      * @param e 通过 key 查找, 需要 twofa.person
      * @return
      * @throws ProjException
+     * @throws FailException
      */
-    public Twofa findAndWaitForLogin(Twofa e) throws ProjException {
+    public Twofa findAndWaitForLogin(Twofa e) throws ProjException, FailException {
         Twofa indb = dio.findByKey(e);
         if (indb.getType() == null || indb.getType() == TwofaType.NONE) return Twofa.NULL;
         if (Instant.now().isBefore(indb.getCodeExp())) throw new ProjException(ProjectRestCode.PHONE_MSG_TOO_MANY);
@@ -53,8 +54,9 @@ public class TwofaService {
      * @param twofa
      * @return
      * @throws ProjException
+     * @throws FailException
      */
-    public Twofa findAfterCheckCode(Twofa e) throws ProjException {
+    public Twofa findAfterCheckCode(Twofa e) throws ProjException, FailException {
         Twofa indb = dio.findByTokenAndCode(e);
         if (indb.getId() == null) throw new ProjException(ProjectRestCode.TWOFA_CODE_NOT_MATCH);
         if (Instant.now().isAfter(indb.getCodeExp())) throw new ProjException(ProjectRestCode.TWOFA_EXPIRED);

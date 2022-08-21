@@ -46,7 +46,7 @@ public class AccountRecoverTest {
 	}
 
 	@Test
-	public void update() {
+	public void update() throws FailException {
 		AccountRecover e = Builder.set("id", data.accountRecoverList.get(0).getId()).set("q1", "q1-service-test").to(new AccountRecover());
 		long count = dio.update(e);
 		Assertions.assertEquals(1, count);
@@ -58,7 +58,7 @@ public class AccountRecoverTest {
 	}
 
 	@Test
-	public void updateByPerson() {
+	public void updateByPerson() throws FailException {
 		AccountRecover e = Builder.set("person", data.accountRecoverList.get(0).getPerson()).set("q1", "q1-service-test").to(new AccountRecover());
 		long count = dio.updateByKey(e);
 		Assertions.assertEquals(1, count);

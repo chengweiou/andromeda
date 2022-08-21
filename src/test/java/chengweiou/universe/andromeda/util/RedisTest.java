@@ -2,7 +2,9 @@ package chengweiou.universe.andromeda.util;
 
 import chengweiou.universe.andromeda.base.redis.JedisUtil;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -34,4 +36,10 @@ public class RedisTest {
         Assertions.assertEquals("aaa", store);
 
     }
+
+    @BeforeEach
+	public void mock() {
+        // Mockito.doAnswer((i)-> null).when(jedisUtil).set(Mockito.any(), Mockito.any(), Mockito.any());
+        // Mockito.when(jedisUtil.get(Mockito.any())).thenReturn("aaa");
+	}
 }

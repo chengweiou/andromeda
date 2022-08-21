@@ -46,7 +46,7 @@ public class AccountControllerMg {
     }
 
     @PutMapping("/account/{id}")
-    public Rest<Boolean> update(Account e) throws ParamException, ProjException {
+    public Rest<Boolean> update(Account e) throws ParamException, ProjException, FailException {
         Valid.check("account.id", e.getId()).is().positive();
         Valid.check("account.username | phone | email | wechat | weibo | google | facebook | password | active | person | extra",
                 e.getUsername(), e.getPhone(), e.getEmail(), e.getWechat(), e.getWeibo(), e.getGoogle(), e.getFacebook(), e.getPassword(), e.getPerson(), e.getActive(), e.getExtra()
@@ -56,7 +56,7 @@ public class AccountControllerMg {
     }
 
     @PutMapping("/account/person/{person.id}")
-    public Rest<Boolean> updateByPerson(Account e) throws ParamException, ProjException {
+    public Rest<Boolean> updateByPerson(Account e) throws ParamException, ProjException, FailException {
         Valid.check("account.person.id", e.getPerson().getId()).is().positive();
         Valid.check("account.username | phone | email | wechat | weibo | google | facebook | password | active | extra",
                 e.getUsername(), e.getPhone(), e.getEmail(), e.getWechat(), e.getWeibo(), e.getGoogle(), e.getFacebook(), e.getPassword(), e.getActive(), e.getExtra()
@@ -66,11 +66,11 @@ public class AccountControllerMg {
     }
 
     @PutMapping("/account/{id}/person")
-    public Rest<Boolean> updatePerson(Account e) throws ParamException, ProjException {
+    public Rest<Boolean> updatePerson(Account e) throws ParamException, ProjException, FailException {
         Valid.check("account.id", e.getId()).is().positive();
         Valid.check("account.person.id", e.getPerson().getId()).is().positive();
         // will update person and acitve=true together
-        boolean success = service.update(Builder.set("id", e.getId()).set("person", e.getPerson()).set("active", true).to(new Account())) == 1;
+        boolean success = dio.update(Builder.set("id", e.getId()).set("person", e.getPerson()).set("active", true).to(new Account())) == 1;
         return Rest.ok(success);
     }
 

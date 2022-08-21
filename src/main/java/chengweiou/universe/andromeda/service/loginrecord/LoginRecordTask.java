@@ -37,7 +37,7 @@ public class LoginRecordTask {
     }
 
     @Async
-    public Future<Long> logout(String token) {
+    public Future<Long> logout(String token) throws FailException {
         try {
             Account account = jwtUtil.verify(token);
             LoginRecord e = dio.findLastByPerson(Builder.set("person", account.getPerson()).to(new LoginRecord()));

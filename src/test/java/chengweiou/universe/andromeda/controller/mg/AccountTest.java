@@ -191,7 +191,7 @@ public class AccountTest {
 				.param("username", data.accountList.get(0).getUsername()).param("password", "123456653")
 		).andReturn().getResponse().getContentAsString();
 		Rest<Long> saveRest = Rest.from(result);
-		Assertions.assertEquals(BasicRestCode.EXISTS, saveRest.getCode());
+		Assertions.assertEquals(BasicRestCode.FAIL, saveRest.getCode());
 	}
 
 	@Test

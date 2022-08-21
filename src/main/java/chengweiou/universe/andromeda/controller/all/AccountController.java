@@ -34,6 +34,7 @@ import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.model.Rest;
 import chengweiou.universe.blackhole.param.Valid;
+import chengweiou.universe.blackhole.util.LogUtil;
 
 @RestController
 public class AccountController {
@@ -70,13 +71,10 @@ public class AccountController {
         Twofa twofa = twofaService.findAndWaitForLogin(Builder.set("person", indb.getPerson()).to(new Twofa()));
         if (twofa.notNull()) {
             switch(twofa.getType()) {
-                case PHONE_MSG:
-                    phoneMsgService.sendLogin(twofa);
-                    break;
-                case EMAIL:
-                    phoneMsgService.sendLogin(twofa);
-                    break;
-                default:
+                case PHONE_MSG -> phoneMsgService.sendLogin(twofa);
+                // todo email
+                case EMAIL -> phoneMsgService.sendLogin(twofa);
+                default -> LogUtil.e("缺少twofa方案: " + twofa.getType());
             }
             return Rest.ok(ProjectRestCode.TWOFA_WAITING, Builder.set("token", twofa.getToken()).to(new Auth()));
         }
@@ -85,7 +83,7 @@ public class AccountController {
     }
 
     @PostMapping("/checkTwofa")
-    public Rest<Auth> checkTwofa(Twofa twofa) throws ParamException, ProjException {
+    public Rest<Auth> checkTwofa(Twofa twofa) throws ParamException, ProjException, FailException {
         Valid.check("twofa.token", twofa.getToken()).is().notEmpty();
         Valid.check("twofa.code", twofa.getCode()).is().notEmpty();
         Twofa twofaIndb = twofaService.findAfterCheckCode(twofa);
@@ -106,7 +104,7 @@ public class AccountController {
     }
 
     @PostMapping("/logout")
-    public Rest<Boolean> logout(Auth auth) throws ParamException {
+    public Rest<Boolean> logout(Auth auth) throws ParamException, FailException {
         if (auth.getRefreshToken()==null || auth.getRefreshToken().isEmpty()) return Rest.ok(false);
         // Valid.check("auth.refreshToken", auth.getRefreshToken()).is().notEmpty();
         // todo put token to block list
@@ -158,6 +156,7 @@ public class AccountController {
         userConfirm.setCode(code);
         // 输入电话发送短信，输入email发送email， 如果是密保问题，直接返回
         if (userConfirm.getPhone() != null) phoneMsgService.sendForgetUrl(userConfirm);
+        // todo email
         else if (userConfirm.getEmail() != null) phoneMsgService.sendForgetUrl(userConfirm);
         else result = code;
         return Rest.ok(result);
@@ -165,7 +164,7 @@ public class AccountController {
 
     // 忘记密码: 3. 新密码
     @PostMapping("/forgetPassword/3")
-    public Rest<String> forgetPasswordS3(AccountRecover accountRecover, Account e) throws ParamException, ProjException {
+    public Rest<String> forgetPasswordS3(AccountRecover accountRecover, Account e) throws ParamException, ProjException, FailException {
         Valid.check("accountRecover.id", accountRecover.getId()).is().positive();
         Valid.check("accountRecover.code", accountRecover.getCode()).is().lengthIs(50);
         Valid.check("account.password", e.getPassword()).is().lengthIn(30);

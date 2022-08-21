@@ -29,6 +29,7 @@ public class AccountTest {
 	private AccountDio dio;
 	@Autowired
 	private Data data;
+	private long update;
 
 	@Test
 	public void saveDelete() throws FailException, ProjException {
@@ -41,11 +42,11 @@ public class AccountTest {
 	@Test
 	public void saveDeleteFailSameName() {
 		Account e = Builder.set("username", data.accountList.get(0).getUsername()).set("password", data.accountList.get(0).getPassword()).to(new Account());
-		Assertions.assertThrows(ProjException.class, () -> service.save(e));
+		Assertions.assertThrows(FailException.class, () -> service.save(e));
 	}
 
 	@Test
-	public void update() throws ProjException {
+	public void update() throws ProjException, FailException {
 		Account e = Builder.set("id", 1).set("username", "ou1").to(new Account());
 		long count = service.update(e);
 		Assertions.assertEquals(1, count);
@@ -57,7 +58,7 @@ public class AccountTest {
 	}
 
 	@Test
-	public void updatePassword() throws ProjException {
+	public void updatePassword() throws ProjException, FailException {
 		String old = "123";
 		Account e = Builder.set("id", 1).set("password", "123456").to(new Account());
 		long count = service.update(e);
@@ -69,7 +70,7 @@ public class AccountTest {
 		service.update(e);
 	}
 	@Test
-	public void changePasswordByMe() throws ProjException {
+	public void changePasswordByMe() throws ProjException, FailException {
 		String old = "123";
 		Account e = Builder.set("person", data.accountList.get(0).getPerson()).set("oldPassword", old).set("password", "123456").to(new Account());
 		long count = service.changePassword(e);
@@ -77,7 +78,7 @@ public class AccountTest {
 		Account indb = dio.findById(data.accountList.get(0));
 		Assertions.assertEquals(true, SecurityUtil.check("123456", indb.getPassword()));
 
-		service.update(data.accountList.get(0));
+		update = service.update(data.accountList.get(0));
 	}
 
 	@Test
@@ -88,7 +89,7 @@ public class AccountTest {
 	}
 
 	@Test
-	public void updateByPerson() throws ProjException {
+	public void updateByPerson() throws ProjException, FailException {
 		Account e = Builder.set("person", data.accountList.get(0).getPerson()).set("extra", "extra by person").to(new Account());
 		long count = dio.updateByKey(e);
 		Assertions.assertEquals(1, count);
@@ -99,7 +100,7 @@ public class AccountTest {
 	}
 
 	@Test
-	public void updatePerson() throws ProjException {
+	public void updatePerson() throws ProjException, FailException {
 		Account e = Builder.set("id", data.accountList.get(0).getId()).set("person", Builder.set("id", "666").to(new Person())).to(new Account());
 		long count = service.update(e);
 		Assertions.assertEquals(1, count);

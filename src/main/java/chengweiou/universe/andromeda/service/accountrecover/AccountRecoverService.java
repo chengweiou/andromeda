@@ -54,7 +54,7 @@ public class AccountRecoverService {
     }
 
     // 忘记密码：2. 客户端填充完整信息。服务端发送code
-    public String forgetPasswordS2(AccountRecover e) throws ProjException {
+    public String forgetPasswordS2(AccountRecover e) throws ProjException, FailException {
         AccountRecover indb = dio.findById(e);
         // 在过期前，只能发三次
         if (Instant.now().isBefore(indb.getCodeExp()) && indb.getCodeCount() == 3) throw new ProjException(ProjectRestCode.CODE_TOO_MANY);
@@ -78,8 +78,9 @@ public class AccountRecoverService {
      * @param account
      * @return
      * @throws ProjException
+     * @throws FailException
      */
-    public long forgetPasswordS3(AccountRecover e, Account account) throws ProjException {
+    public long forgetPasswordS3(AccountRecover e, Account account) throws ProjException, FailException {
         // 通过激活的code 找到对应的 accountRecover
         AccountRecover indb = dio.findById(e);
         if (indb.getId() == null) throw new ProjException(ProjectRestCode.CODE_NOT_MATCH);
