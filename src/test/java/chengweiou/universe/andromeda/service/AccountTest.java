@@ -29,7 +29,6 @@ public class AccountTest {
 	private AccountDio dio;
 	@Autowired
 	private Data data;
-	private long update;
 
 	@Test
 	public void saveDelete() throws FailException, ProjException {
@@ -78,7 +77,7 @@ public class AccountTest {
 		Account indb = dio.findById(data.accountList.get(0));
 		Assertions.assertEquals(true, SecurityUtil.check("123456", indb.getPassword()));
 
-		update = service.update(data.accountList.get(0));
+		service.update(data.accountList.get(0));
 	}
 
 	@Test
