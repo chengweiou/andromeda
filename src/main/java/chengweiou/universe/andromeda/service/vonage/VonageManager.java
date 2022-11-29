@@ -1,18 +1,16 @@
 package chengweiou.universe.andromeda.service.vonage;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.vonage.client.VonageClient;
 import com.vonage.client.sms.MessageStatus;
 import com.vonage.client.sms.SmsSubmissionResponse;
 import com.vonage.client.sms.messages.TextMessage;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
-
 import chengweiou.universe.blackhole.exception.FailException;
 
-@Profile("!test")
 @Service
 public class VonageManager {
     @Autowired

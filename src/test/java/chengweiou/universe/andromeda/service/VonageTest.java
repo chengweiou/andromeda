@@ -1,17 +1,18 @@
 package chengweiou.universe.andromeda.service;
 
 
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+
 import com.vonage.client.VonageClient;
 import com.vonage.client.sms.MessageStatus;
 import com.vonage.client.sms.SmsSubmissionResponse;
 import com.vonage.client.sms.messages.TextMessage;
 import com.vonage.client.verify.VerifyResponse;
 import com.vonage.client.verify.VerifyStatus;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
 import chengweiou.universe.andromeda.service.vonage.VonageConfig;
 import chengweiou.universe.blackhole.exception.FailException;
@@ -22,9 +23,12 @@ import chengweiou.universe.blackhole.exception.ProjException;
 public class VonageTest {
 	@Autowired
 	private VonageConfig config;
+	@Value("${onMock.vonage}")
+	private boolean onMock;
 
 	@Test
 	public void sendSms() throws FailException, ProjException {
+		if (onMock) return;
 		VonageClient client = VonageClient.builder().apiKey(config.getApiKey()).apiSecret(config.getApiSecret()).build();
 		TextMessage message = new TextMessage("18773370831", "", "vonage sms from service test");
 
@@ -39,6 +43,7 @@ public class VonageTest {
 
 	@Test
 	public void sendTwofa() throws FailException, ProjException {
+		if (onMock) return;
 		VonageClient client = VonageClient.builder().apiKey(config.getApiKey()).apiSecret(config.getApiSecret()).build();
 		VerifyResponse response = client.getVerifyClient().verify("", "Vonage");
 

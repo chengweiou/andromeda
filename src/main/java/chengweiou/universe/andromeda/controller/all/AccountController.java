@@ -1,8 +1,6 @@
 package chengweiou.universe.andromeda.controller.all;
 
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,9 +32,11 @@ import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Builder;
 import chengweiou.universe.blackhole.model.Rest;
 import chengweiou.universe.blackhole.param.Valid;
-import chengweiou.universe.blackhole.util.LogUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
+@Slf4j
 public class AccountController {
     @Autowired
     private AccountService service;
@@ -74,7 +74,7 @@ public class AccountController {
                 case PHONE_MSG -> phoneMsgService.sendLogin(twofa);
                 // todo email
                 case EMAIL -> phoneMsgService.sendLogin(twofa);
-                default -> LogUtil.e("缺少twofa方案: " + twofa.getType());
+                default -> log.error("缺少twofa方案: " + twofa.getType());
             }
             return Rest.ok(ProjectRestCode.TWOFA_WAITING, Builder.set("token", twofa.getToken()).to(new Auth()));
         }

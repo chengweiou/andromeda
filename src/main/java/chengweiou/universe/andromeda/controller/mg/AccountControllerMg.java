@@ -6,11 +6,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.service.account.AccountDio;
@@ -55,12 +57,13 @@ public class AccountControllerMg {
         return Rest.ok(success);
     }
 
-    @PutMapping("/account/person/{person.id}")
-    public Rest<Boolean> updateByPerson(Account e) throws ParamException, ProjException, FailException {
-        Valid.check("account.person.id", e.getPerson().getId()).is().positive();
+    @PutMapping("/account/person/{personId}")
+    public Rest<Boolean> updateByPerson(Account e, @PathVariable Long personId) throws ParamException, ProjException, FailException {
+        Valid.check("personId", personId).is().positive();
         Valid.check("account.username | phone | email | wechat | weibo | google | facebook | password | active | extra",
                 e.getUsername(), e.getPhone(), e.getEmail(), e.getWechat(), e.getWeibo(), e.getGoogle(), e.getFacebook(), e.getPassword(), e.getActive(), e.getExtra()
             ).are().notAllNull();
+        e.setPerson(Builder.set("id", personId).to(new Person()));
         boolean success = service.updateByKey(e) == 1 ;
         return Rest.ok(success);
     }
@@ -81,9 +84,10 @@ public class AccountControllerMg {
         return Rest.ok(data);
     }
 
-    @GetMapping("/account/person/{person.id}")
-    public Rest<Account> findByPerson(Account e) throws ParamException {
-        Valid.check("account.person.id", e.getPerson().getId()).is().positive();
+    @GetMapping("/account/person/{personId}")
+    public Rest<Account> findByPerson(Account e, @PathVariable Long personId) throws ParamException {
+        Valid.check("personId", personId).is().positive();
+        e.setPerson(Builder.set("id", personId).to(new Person()));
         Account data = dio.findByKey(e);
         return Rest.ok(data);
     }

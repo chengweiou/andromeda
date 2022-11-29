@@ -2,15 +2,14 @@ package chengweiou.universe.andromeda.interceptor;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Rest;
 import chengweiou.universe.blackhole.util.GsonUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class AuthInterceptorMe implements HandlerInterceptor {
     @Override

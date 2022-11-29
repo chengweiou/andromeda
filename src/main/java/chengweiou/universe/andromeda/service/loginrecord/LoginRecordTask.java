@@ -1,11 +1,10 @@
 package chengweiou.universe.andromeda.service.loginrecord;
 
 import java.time.Instant;
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 
 import chengweiou.universe.andromeda.base.jwt.JwtUtil;
@@ -15,9 +14,10 @@ import chengweiou.universe.andromeda.util.UserAgentUtil;
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.UnauthException;
 import chengweiou.universe.blackhole.model.Builder;
-import chengweiou.universe.blackhole.util.LogUtil;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class LoginRecordTask {
     @Autowired
     private LoginRecordDio dio;
@@ -27,26 +27,26 @@ public class LoginRecordTask {
     private JwtUtil jwtUtil;
 
     @Async
-    public Future<Boolean> save(LoginRecord e) {
+    public CompletableFuture<Boolean> save(LoginRecord e) {
         try {
             dio.save(e);
-            return new AsyncResult<>(true);
+            return CompletableFuture.completedFuture(true);
         } catch (FailException ex) {
-            return new AsyncResult<>(false);
+            return CompletableFuture.completedFuture(false);
         }
     }
 
     @Async
-    public Future<Long> logout(String token) throws FailException {
+    public CompletableFuture<Long> logout(String token) throws FailException {
         try {
             Account account = jwtUtil.verify(token);
             LoginRecord e = dio.findLastByPerson(Builder.set("person", account.getPerson()).to(new LoginRecord()));
             e.setLogoutTime(Instant.now().toString());
             long count = dio.update(e);
-            return new AsyncResult<>(count);
+            return CompletableFuture.completedFuture(count);
         } catch (UnauthException e) {
-            LogUtil.i("logout update record fail <-- jwt verify fail");
-            return new AsyncResult<>(0L);
+            log.info("logout update record fail <-- jwt verify fail");
+            return CompletableFuture.completedFuture(0L);
         }
     }
 }

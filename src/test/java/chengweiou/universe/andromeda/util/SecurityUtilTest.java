@@ -1,13 +1,15 @@
 package chengweiou.universe.andromeda.util;
 
-import chengweiou.universe.blackhole.util.LogUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import lombok.extern.slf4j.Slf4j;
+
 @SpringBootTest
 @ActiveProfiles("test")
+@Slf4j
 public class SecurityUtilTest {
     @Test
     public void ok() {
@@ -15,9 +17,9 @@ public class SecurityUtilTest {
         String hashpw = SecurityUtil.hash("123");
         boolean success = SecurityUtil.check("123", hashpw);
         Assertions.assertEquals(true, success);
-        LogUtil.d("--------------------take to test data---------------");
-        LogUtil.d(hashpw);
-        LogUtil.d("--------------------take to test data---------------");
+        log.debug("--------------------take to test data---------------");
+        log.debug(hashpw);
+        log.debug("--------------------take to test data---------------");
         // diff salt
         hashpw = SecurityUtil.hash("aaa");
         success = SecurityUtil.check("aaa", hashpw);

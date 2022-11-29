@@ -1,10 +1,9 @@
 package chengweiou.universe.andromeda.service.codesendrecord;
 
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 
 import chengweiou.universe.andromeda.model.entity.codesendrecord.CodeSendRecord;
@@ -16,12 +15,12 @@ public class CodeSendRecordTask {
     @Autowired
     private CodeSendRecordDio dio;
     @Async
-    public Future<Boolean> save(CodeSendRecord e) throws ProjException {
+    public CompletableFuture<Boolean> save(CodeSendRecord e) throws ProjException {
         try {
             dio.save(e);
-            return new AsyncResult<>(true);
+            return CompletableFuture.completedFuture(true);
         } catch (FailException ex) {
-            return new AsyncResult<>(false);
+            return CompletableFuture.completedFuture(false);
         }
     }
 }

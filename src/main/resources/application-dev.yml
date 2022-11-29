@@ -1,6 +1,6 @@
 server:
   port: 0
-      
+
 spring:
   datasource:
     url: jdbc:postgresql://127.0.0.1/universe?currentSchema=andromeda
@@ -14,7 +14,7 @@ spring:
         max-active: 1000
         max-idle: 10
         min-idle: 1
-        max-wait: 1000ms
+        max-wait: 1s
 
 jwt:
   issuer: o
