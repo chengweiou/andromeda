@@ -17,6 +17,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 
+import chengweiou.universe.andromeda.base.redis.JedisUtil;
 import chengweiou.universe.andromeda.model.Person;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.blackhole.exception.UnauthException;
@@ -29,7 +30,10 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtUtil {
     @Autowired
     private JwtConfig config;
+    @Autowired
+    private JedisUtil jedisUtil;
 
+    private static final String blacklistPrev = "jwt-blacklist-";
 
     public String sign(Account account) {
         Algorithm algorithm = useRsa ? Algorithm.RSA256(rsaPublicKey, rsaPrivateKey) : Algorithm.HMAC512(config.getSign());
@@ -53,6 +57,7 @@ public class JwtUtil {
 
     public Account verify(String token) throws UnauthException {
         if (token == null) throw new UnauthException();
+        if (jedisUtil.get(blacklistPrev+token) != null) throw new UnauthException();
         Algorithm algorithm = useRsa ? Algorithm.RSA256(rsaPublicKey, rsaPrivateKey) : Algorithm.HMAC512(config.getSign());
         return verify(token, algorithm);
     }
@@ -79,6 +84,11 @@ public class JwtUtil {
                 .set("person", Builder.set("id", jwt.getClaim("personId").asLong()).to(new Person()))
                 .set("extra", jwt.getClaim("extra").asString())
             .to(new Account());
+    }
+
+    public void signOut(String token) {
+        if (token == null) return;
+        jedisUtil.set(blacklistPrev + token, "", config.getExpMinute() * 60);
     }
 
     private boolean useRsa;

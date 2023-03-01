@@ -108,6 +108,7 @@ public class AccountController {
         if (auth.getRefreshToken()==null || auth.getRefreshToken().isEmpty()) return Rest.ok(false);
         // Valid.check("auth.refreshToken", auth.getRefreshToken()).is().notEmpty();
         // todo put token to block list
+        jwtUtil.signOut(auth.getToken());
         String token = jedisUtil.get(auth.getRefreshToken());
         jedisUtil.del(auth.getRefreshToken());
         loginRecordTask.logout(token);
