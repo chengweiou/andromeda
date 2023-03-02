@@ -25,3 +25,14 @@ jwt:
   rsaPublicPath: config/jwt-public.pem
   expMinute: 10
   refreshExpMinute: 60
+
+security:
+  needLength: 6
+  needUpper: 0
+  needLower: 1
+  needNum: 1
+  needSpec: 0
+
+vonage:
+  apiKey: aaa
+  apiSecret: aaa

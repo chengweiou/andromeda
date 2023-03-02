@@ -43,7 +43,7 @@ public class AccountTest {
 			).andReturn().getResponse().getContentAsString();
 		Rest<Account> rest = Rest.from(result, Account.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
-		Assertions.assertEquals("ou", rest.getData().getUsername());
+		Assertions.assertEquals("ou1111", rest.getData().getUsername());
 	}
 
 	@Test
@@ -56,20 +56,20 @@ public class AccountTest {
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
 		Assertions.assertEquals(true, rest.getData());
 
-		dio.update(Builder.set("id", 1).set("username", "ou").to(new Account()));
+		dio.update(Builder.set("id", 1).set("username", "ou1111").to(new Account()));
 	}
 
 	@Test
 	public void updatePassword() throws Exception {
 		String result = mvc.perform(MockMvcRequestBuilders.put("/me/account/password")
 				.header("loginAccount", GsonUtil.create().toJson(loginAccount))
-				.param("oldPassword", "123")
+				.param("oldPassword", "123aaa")
 				.param("password", "abcdefg")
 		).andReturn().getResponse().getContentAsString();
 		Rest<Boolean> saveRest = Rest.from(result, Boolean.class);
 		Assertions.assertEquals(BasicRestCode.OK, saveRest.getCode());
 
-		service.updateByKey(Builder.set("person", loginAccount.getPerson()).set("password", "123").to(new Account()));
+		service.updateByKey(Builder.set("person", loginAccount.getPerson()).set("password", "123aaa").to(new Account()));
 	}
 
 	@Test

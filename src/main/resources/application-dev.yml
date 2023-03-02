@@ -26,6 +26,16 @@ jwt:
   expMinute: 10
   refreshExpMinute: 60
 
+security:
+  needLength: 6
+  needUpper: 0
+  needLower: 1
+  needNum: 1
+  needSpec: 0
+  # ALL, NOT_SAME, NOT_INCLUDE
+  needMixLevel: ALL
+
+
 vonage:
   apiKey: aaa
   apiSecret: aaa

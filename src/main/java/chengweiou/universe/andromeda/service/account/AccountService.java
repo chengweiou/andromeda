@@ -11,7 +11,6 @@ import chengweiou.universe.andromeda.service.accountrecover.AccountRecoverDio;
 import chengweiou.universe.andromeda.util.SecurityUtil;
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ProjException;
-import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Builder;
 
 @Service
@@ -20,9 +19,14 @@ public class AccountService {
     private AccountDio dio;
     @Autowired
     private AccountRecoverDio accountRecoverDio;
+    @Autowired
+    private SecurityUtil securityUtil;
 
     public void save(Account e) throws FailException, ProjException {
-        e.setPassword(SecurityUtil.hash(e.getPassword()));
+        if (e.getUsername() != null && !securityUtil.canUseUsername(e.getUsername())) throw new ProjException(ProjectRestCode.USERNAME_CANNOT_USE);
+        if (e.getUsername() != null && !securityUtil.canUseMixLevel(e.getUsername(), e.getPassword())) throw new ProjException(ProjectRestCode.USERNAME_CANNOT_USE);
+        if (!securityUtil.canUsePassword(e.getPassword())) throw new ProjException(ProjectRestCode.PASSWORD_CANNOT_USE);
+        e.setPassword(securityUtil.hash(e.getPassword()));
         dio.save(e);
         AccountRecover accountRecover = Builder.set("id", e.getId()).set("person", e.getPerson()).set("phone", e.getPhone()).set("email", e.getEmail()).to(new AccountRecover());
         accountRecover.cleanCode();
@@ -35,13 +39,31 @@ public class AccountService {
         accountRecoverDio.delete(accountRecover);
     }
 
-    public long update(Account e) throws FailException {
-        if (e.getPassword() != null) e.setPassword(SecurityUtil.hash(e.getPassword()));
+    public long update(Account e) throws FailException, ProjException {
+        Account indb = dio.findById(e);
+        String username = e.getUsername() != null ? e.getUsername() : !indb.getUsername().equals("") ? indb.getUsername() : null;
+        if (e.getUsername() != null) {
+            if (!securityUtil.canUseUsername(e.getUsername())) throw new ProjException(ProjectRestCode.USERNAME_CANNOT_USE);
+        }
+        if (e.getPassword() != null) {
+            if (username != null && !securityUtil.canUseMixLevel(username, e.getPassword())) throw new ProjException(ProjectRestCode.USERNAME_CANNOT_USE);
+            if (!securityUtil.canUsePassword(e.getPassword())) throw new ProjException(ProjectRestCode.PASSWORD_CANNOT_USE);
+            e.setPassword(securityUtil.hash(e.getPassword()));
+        }
         return dio.update(e);
     }
 
-    public long updateByKey(Account e) throws FailException {
-        if (e.getPassword() != null) e.setPassword(SecurityUtil.hash(e.getPassword()));
+    public long updateByKey(Account e) throws FailException, ProjException {
+        Account indb = dio.findByKey(e);
+        String username = e.getUsername() != null ? e.getUsername() : !indb.getUsername().equals("") ? indb.getUsername() : null;
+        if (e.getUsername() != null) {
+            if (!securityUtil.canUseUsername(e.getUsername())) throw new ProjException(ProjectRestCode.USERNAME_CANNOT_USE);
+        }
+        if (e.getPassword() != null) {
+            if (username != null && !securityUtil.canUseMixLevel(username, e.getPassword())) throw new ProjException(ProjectRestCode.USERNAME_CANNOT_USE);
+            if (!securityUtil.canUsePassword(e.getPassword())) throw new ProjException(ProjectRestCode.PASSWORD_CANNOT_USE);
+            e.setPassword(securityUtil.hash(e.getPassword()));
+        }
         return dio.updateByKey(e);
     }
 
@@ -49,7 +71,7 @@ public class AccountService {
         Account indb = dio.findByLoginUsername(e);
         if (indb.getId() == null) throw new ProjException(ProjectRestCode.USERNAME_PASSWORD_MISMATCH);
         if (!indb.getActive()) throw new ProjException(ProjectRestCode.ACCOUNT_INACTIVE);
-        if (!SecurityUtil.check(e.getPassword(), indb.getPassword())) throw new ProjException(ProjectRestCode.USERNAME_PASSWORD_MISMATCH);
+        if (!securityUtil.check(e.getPassword(), indb.getPassword())) throw new ProjException(ProjectRestCode.USERNAME_PASSWORD_MISMATCH);
         return indb;
     }
 
@@ -62,8 +84,10 @@ public class AccountService {
      */
     public long changePassword(Account e) throws ProjException, FailException {
         Account indb = dio.findByKey(e);
-        boolean success = SecurityUtil.check(e.getOldPassword(), indb.getPassword());
+        boolean success = securityUtil.check(e.getOldPassword(), indb.getPassword());
         if (!success) throw new ProjException(ProjectRestCode.USERNAME_PASSWORD_MISMATCH);
-        return dio.update(Builder.set("id", indb.getId()).set("password", SecurityUtil.hash(e.getPassword())).to(new Account()));
+        if (e.getUsername() != null && !securityUtil.canUseMixLevel(indb.getUsername(), e.getPassword())) throw new ProjException(ProjectRestCode.USERNAME_CANNOT_USE);
+        if (!securityUtil.canUsePassword(e.getPassword())) throw new ProjException(ProjectRestCode.PASSWORD_CANNOT_USE);
+        return dio.update(Builder.set("id", indb.getId()).set("password", securityUtil.hash(e.getPassword())).to(new Account()));
     }
 }

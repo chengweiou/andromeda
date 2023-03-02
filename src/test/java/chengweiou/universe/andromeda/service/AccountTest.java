@@ -29,6 +29,8 @@ public class AccountTest {
 	private AccountDio dio;
 	@Autowired
 	private Data data;
+	@Autowired
+	private SecurityUtil securityUtil;
 
 	@Test
 	public void saveDelete() throws FailException, ProjException {
@@ -46,11 +48,11 @@ public class AccountTest {
 
 	@Test
 	public void update() throws ProjException, FailException {
-		Account e = Builder.set("id", 1).set("username", "ou1").to(new Account());
+		Account e = Builder.set("id", 1).set("username", "ou11112").to(new Account());
 		long count = service.update(e);
 		Assertions.assertEquals(1, count);
 		Account indb = dio.findById(e);
-		Assertions.assertEquals("ou1", indb.getUsername());
+		Assertions.assertEquals("ou11112", indb.getUsername());
 
 		Builder.set("username", data.accountList.get(0).getUsername()).to(e);
 		service.update(e);
@@ -58,31 +60,31 @@ public class AccountTest {
 
 	@Test
 	public void updatePassword() throws ProjException, FailException {
-		String old = "123";
-		Account e = Builder.set("id", 1).set("password", "123456").to(new Account());
+		String old = "123aaa";
+		Account e = Builder.set("id", 1).set("password", "123456abc").to(new Account());
 		long count = service.update(e);
 		Assertions.assertEquals(1, count);
 		Account indb = dio.findById(e);
-		Assertions.assertEquals(true, SecurityUtil.check("123456", indb.getPassword()));
+		Assertions.assertEquals(true, securityUtil.check("123456abc", indb.getPassword()));
 
 		Builder.set("password", old).to(e);
 		service.update(e);
 	}
 	@Test
 	public void changePasswordByMe() throws ProjException, FailException {
-		String old = "123";
-		Account e = Builder.set("person", data.accountList.get(0).getPerson()).set("oldPassword", old).set("password", "123456").to(new Account());
+		String old = "123aaa";
+		Account e = Builder.set("person", data.accountList.get(0).getPerson()).set("oldPassword", old).set("password", "123456abc").to(new Account());
 		long count = service.changePassword(e);
 		Assertions.assertEquals(1, count);
 		Account indb = dio.findById(data.accountList.get(0));
-		Assertions.assertEquals(true, SecurityUtil.check("123456", indb.getPassword()));
+		Assertions.assertEquals(true, securityUtil.check("123456abc", indb.getPassword()));
 
 		service.update(data.accountList.get(0));
 	}
 
 	@Test
 	public void changePasswordByMeFail() throws ProjException {
-		String old = "123";
+		String old = "123aaa";
 		Account e = Builder.set("person", data.accountList.get(0).getPerson()).set("oldPassword", "123456").set("password", old).to(new Account());
 		Assertions.assertThrows(ProjException.class, () -> service.changePassword(e));
 	}
@@ -180,7 +182,7 @@ public class AccountTest {
 		Account indb = service.login(Builder.set("username", data.accountList.get(0).getUsername()).set("password", data.accountList.get(0).getPassword()).to(new Account()));
 		Assertions.assertEquals(true, indb.notNull());
 		Assertions.assertEquals(data.accountList.get(0).getUsername(), indb.getUsername());
-		data.accountList.get(0).setPassword("123");
+		data.accountList.get(0).setPassword("123aaa");
 
 	}
 

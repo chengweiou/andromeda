@@ -65,7 +65,7 @@ public class AccountTest {
 	@Test
 	public void login() throws Exception {
 		String result = mvc.perform(MockMvcRequestBuilders.post("/login")
-				.param("username", "ou").param("password", "123")
+				.param("username", "ou1111").param("password", "123aaa")
 			).andReturn().getResponse().getContentAsString();
 		Rest<Auth> loginRest = Rest.from(result, Auth.class);
 		Assertions.assertEquals(BasicRestCode.OK, loginRest.getCode());
@@ -87,7 +87,7 @@ public class AccountTest {
 		twofaDio.update(updateTwofa);
 
 		String result = mvc.perform(MockMvcRequestBuilders.post("/login")
-				.param("username", "ou").param("password", "123")
+				.param("username", "ou1111").param("password", "123aaa")
 			).andReturn().getResponse().getContentAsString();
 		Rest<Auth> loginRest = Rest.from(result, ProjectRestCode.class, Auth.class);
 		Assertions.assertEquals(ProjectRestCode.TWOFA_WAITING, loginRest.getCode());
@@ -116,7 +116,7 @@ public class AccountTest {
 	public void loginFail() throws Exception {
 		// wrong pass
 		String result = mvc.perform(MockMvcRequestBuilders.post("/login")
-				.param("username", "ou").param("password", "123e")
+				.param("username", "ou1111").param("password", "123e")
 		).andReturn().getResponse().getContentAsString();
 		Rest<Auth> loginRest = Rest.from(result, ProjectRestCode.class);
 		Assertions.assertEquals(ProjectRestCode.USERNAME_PASSWORD_MISMATCH, loginRest.getCode());
@@ -139,7 +139,7 @@ public class AccountTest {
 	@Test
 	public void checkUsername() throws Exception {
 		String result = mvc.perform(MockMvcRequestBuilders.get("/account/username/check")
-				.param("username", "ou")
+				.param("username", "ou1111")
 		).andReturn().getResponse().getContentAsString();
 		Rest<Boolean> rest = Rest.from(result);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
@@ -156,7 +156,7 @@ public class AccountTest {
 	@Test
 	public void forgetPassword() throws Exception {
 		String result = mvc.perform(MockMvcRequestBuilders.post("/forgetPassword/1")
-				.param("username", "ou")
+				.param("username", "ou1111")
 			).andReturn().getResponse().getContentAsString();
 		Rest<AccountRecover> forgetRest1 = Rest.from(result, AccountRecover.class);
 		Assertions.assertEquals(BasicRestCode.OK, forgetRest1.getCode());
@@ -194,7 +194,7 @@ public class AccountTest {
 		Assertions.assertEquals(ProjectRestCode.CODE_NOT_MATCH, failRest.getCode());
 
 		result = mvc.perform(MockMvcRequestBuilders.post("/login")
-				.param("username", "ou").param("password", "321")
+				.param("username", "ou1111").param("password", "321")
 			).andReturn().getResponse().getContentAsString();
 		Rest<Auth> loginRest = Rest.from(result, Auth.class);
 		Assertions.assertEquals(BasicRestCode.OK, loginRest.getCode());
@@ -208,7 +208,7 @@ public class AccountTest {
 		Assertions.assertEquals(BasicRestCode.OK, logoutRest.getCode());
 		LoginRecord delLoginRecord = loginRecordDio.findLastByPerson(Builder.set("person", data.accountList.get(0).getPerson()).to(new LoginRecord()));
 		loginRecordDio.delete(delLoginRecord);
-		service.updateByKey(Builder.set("person", data.accountList.get(0).getPerson()).set("password", "123").to(new Account()));
+		service.updateByKey(Builder.set("person", data.accountList.get(0).getPerson()).set("password", "123aaa").to(new Account()));
 		accountRecoverDio.update(data.accountRecoverList.get(0));
 		CodeSendRecord delCodeSendRecord = codeSendRecordDio.findLastByUsername(Builder.set("username", "9790000000").to(new CodeSendRecord()));
 		codeSendRecordDio.delete(delCodeSendRecord);

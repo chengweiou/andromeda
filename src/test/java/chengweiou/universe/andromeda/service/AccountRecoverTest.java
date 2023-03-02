@@ -36,6 +36,8 @@ public class AccountRecoverTest {
 	private AccountDio accountDio;
 	@Autowired
 	private Data data;
+	@Autowired
+	private SecurityUtil securityUtil;
 
 	@Test
 	public void saveDelete() throws FailException, ProjException {
@@ -128,11 +130,11 @@ public class AccountRecoverTest {
 
 		long count = service.forgetPasswordS3(
 			Builder.set("id", data.accountRecoverList.get(0).getId()).set("code", "123").to(new AccountRecover()),
-			Builder.set("password", "123").to(new Account())
+			Builder.set("password", "123aaa").to(new Account())
 		);
 		Assertions.assertEquals(1, count);
 		Account accountIndb = accountDio.findById(data.accountList.get(0));
-		Assertions.assertEquals(true, SecurityUtil.check(data.accountList.get(0).getPassword(), accountIndb.getPassword()));
+		Assertions.assertEquals(true, securityUtil.check(data.accountList.get(0).getPassword(), accountIndb.getPassword()));
 
 		dio.update(data.accountRecoverList.get(0));
 	}

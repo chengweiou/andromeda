@@ -34,7 +34,7 @@ public class JwtUtilTest {
 
     @Test
     public void sign() throws UnauthException, IllegalArgumentException, IOException {
-        String token = jwtUtil.sign(Builder.set("username", "ou").set("person", Builder.set("id", "1").to(new Person())).set("extra", PersonType.SUPER.toString()).to(new Account()));
+        String token = jwtUtil.sign(Builder.set("username", "ou1111").set("person", Builder.set("id", "1").to(new Person())).set("extra", PersonType.SUPER.toString()).to(new Account()));
         System.out.println(token);
         Account account = jwtUtil.verify(token);
         System.out.println("------------------------");
@@ -46,7 +46,7 @@ public class JwtUtilTest {
     @Test
     public void signOut() {
         jwtUtil.signOut(null);
-        String token = jwtUtil.sign(Builder.set("username", "ou").set("person", Builder.set("id", "1").to(new Person())).set("extra", PersonType.SUPER.toString()).to(new Account()));
+        String token = jwtUtil.sign(Builder.set("username", "ou1111").set("person", Builder.set("id", "1").to(new Person())).set("extra", PersonType.SUPER.toString()).to(new Account()));
         doReturn(null).when(jedisUtil).get("jwt-blacklist-" + token);
         jwtUtil.signOut(token);
         doReturn("").when(jedisUtil).get("jwt-blacklist-" + token);

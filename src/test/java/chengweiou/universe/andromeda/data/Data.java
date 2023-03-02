@@ -46,9 +46,9 @@ public class Data {
 
     public void init() {
         // accountList = accountDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(Account::getId)).toList();
-        // accountList.forEach(e -> e.setPassword("123"));
+        // accountList.forEach(e -> e.setPassword("123aaa"));
         accountList = accountDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(Account::getId)).toList();
-        accountList.forEach(e -> e.setPassword("123"));
+        accountList.forEach(e -> e.setPassword("123aaa"));
         loginRecordList = loginRecordDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(LoginRecord::getId)).toList();
         twofaList = twofaDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(Twofa::getId)).toList();
         codeSendRecordList = codeSendRecordDio.find(new SearchCondition(), null).stream().sorted(Comparator.comparingLong(CodeSendRecord::getId)).toList();

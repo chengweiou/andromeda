@@ -24,6 +24,8 @@ public class AccountRecoverService {
     private AccountRecoverDio dio;
     @Autowired
     private AccountDio accountDio;
+    @Autowired
+    private SecurityUtil securityUtil;
 
     public void save(AccountRecover e) throws FailException, ProjException {
         e.cleanCode();
@@ -88,7 +90,7 @@ public class AccountRecoverService {
         if (Instant.now().isAfter(indb.getCodeExp())) throw new ProjException(ProjectRestCode.CODE_EXPIRED);
         indb.cleanCode();
         dio.update(indb);
-        return accountDio.updateByKey(Builder.set("person", indb.getPerson()).set("password", SecurityUtil.hash(account.getPassword())).to(new Account()));
+        return accountDio.updateByKey(Builder.set("person", indb.getPerson()).set("password", securityUtil.hash(account.getPassword())).to(new Account()));
     }
 
 }

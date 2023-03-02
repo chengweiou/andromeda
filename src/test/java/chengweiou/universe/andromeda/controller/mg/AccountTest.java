@@ -74,7 +74,7 @@ public class AccountTest {
 
 		mvc.perform(MockMvcRequestBuilders.put("/mg/account/1")
 				.header("inServer", "true")
-				.param("username", "ou")
+				.param("username", "ou1111")
 		).andReturn().getResponse().getContentAsString();
 	}
 
@@ -89,7 +89,7 @@ public class AccountTest {
 		Assertions.assertEquals(true, rest.getData());
 
 		result = mvc.perform(MockMvcRequestBuilders.post("/login")
-				.param("username", "ou").param("password", "123")
+				.param("username", "ou1111").param("password", "123aaa")
 		).andReturn().getResponse().getContentAsString();
 		Rest<Auth> loginRest = Rest.from(result, ProjectRestCode.class);
 		Assertions.assertEquals(ProjectRestCode.ACCOUNT_INACTIVE, loginRest.getCode());
@@ -100,7 +100,7 @@ public class AccountTest {
 		).andReturn().getResponse().getContentAsString();
 
 		result = mvc.perform(MockMvcRequestBuilders.post("/login")
-				.param("username", "ou").param("password", "123")
+				.param("username", "ou1111").param("password", "123aaa")
 		).andReturn().getResponse().getContentAsString();
 		loginRest = Rest.from(result, Auth.class);
 		Assertions.assertEquals(BasicRestCode.OK, loginRest.getCode(), loginRest.getMessage());
@@ -149,7 +149,7 @@ public class AccountTest {
 			).andReturn().getResponse().getContentAsString();
 		Rest<Account> rest = Rest.from(result, Account.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
-		Assertions.assertEquals("ou", rest.getData().getUsername());
+		Assertions.assertEquals("ou1111", rest.getData().getUsername());
 	}
 
 	@Test
@@ -159,7 +159,7 @@ public class AccountTest {
 			).andReturn().getResponse().getContentAsString();
 		Rest<Account> rest = Rest.from(result, Account.class);
 		Assertions.assertEquals(BasicRestCode.OK, rest.getCode());
-		Assertions.assertEquals("ou", rest.getData().getUsername());
+		Assertions.assertEquals("ou1111", rest.getData().getUsername());
 	}
 
 	@Test
@@ -197,7 +197,7 @@ public class AccountTest {
 	public void saveDeleteFail() throws Exception {
 		String result = mvc.perform(MockMvcRequestBuilders.post("/mg/account")
 				.header("inServer", "true")
-				.param("username", data.accountList.get(0).getUsername()).param("password", "123456653")
+				.param("username", data.accountList.get(0).getUsername()).param("password", "123456653aa")
 		).andReturn().getResponse().getContentAsString();
 		Rest<Long> saveRest = Rest.from(result);
 		Assertions.assertEquals(BasicRestCode.FAIL, saveRest.getCode());
