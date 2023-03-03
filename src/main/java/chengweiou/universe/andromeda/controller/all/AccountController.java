@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import chengweiou.universe.andromeda.base.jwt.JwtConfig;
 import chengweiou.universe.andromeda.base.jwt.JwtUtil;
-import chengweiou.universe.andromeda.base.redis.JedisUtil;
+import chengweiou.universe.andromeda.base.redis.RedisUtil;
 import chengweiou.universe.andromeda.model.Auth;
 import chengweiou.universe.andromeda.model.ProjectRestCode;
 import chengweiou.universe.andromeda.model.entity.Account;
@@ -53,7 +53,7 @@ public class AccountController {
     @Autowired
     private LoginRecordTask loginRecordTask;
     @Autowired
-    private JedisUtil jedisUtil;
+    private RedisUtil redisUtil;
     @Autowired
     private JwtUtil jwtUtil;
     @Autowired
@@ -95,7 +95,7 @@ public class AccountController {
     private Auth getAuthBySuccessLogin(Account indb) {
         String token = jwtUtil.sign(indb);
         String refreshToken = RandomStringUtils.randomAlphabetic(256);
-        jedisUtil.set(refreshToken, token, jwtConfig.getRefreshExpMinute().intValue()*60);
+        redisUtil.set(refreshToken, token, jwtConfig.getRefreshExpMinute().intValue()*60);
         Auth result = Builder.set("token", token).set("refreshToken", refreshToken).set("person", indb.getPerson()).to(new Auth());
         loginRecordTask.save(
                 Builder.set("person", indb.getPerson()).set("ip", request.getRemoteAddr()).set("platform", userAgentUtil.getPlatform(request.getHeader("User-Agent")))
@@ -107,10 +107,9 @@ public class AccountController {
     public Rest<Boolean> logout(Auth auth) throws ParamException, FailException {
         if (auth.getRefreshToken()==null || auth.getRefreshToken().isEmpty()) return Rest.ok(false);
         // Valid.check("auth.refreshToken", auth.getRefreshToken()).is().notEmpty();
-        // todo put token to block list
         jwtUtil.signOut(auth.getToken());
-        String token = jedisUtil.get(auth.getRefreshToken());
-        jedisUtil.del(auth.getRefreshToken());
+        String token = redisUtil.get(auth.getRefreshToken());
+        redisUtil.del(auth.getRefreshToken());
         loginRecordTask.logout(token);
         return Rest.ok(true);
     }
@@ -118,10 +117,10 @@ public class AccountController {
     @PostMapping("/token/refresh")
     public Rest<Auth> refresh(Auth auth) throws UnauthException, ParamException {
         Valid.check("auth.refreshToken", auth.getRefreshToken()).is().notEmpty();
-        String oldToken = jedisUtil.get(auth.getRefreshToken());
+        String oldToken = redisUtil.get(auth.getRefreshToken());
         Account e = jwtUtil.decode(oldToken);
         String token = jwtUtil.sign(e);
-        jedisUtil.set(auth.getRefreshToken(), token, jwtConfig.getRefreshExpMinute().intValue()*60);
+        redisUtil.set(auth.getRefreshToken(), token, jwtConfig.getRefreshExpMinute().intValue()*60);
         return Rest.ok(Builder.set("token", token).to(auth));
     }
 

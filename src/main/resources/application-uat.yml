@@ -6,15 +6,16 @@ spring:
     url: jdbc:postgresql://pgsql/universe?currentSchema=andromeda
     username: postgres
     password: 123456
-  redis:
-    host: redis
-    port: 6379
-    jedis:
-      pool:
-        max-active: 1000
-        max-idle: 10
-        min-idle: 1
-        max-wait: 1s
+  data:
+    redis:
+      host: redis
+      port: 6379
+      lettuce:
+        pool:
+          max-active: 1000
+          max-idle: 10
+          min-idle: 1
+          max-wait: 1s
 
 jwt:
   issuer: o
@@ -32,6 +33,8 @@ security:
   needLower: 1
   needNum: 1
   needSpec: 0
+  # ALL, NOT_SAME, NOT_INCLUDE
+  needMixLevel: ALL
 
 vonage:
   apiKey: aaa

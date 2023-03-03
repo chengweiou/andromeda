@@ -1,11 +1,6 @@
 package chengweiou.universe.andromeda.controller.mg;
 
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -28,8 +23,6 @@ import chengweiou.universe.andromeda.model.entity.loginrecord.LoginRecord;
 import chengweiou.universe.andromeda.service.loginrecord.LoginRecordDio;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Rest;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -39,8 +32,6 @@ public class AccountTest {
 	private WebApplicationContext webApplicationContext;
 	@Autowired
 	private Data data;
-	@Autowired
-	private JedisPool jedisPool;
 	@Autowired
 	private LoginRecordDio loginRecordDio;
 
@@ -234,10 +225,6 @@ public class AccountTest {
 	@BeforeEach
 	public void before() {
 		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-		Jedis jedis = mock(Jedis.class);
-		doReturn(jedis).when(jedisPool).getResource();
-		doReturn("jedis").when(jedis).setex(any(byte[].class), anyLong(), any(byte[].class));
-
 	}
 	@BeforeEach
 	public void init() {
