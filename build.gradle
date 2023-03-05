@@ -28,6 +28,7 @@ repositories {
 dependencies {
 	implementation 'com.vonage:client:7.1.1'
 
+	implementation 'com.github.ben-manes.caffeine:caffeine:3.1.4'
 	implementation 'com.auth0:java-jwt:4.2.1'
 	implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
 	implementation 'eu.bitwalker:UserAgentUtils:1.21'

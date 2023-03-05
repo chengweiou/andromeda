@@ -1,11 +1,15 @@
 package chengweiou.universe.andromeda.controller.all;
 
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -27,6 +31,7 @@ import chengweiou.universe.andromeda.service.accountrecover.AccountRecoverDio;
 import chengweiou.universe.andromeda.service.codesendrecord.CodeSendRecordDio;
 import chengweiou.universe.andromeda.service.loginrecord.LoginRecordDio;
 import chengweiou.universe.andromeda.service.twofa.TwofaDio;
+import chengweiou.universe.andromeda.util.LoginFailCache;
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.model.BasicRestCode;
 import chengweiou.universe.blackhole.model.Builder;
@@ -52,6 +57,8 @@ public class AccountTest {
 	private AccountService service;
 	@Autowired
 	private AccountDio dio;
+	@MockBean
+	private LoginFailCache loginFailCache;
 
 	@Test
 	public void login() throws Exception {
@@ -208,6 +215,7 @@ public class AccountTest {
 	@BeforeEach
 	public void before() throws FailException {
 		mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+		doReturn(true).when(loginFailCache).ok(any(), any());
 	}
 	@BeforeEach
 	public void init() {

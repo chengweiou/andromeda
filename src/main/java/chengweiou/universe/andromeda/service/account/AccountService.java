@@ -8,6 +8,7 @@ import chengweiou.universe.andromeda.model.ProjectRestCode;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.model.entity.accountrecover.AccountRecover;
 import chengweiou.universe.andromeda.service.accountrecover.AccountRecoverDio;
+import chengweiou.universe.andromeda.util.LoginFailCache;
 import chengweiou.universe.andromeda.util.SecurityUtil;
 import chengweiou.universe.blackhole.exception.FailException;
 import chengweiou.universe.blackhole.exception.ProjException;
@@ -21,6 +22,8 @@ public class AccountService {
     private AccountRecoverDio accountRecoverDio;
     @Autowired
     private SecurityUtil securityUtil;
+    @Autowired
+    private LoginFailCache loginFailCache;
 
     public void save(Account e) throws FailException, ProjException {
         if (e.getUsername() != null && !securityUtil.canUseUsername(e.getUsername())) throw new ProjException(ProjectRestCode.USERNAME_CANNOT_USE);
@@ -67,11 +70,15 @@ public class AccountService {
         return dio.updateByKey(e);
     }
 
-    public Account login(Account e) throws ProjException {
+    public Account login(Account e, String ip) throws ProjException {
+        String usernameInfo = e.getUsername() + ", email:" + e.getEmail() + ", phone:" + e.getPhone();
+        if (!loginFailCache.ok(ip, usernameInfo)) throw new ProjException(ProjectRestCode.TRY_TOO_MANY);
         Account indb = dio.findByLoginUsername(e);
-        if (indb.getId() == null) throw new ProjException(ProjectRestCode.USERNAME_PASSWORD_MISMATCH);
+        if (indb.getId() == null || !securityUtil.check(e.getPassword(), indb.getPassword())) {
+            loginFailCache.oneMoreFail(ip, usernameInfo);
+            throw new ProjException(ProjectRestCode.USERNAME_PASSWORD_MISMATCH);
+        }
         if (!indb.getActive()) throw new ProjException(ProjectRestCode.ACCOUNT_INACTIVE);
-        if (!securityUtil.check(e.getPassword(), indb.getPassword())) throw new ProjException(ProjectRestCode.USERNAME_PASSWORD_MISMATCH);
         return indb;
     }
 

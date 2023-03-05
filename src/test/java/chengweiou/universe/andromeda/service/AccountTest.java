@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import chengweiou.universe.andromeda.data.Data;
 import chengweiou.universe.andromeda.model.Person;
+import chengweiou.universe.andromeda.model.ProjectRestCode;
 import chengweiou.universe.andromeda.model.SearchCondition;
 import chengweiou.universe.andromeda.model.entity.Account;
 import chengweiou.universe.andromeda.service.account.AccountDio;
@@ -179,11 +182,29 @@ public class AccountTest {
 
 	@Test
 	public void login() throws ProjException {
-		Account indb = service.login(Builder.set("username", data.accountList.get(0).getUsername()).set("password", data.accountList.get(0).getPassword()).to(new Account()));
+		Account indb = service.login(Builder.set("username", data.accountList.get(0).getUsername()).set("password", data.accountList.get(0).getPassword()).to(new Account()), "127.0.0.1");
 		Assertions.assertEquals(true, indb.notNull());
 		Assertions.assertEquals(data.accountList.get(0).getUsername(), indb.getUsername());
 		data.accountList.get(0).setPassword("123aaa");
+	}
 
+	@Test
+	public void loginFail() throws ProjException {
+		Account indb = service.login(Builder.set("username", data.accountList.get(0).getUsername()).set("password", data.accountList.get(0).getPassword()).to(new Account()), "127.0.0.1");
+		Assertions.assertEquals(true, indb.notNull());
+		Assertions.assertEquals(data.accountList.get(0).getUsername(), indb.getUsername());
+		data.accountList.get(0).setPassword("123aaa");
+	}
+
+	@RepeatedTest(6)
+	public void loginFailTryTooMany(RepetitionInfo repetitionInfo) throws ProjException {
+		Account wrongAccount = Builder.set("username", "aaa").set("password", "bbb").to(new Account());
+		String ip = "127.0.0.1";
+		try {
+			service.login(wrongAccount, ip);
+		} catch (ProjException ex) {
+			Assertions.assertEquals(repetitionInfo.getCurrentRepetition() < 6 ? ProjectRestCode.USERNAME_PASSWORD_MISMATCH : ProjectRestCode.TRY_TOO_MANY, ex.getCode());
+		}
 	}
 
 	@BeforeEach
